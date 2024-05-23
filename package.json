@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "@tanstack/react-query": "^5.37.1",
+    "@tanstack/react-query-next-experimental": "^5.37.1",
+    "axios": "^1.7.2",
     "lucide-react": "^0.379.0",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.51.5"
+    "react-hook-form": "^7.51.5",
+    "stable-hash": "^0.0.4"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -23,6 +28,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
+    "prisma": "^5.14.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
