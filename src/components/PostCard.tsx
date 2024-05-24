@@ -18,7 +18,7 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
     <div className="card w-full bg-base-100 shadow-xl border">
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
-        <p>{content.slice(0, 30)}</p>
+        <p>{content.slice(0, 60)}</p>
         <div className="card-actions justify-end">
           <span className="badge badge-neutral">{tag.name}</span>
           <div className="card-actions justify-end">
