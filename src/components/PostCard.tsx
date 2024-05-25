@@ -1,3 +1,4 @@
+import { default as PostTag } from "@/components/Tag";
 import { Tag } from "@prisma/client";
 import Link from "next/link";
 import { FC } from "react";
@@ -20,7 +21,7 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
         <h2 className="card-title">{title}</h2>
         <p>{content.slice(0, 60)}</p>
         <div className="card-actions justify-end">
-          {tag && <span className="badge badge-neutral">{tag.name}</span>}
+          {tag && <PostTag tag={tag} />}
           <div className="card-actions justify-end">
             <Link href={`/blog/${id}`} className="hover:underline">
               Read more...
