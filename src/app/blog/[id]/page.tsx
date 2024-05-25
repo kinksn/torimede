@@ -34,7 +34,9 @@ const BlogDetailPage: FC<BlogDetailPageProps> = async ({ params }) => {
         <h2 className="text-2xl font-bold my-4">{post?.title}</h2>
         <ButtonAction id={params.id} />
       </div>
-      <span className="badge badge-neutral">{post?.tag.name}</span>
+      {post?.tag && (
+        <span className="badge badge-neutral">{post.tag.name}</span>
+      )}
       <p className="text-state-700">{post?.content}</p>
     </div>
   );

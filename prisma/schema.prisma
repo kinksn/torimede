@@ -25,6 +25,6 @@ model Post {
   content String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tagId String
-  tag Tag @relation(fields: [tagId], references: [id])
+  tagId String?
+  tag Tag? @relation(fields: [tagId], references: [id])
 }

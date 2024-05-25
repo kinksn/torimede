@@ -7,7 +7,7 @@ type PostCardProps = {
     id: string;
     title: string;
     content: string;
-    tag: Tag;
+    tag?: Tag;
   };
 };
 
@@ -20,7 +20,7 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
         <h2 className="card-title">{title}</h2>
         <p>{content.slice(0, 60)}</p>
         <div className="card-actions justify-end">
-          <span className="badge badge-neutral">{tag.name}</span>
+          {tag && <span className="badge badge-neutral">{tag.name}</span>}
           <div className="card-actions justify-end">
             <Link href={`/blog/${id}`} className="hover:underline">
               Read more...

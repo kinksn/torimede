@@ -26,7 +26,10 @@ async function getPosts() {
       createdAt: "desc",
     },
   });
-  return response;
+  return response.map((post) => ({
+    ...post,
+    tag: post.tag ?? undefined,
+  }));
 }
 
 export default async function Home() {

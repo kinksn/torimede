@@ -1,7 +1,7 @@
 export type FormInputPost = {
   title: string;
   content: string;
-  tagId: string;
+  tagId?: string;
 };
 
 export type Tag = {

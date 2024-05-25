@@ -5,7 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
@@ -45,7 +46,6 @@ const FormPost: FC<FromPostProps> = ({
 
   return (
     <>
-      {!isSubmitting && <ConfirmDialog disabled={!isDirty} />}
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
         className="flex flex-col items-center justify-center gap-5 mt-10"
@@ -57,7 +57,7 @@ const FormPost: FC<FromPostProps> = ({
           className="input input-bordered w-full max-w-lg"
         />
         <textarea
-          {...register("content")}
+          {...register("content", { required: true })}
           className="textarea textarea-bordered w-full max-w-lg"
           placeholder="Post content..."
         ></textarea>
@@ -69,9 +69,7 @@ const FormPost: FC<FromPostProps> = ({
             className="select select-bordered w-full max-w-lg"
             defaultValue={""}
           >
-            <option disabled value="">
-              Select tags
-            </option>
+            <option value="">Select tags</option>
             {dataTags?.map((tag) => (
               <option key={tag.id} value={tag.id}>
                 {tag.name}
@@ -80,7 +78,10 @@ const FormPost: FC<FromPostProps> = ({
           </select>
         )}
 
-        <button type="submit" className="btn btn-primary w-full max-w-lg">
+        <button
+          type="submit"
+          className="btn bg-yellow-400 hover:bg-yellow-500 w-full max-w-lg"
+        >
           {isLoadingSubmit && <span className="loading loading-spinner"></span>}
           {isEditing
             ? isLoadingSubmit
@@ -91,6 +92,7 @@ const FormPost: FC<FromPostProps> = ({
             : "Create"}
         </button>
       </form>
+      {!isSubmitting && <ConfirmDialog disabled={!isDirty} />}
     </>
   );
 };
@@ -113,14 +115,16 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
     modalRef.current?.close();
 
     // ページ遷移を実行する前にイベントリスナーを削除
-    removeBeforeUnloadHandler();
+    window.removeEventListener("beforeunload", beforeUnloadHandler);
 
     if (isBack) {
-      router.back = originalBack.current;
-      router.back();
-    } else if (nextRoute) {
-      router.push = originalPush.current;
-      router.push(nextRoute);
+      originalBack.current();
+      return;
+    }
+
+    if (nextRoute) {
+      originalPush.current(nextRoute);
+      return;
     }
   };
 
@@ -135,46 +139,35 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
     [disabled]
   );
 
-  const addBeforeUnloadHandler = useCallback(() => {
+  useEffect(() => {
     window.addEventListener("beforeunload", beforeUnloadHandler);
-  }, [beforeUnloadHandler]);
-
-  const removeBeforeUnloadHandler = useCallback(() => {
-    window.removeEventListener("beforeunload", beforeUnloadHandler);
+    return () => {
+      window.removeEventListener("beforeunload", beforeUnloadHandler);
+    };
   }, [beforeUnloadHandler]);
 
   useEffect(() => {
     if (!disabled) {
-      addBeforeUnloadHandler();
-      return () => {
-        removeBeforeUnloadHandler();
-      };
-    }
-  }, [disabled, addBeforeUnloadHandler, removeBeforeUnloadHandler]);
-
-  useEffect(() => {
-    if (!disabled) {
-      const handleRouteChange = (url: string, isBackAction: boolean) => {
+      const handleRouteChange = (
+        url: string,
+        isBackAction: boolean = false
+      ) => {
         setNextRoute(url);
         setIsBack(isBackAction);
         handleOpenModal();
-        throw "Route change blocked.";
+        // throw "Route change blocked.";
       };
 
-      const currentPush = originalPush.current;
-      const currentBack = originalBack.current;
-
-      router.push = async (href: string | URL, options?: any) => {
-        handleRouteChange(
-          typeof href === "string" ? href : href.pathname,
-          false
-        );
+      router.push = async (url) => {
+        handleRouteChange(url);
       };
 
       router.back = () => {
         handleRouteChange(document.referrer, true);
       };
 
+      const currentPush = originalPush.current;
+      const currentBack = originalBack.current;
       return () => {
         router.push = currentPush;
         router.back = currentBack;
@@ -195,37 +188,21 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
         </p>
         <div className="modal-action">
           <form method="dialog">
-            <button className="btn">Cancel</button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleConfirm}
-            >
-              OK
-            </button>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={handleConfirm}
+              >
+                OK
+              </button>
+              <button className="btn">Cancel</button>
+            </div>
           </form>
         </div>
       </div>
     </dialog>
   );
-};
-
-type NavigationEventsProps = {
-  shouldBlock: boolean;
-};
-
-const NavigationEvents: FC<NavigationEventsProps> = ({ shouldBlock }) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    if (shouldBlock) {
-      const url = `${pathname}?${searchParams}`;
-      console.log(url);
-    }
-  }, [shouldBlock, pathname, searchParams]);
-
-  return null;
 };
 
 export default FormPost;

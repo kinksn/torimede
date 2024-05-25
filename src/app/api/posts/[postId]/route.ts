@@ -35,7 +35,7 @@ export async function PATCH(req: Request, context: ContextProps) {
       data: {
         title: body.title,
         content: body.content,
-        tagId: body.tagId,
+        tagId: body.tagId || null,
       },
     });
     return NextResponse.json({ message: "update success" }, { status: 200 });
