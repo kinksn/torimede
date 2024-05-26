@@ -80,7 +80,7 @@ const FormPost: FC<FromPostProps> = ({
 
         <button
           type="submit"
-          className="btn bg-yellow-400 hover:bg-yellow-500 w-full max-w-lg"
+          className="btn bg-yellow-400 hover:bg-yellow-500 w-full max-w-lg text-gray-900"
         >
           {isLoadingSubmit && <span className="loading loading-spinner"></span>}
           {isEditing

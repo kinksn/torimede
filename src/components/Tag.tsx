@@ -3,9 +3,8 @@
 import { X } from "lucide-react";
 import { FC } from "react";
 import { Tag } from "@prisma/client";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useDeleteTag } from "@/hooks/useTags";
+import { relative } from "path";
 
 type TagProps = {
   tag: Tag;
@@ -14,26 +13,21 @@ type TagProps = {
 
 const Tag: FC<TagProps> = ({ tag, isEdit = false }) => {
   const { id, name } = tag;
-  const router = useRouter();
-  const { mutate: deleteTag } = useMutation({
-    mutationFn: async () => {
-      return axios.delete(`/api/tags/${id}`);
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-    onSuccess: () => {
-      console.log("tag is deleted");
-      router.refresh();
-    },
-  });
+  const { mutate: deleteTag } = useDeleteTag();
 
   return (
-    <span className="badge badge-neutral">
+    <span className="badge badge-neutral flex px-2 py-3">
       {name}
       {isEdit && (
-        <button className="btn btn-circle" onClick={() => deleteTag()}>
-          <X />
+        <button
+          className="btn btn-circle w-4 h-4 min-h-4 flex items-center justify-center ml-3"
+          style={{
+            position: "relative",
+            right: "-2px",
+          }}
+          onClick={() => deleteTag(id)}
+        >
+          <X className="w-3 h-3" />
         </button>
       )}
     </span>

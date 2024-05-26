@@ -1,6 +1,7 @@
 import BackButton from "@/components/BackButton";
 import ButtonAction from "@/components/ButtonAction";
 import { db } from "@/lib/db";
+import Tag from "@/components/Tag";
 import { FC } from "react";
 
 type BlogDetailPageProps = {
@@ -34,9 +35,7 @@ const BlogDetailPage: FC<BlogDetailPageProps> = async ({ params }) => {
         <h2 className="text-2xl font-bold my-4">{post?.title}</h2>
         <ButtonAction id={params.id} />
       </div>
-      {post?.tag && (
-        <span className="badge badge-neutral">{post.tag.name}</span>
-      )}
+      {post?.tag && <Tag tag={post.tag} />}
       <p className="text-state-700">{post?.content}</p>
     </div>
   );
