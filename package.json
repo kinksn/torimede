@@ -6,13 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "studio": "dotenv -e .env -- npx prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
     "@tanstack/react-query": "^5.37.1",
     "@tanstack/react-query-next-experimental": "^5.37.1",
     "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "lucide-react": "^0.379.0",
     "next": "14.2.3",
     "react": "^18",

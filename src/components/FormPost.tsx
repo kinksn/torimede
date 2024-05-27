@@ -130,6 +130,7 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
 
   const beforeUnloadHandler = useCallback(
     (event: BeforeUnloadEvent) => {
+      console.log(event);
       if (!disabled) {
         event.preventDefault();
         // これがないとChromeで動作しない
