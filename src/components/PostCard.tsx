@@ -1,5 +1,8 @@
+"use client";
+
 import { default as PostTag } from "@/components/Tag";
 import { Tag } from "@prisma/client";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -14,9 +17,14 @@ type PostCardProps = {
 
 const PostCard: FC<PostCardProps> = ({ post }) => {
   const { id, title, content, tag } = post;
+  const { data, status } = useSession();
+  console.log("data = " + JSON.stringify(data));
+  console.log("status = " + status);
 
   return (
     <div className="card w-full bg-base-100 shadow-xl border">
+      <button onClick={() => signIn("google")}>google</button>
+      <button onClick={() => signOut()}>signout</button>
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
         <p>{content.slice(0, 60)}</p>
