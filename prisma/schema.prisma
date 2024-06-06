@@ -39,6 +39,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  password      String?
   isAdmin       Boolean   @default(false)
 
   @@map("users")

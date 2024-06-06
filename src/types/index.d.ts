@@ -9,8 +9,7 @@ export type Tag = {
   name: string;
 };
 
-// export type Post = {
-//   id: string;
-//   title: string;
-//   content: string;
-// };
+export type Login = {
+  email: string;
+  password: string;
+};
