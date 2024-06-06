@@ -16,12 +16,8 @@ export type Login = {
   password: string;
 };
 
-const signUpFormSchema = z
-  .object({
-    name: z.string(),
-    email: z.string().email(),
-    password: z.string().min(6),
-  })
-  .strict();
-
-export type SignUp = z.infer<typeof signUpFormSchema>;
+export type SignUp = {
+  email: string;
+  password: string;
+  name: string;
+};
