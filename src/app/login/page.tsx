@@ -5,7 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-const Login = () => {
+const LoginPage = () => {
   const { data, status } = useSession();
   console.log("data = " + JSON.stringify(data));
   console.log("status = " + status);
@@ -61,4 +61,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
