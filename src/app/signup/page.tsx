@@ -4,15 +4,9 @@ import React from "react";
 import { SignUp } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-const signUpFormSchema = z
-  .object({
-    name: z.string().min(1, "1文字以上入力してください"),
-    email: z.string().email("メールアドレスの形式で入力してください"),
-    password: z.string().min(6, "6文字以上入力してください"),
-  })
-  .strict();
+import { signUpFormSchema } from "@/app/api/user/schema";
+import { useRouter } from "next/navigation";
+import { useCreateUser } from "@/hooks/useUsers";
 
 const SignUpPage = () => {
   const {
@@ -23,9 +17,19 @@ const SignUpPage = () => {
     defaultValues: { name: "", email: "", password: "" },
     resolver: zodResolver(signUpFormSchema),
   });
+  const { mutate: createUser } = useCreateUser();
+  const router = useRouter();
 
   const signup = (data: SignUp) => {
-    console.log(data);
+    createUser(data, {
+      onSuccess: () => {
+        router.push("/");
+        router.refresh();
+      },
+      onError: (error) => {
+        alert(error?.message);
+      },
+    });
   };
 
   return (
