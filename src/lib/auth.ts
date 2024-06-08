@@ -29,14 +29,14 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (user && user.password) {
-          // const isValid = await bcrypt.compare(
-          //   credentials.password,
-          //   user.password
-          // );
-          // if (isValid) {
-          //   return user;
-          // }
-          return user;
+          const isValid = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+          if (isValid) {
+            return user;
+          }
+          // return user;
         }
         return null;
       },
@@ -52,12 +52,12 @@ export const authOptions: NextAuthOptions = {
           email: token.email!,
         },
       });
-      token.isAdmin = userInDb?.isAdmin!;
+      token.isAdmin = userInDb?.isAdmin ?? false;
       return token;
     },
     async session({ token, session }) {
       if (token && session.user) {
-        session.user.isAdmin! = token.isAdmin;
+        session.user.isAdmin = token.isAdmin as boolean;
       }
       return session;
     },
