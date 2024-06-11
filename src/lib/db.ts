@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
+  if (process.env.NODE_ENV === "test") {
+    const { mockPrisma } = require("./test/mocks/mockPrisma");
+    return mockPrisma;
+  }
   return new PrismaClient();
 };
 

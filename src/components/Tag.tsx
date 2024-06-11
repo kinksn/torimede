@@ -2,9 +2,8 @@
 
 import { X } from "lucide-react";
 import { FC } from "react";
-import { Tag } from "@prisma/client";
+import type { Tag } from "@prisma/client";
 import { useDeleteTag } from "@/hooks/useTags";
-import { relative } from "path";
 
 type TagProps = {
   tag: Tag;

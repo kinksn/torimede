@@ -1,5 +1,6 @@
 import { z } from "zod";
 import NextAuth from "next-auth";
+import { Post } from "@prisma/client";
 
 export type FormInputPost = {
   title: string;
@@ -10,6 +11,10 @@ export type FormInputPost = {
 export type Tag = {
   id: string;
   name: string;
+};
+
+export type PostInTag = Post & {
+  tag?: Tag;
 };
 
 export type Login = {
