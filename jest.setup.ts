@@ -1,5 +1,8 @@
+// このファイルでは各テストファイルが実行されるセットアップコードを定義している
+
 // @testing-library/jest-domをインポートしてカスタムマッチャーを使用可能にする
 import "@testing-library/jest-dom";
+// テスト環境で fetch が使えるように
 import "isomorphic-fetch";
 
 // 必要に応じて、他のセットアップコードを追加できます
@@ -11,7 +14,8 @@ import "isomorphic-fetch";
 //   };
 // });
 
-// NextResponseのモック
+// Next.jsのNextResponseオブジェクトのモックを設定
+// これにより、NextResponse.jsonメソッドが特定の動作をシミュレートするようにカスタマイズされる
 jest.mock("next/server", () => ({
   NextResponse: {
     json: jest.fn().mockImplementation((data, init) => {

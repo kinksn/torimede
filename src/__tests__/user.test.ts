@@ -1,65 +1,77 @@
-import { mockPrisma } from "./mocks/prismaMock";
+import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 import { POST } from "../app/api/user/route";
 import bcrypt from "bcrypt";
-import { PrismaClient, Prisma } from "@prisma/client";
 
-jest.mock("bcrypt", () => ({
-  hash: jest.fn((password, saltRounds) =>
-    Promise.resolve(`hashed_${password}`)
-  ),
-}));
+const postRequestUser = (
+  body?: { name: string; email: string; password: string },
+  apiUrl?: string
+) => {
+  return new Request((apiUrl = `${process.env.API_URL}/user`), {
+    method: "POST",
+    body: JSON.stringify(
+      (body = {
+        name: "John Doe",
+        email: "john.doe@example.com",
+        password: "password1234",
+      })
+    ),
+  });
+};
 
 describe("User API", () => {
-  test("should create a new user successfully", async () => {
+  it("新規ユーザーが作成できること", async () => {
     const body = {
       name: "John Doe",
       email: "john.doe@example.com",
-      password: "password123",
+      password: "password1234",
     };
 
-    const req = new Request("http://localhost:3000/api/user", {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
+    // POST APIの引数に渡すためのRequestオブジェクトを生成
+    const req = postRequestUser(body);
 
-    const today = new Date();
-
-    const hashedPassword = `hashed_${body.password}`;
-    const user = {
-      id: "1",
-      name: body.name,
-      email: body.email,
-      emailVerified: null,
-      image: null,
-      createdAt: today,
-      updatedAt: today,
-      password: hashedPassword,
-      isAdmin: false,
-    };
-
-    mockPrisma.user.create.mockImplementation((args) => {
+    // POST(req)実行後、APIの`db.user.create`の実行を補足してreturnの内容のPormiseオブジェクトを返却する
+    db.user.create.mockImplementation((args: Prisma.UserCreateArgs) => {
       return Promise.resolve({
         ...args.data,
-        id: "1",
-        createdAt: today,
-        updatedAt: today,
-        emailVerified: null,
-        image: null,
-        isAdmin: false,
-      }) as unknown as Prisma.Prisma__UserClient<typeof user>;
+      });
     });
 
     const res = await POST(req);
     const json = await res.json();
 
-    console.log("Response status:", res.status);
-    console.log("Response json:", json);
-
     expect(res.status).toBe(200);
-    expect(json).toEqual(user);
+    expect(json).toEqual(
+      expect.objectContaining({
+        name: body.name,
+        email: body.email,
+      })
+    );
   });
 
-  test("should return validation error", async () => {
+  it("ハッシュ化したパスワードが元と一致していること", async () => {
+    const body = {
+      name: "John Doe",
+      email: "john.doe@example.com",
+      password: "password1234",
+    };
+
+    const req = postRequestUser(body);
+
+    db.user.create.mockImplementation((args: Prisma.UserCreateArgs) => {
+      return Promise.resolve({
+        ...args.data,
+      });
+    });
+
+    const res = await POST(req);
+    const json = await res.json();
+
+    const isMatch = await bcrypt.compare(body.password, json.password);
+    expect(isMatch).toBe(true);
+  });
+
+  it("バリデーションを満たさない場合エラーになること", async () => {
     const req = new Request("http://localhost:3000/api/user", {
       method: "POST",
       body: JSON.stringify({
@@ -76,7 +88,7 @@ describe("User API", () => {
     expect(json.errors).toBeDefined();
   });
 
-  test("should return server error on user creation failure", async () => {
+  it("ユーザー作成に失敗すると500サーバーエラーを返すこと", async () => {
     const req = new Request("http://localhost:3000/api/user", {
       method: "POST",
       body: JSON.stringify({
@@ -86,7 +98,7 @@ describe("User API", () => {
       }),
     });
 
-    mockPrisma.user.create.mockRejectedValue(new Error("Database error"));
+    db.user.create.mockRejectedValue(new Error("Database error"));
 
     const res = await POST(req);
     const json = await res.json();

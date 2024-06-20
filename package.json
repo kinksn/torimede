@@ -25,6 +25,7 @@
     "@testing-library/dom": "^10.1.0",
     "@types/bcrypt": "^5.0.2",
     "axios": "^1.7.2",
+    "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "lucide-react": "^0.379.0",

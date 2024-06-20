@@ -1,3 +1,5 @@
+// このファイルはプロジェクト全体のJestの設定をしている
+
 import nextJest from "next/jest.js";
 
 const createJestConfig = nextJest({
