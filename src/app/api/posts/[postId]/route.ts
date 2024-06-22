@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { getAuthSession } from "@/lib/auth";
 
 type ContextProps = {
   params: {
@@ -7,9 +8,17 @@ type ContextProps = {
   };
 };
 
-export async function DELETE(_req: Request, context: ContextProps) {
+export async function DELETE(req: Request, context: ContextProps) {
   try {
+    const session = await getAuthSession();
     const { params } = context;
+    const body = await req.json();
+    if (session?.user?.id !== body.userId) {
+      return NextResponse.json(
+        { message: "not arrow update post" },
+        { status: 500 }
+      );
+    }
     await db.post.delete({
       where: {
         id: params.postId,
@@ -26,8 +35,15 @@ export async function DELETE(_req: Request, context: ContextProps) {
 
 export async function PATCH(req: Request, context: ContextProps) {
   try {
+    const session = await getAuthSession();
     const { params } = context;
     const body = await req.json();
+    if (session?.user?.id !== body.userId) {
+      return NextResponse.json(
+        { message: "not arrow update post" },
+        { status: 500 }
+      );
+    }
     await db.post.update({
       where: {
         id: params.postId,

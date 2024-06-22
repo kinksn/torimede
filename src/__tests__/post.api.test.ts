@@ -62,6 +62,8 @@ describe("正常系", () => {
       return Promise.resolve({
         ...args.data,
         id: "2",
+        // `getAuthSession`でセッション情報からログインユーザーのuserIdを取得
+        userId: "1",
       });
     });
 
@@ -69,7 +71,7 @@ describe("正常系", () => {
     const posts = await res.json();
 
     expect(res.status).toBe(200);
-    expect(posts).toEqual(expect.objectContaining(body));
+    expect(posts).toEqual(expect.objectContaining({ ...body, userId: "1" }));
   });
 
   it("投稿を更新できること（PATCH）", async () => {
@@ -77,6 +79,8 @@ describe("正常系", () => {
       title: "Updated Title",
       content: "Updated content",
       tagId: "1",
+      // `getAuthSession`でセッション情報からログインユーザーのuserIdを取得
+      userId: "1",
     };
 
     db.post.update.mockImplementation((args: Prisma.PostUpdateArgs) => {
@@ -96,9 +100,11 @@ describe("正常系", () => {
   });
 
   it("投稿を削除できること（DELETE）", async () => {
+    const body = { userId: "1" };
+
     db.post.delete.mockResolvedValue({});
 
-    const req = createDELETERequest(`/posts/${mockPost.id}`);
+    const req = createDELETERequest(body, `/posts/${mockPost.id}`);
     const context = { params: { postId: mockPost.id } };
 
     const res = await DELETE(req, context);
