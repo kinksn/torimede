@@ -14,8 +14,9 @@ export const createPATCHRequest = (body: RequestBody, endpoint: string) => {
   });
 };
 
-export const createDELETERequest = (endpoint: string) => {
+export const createDELETERequest = (body: RequestBody, endpoint: string) => {
   return new Request(`${process.env.API_URL}${endpoint}`, {
     method: "DELETE",
+    body: JSON.stringify(body),
   });
 };

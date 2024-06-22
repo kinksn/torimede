@@ -40,8 +40,10 @@ const EditPostPage: FC<EditPostPageProps> = ({ params }) => {
     },
   });
 
-  const handleEditPost: SubmitHandler<FormInputPost> = (data) => {
-    updatePost(data);
+  const handleEditPost: SubmitHandler<FormInputPost> = (newPost) => {
+    // リクエストオブジェクトにuserIdを追加
+    if (dataPosts?.userId) newPost.userId = dataPosts.userId;
+    updatePost(newPost);
   };
 
   if (isLoadingPost) {

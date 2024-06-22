@@ -9,13 +9,14 @@ import { useRouter } from "next/navigation";
 
 type ButtonActionProps = {
   id: string;
+  userId: string;
 };
 
-const ButtonAction: FC<ButtonActionProps> = ({ id }) => {
+const ButtonAction: FC<ButtonActionProps> = ({ id, userId }) => {
   const router = useRouter();
   const { mutate: deletePost, isPending } = useMutation({
-    mutationFn: async () => {
-      return axios.delete(`/api/posts/${id}`);
+    mutationFn: async (userId: string) => {
+      return axios.delete(`/api/posts/${id}`, { data: { userId } });
     },
     onError: (error) => {
       console.error(error);
@@ -32,7 +33,7 @@ const ButtonAction: FC<ButtonActionProps> = ({ id }) => {
         <Pen />
         Edit
       </Link>
-      <button onClick={() => deletePost()} className="btn btn-error">
+      <button onClick={() => deletePost(userId)} className="btn btn-error">
         {isPending ? (
           <span className="loading loading-spinner loading-xs"></span>
         ) : (

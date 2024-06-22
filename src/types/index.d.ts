@@ -6,6 +6,7 @@ export type FormInputPost = {
   title: string;
   content: string;
   tagId?: string;
+  userId?: string;
 };
 
 export type Tag = {
