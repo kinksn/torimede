@@ -36,6 +36,7 @@ declare module "next-auth" {
       email?: string | null;
       image?: string | null;
       isAdmin: boolean; // ここにisAdminを追加
+      id: string | null;
     };
   }
 

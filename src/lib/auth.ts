@@ -58,6 +58,7 @@ export const authOptions: NextAuthOptions = {
     async session({ token, session }) {
       if (token && session.user) {
         session.user.isAdmin = token.isAdmin as boolean;
+        session.user.id = token.sub || null;
       }
       return session;
     },

@@ -31,7 +31,6 @@ const LoginPage = () => {
   });
 
   const login = async (data: Login) => {
-    console.log("data = ", data);
     const res = await signIn("credentials", {
       redirect: false,
       email: data.email,
