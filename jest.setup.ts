@@ -28,10 +28,3 @@ jest.mock("next/server", () => ({
     }),
   },
 }));
-
-// getAuthSessionのモック
-jest.mock("./src/lib/auth", () => ({
-  getAuthSession: jest.fn().mockResolvedValue({
-    user: { id: "1", email: "test@example.com" },
-  }),
-}));

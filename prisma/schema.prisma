@@ -19,6 +19,13 @@ model Tag {
   post Post[]
 }
 
+model Cute {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
 model Post {
   id        String   @id @default(cuid())
   title     String   @db.VarChar(225)
@@ -29,6 +36,7 @@ model Post {
   tag       Tag?     @relation(fields: [tagId], references: [id])
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+  cutes     Cute[]
 }
 
 model User {
