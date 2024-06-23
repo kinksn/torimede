@@ -34,6 +34,8 @@ model Post {
   updatedAt DateTime @updatedAt
   tagId     String?
   tag       Tag?     @relation(fields: [tagId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   cutes     Cute[]
 }
 
@@ -49,6 +51,7 @@ model User {
   sessions      Session[]
   password      String?
   isAdmin       Boolean   @default(false)
+  Post          Post[]
 
   @@map("users")
 }

@@ -9,6 +9,13 @@ import {
 } from "@/lib/test/testUtil";
 import { Prisma } from "@prisma/client";
 
+// getAuthSessionのモック
+jest.mock("../lib/auth", () => ({
+  getAuthSession: jest.fn().mockResolvedValue({
+    user: { id: "1", email: "test@example.com" },
+  }),
+}));
+
 const mockPost = {
   id: "1",
   title: "Post Title",
@@ -104,7 +111,7 @@ describe("正常系", () => {
 
     db.post.delete.mockResolvedValue({});
 
-    const req = createDELETERequest(body, `/posts/${mockPost.id}`);
+    const req = createDELETERequest(`/posts/${mockPost.id}`, body);
     const context = { params: { postId: mockPost.id } };
 
     const res = await DELETE(req, context);
