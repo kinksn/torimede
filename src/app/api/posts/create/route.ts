@@ -15,6 +15,7 @@ export async function POST(req: Request) {
         content: body.content,
         tagId: body.tagId || null,
         userId: session.user.id,
+        image: body.image || null,
       },
     });
     return NextResponse.json(post, { status: 200 });

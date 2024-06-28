@@ -5,6 +5,7 @@ import { Post } from "@prisma/client";
 export type FormInputPost = {
   title: string;
   content: string;
+  image?: string;
   tagId?: string;
   userId?: string;
 };
@@ -14,8 +15,9 @@ export type Tag = {
   name: string;
 };
 
-export type PostInTag = Post & {
+export type PostAddRelationFields = Post & {
   tag?: Tag;
+  image?: string;
 };
 
 export type Login = {

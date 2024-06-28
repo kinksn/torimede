@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import Tag from "@/components/Tag";
 import { FC } from "react";
 import { getAuthSession } from "@/lib/auth";
+import Image from "next/image";
 import CuteButton from "@/components/CuteButton";
 
 type BlogDetailPageProps = {
@@ -21,6 +22,7 @@ async function getPost(id: string) {
       id: true,
       title: true,
       content: true,
+      image: true,
       tag: true,
       userId: true,
       cutes: true,
@@ -49,6 +51,9 @@ const BlogDetailPage: FC<BlogDetailPageProps> = async ({ params }) => {
         )}
       </div>
       {post?.tag && <Tag tag={post.tag} />}
+      {post?.image && (
+        <Image src={post.image} alt="" width="100" height="100" />
+      )}
       <p className="text-state-700">{post?.content}</p>
     </div>
   );

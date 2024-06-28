@@ -1,10 +1,10 @@
 import { db } from "@/lib/db";
-import { PostInTag } from "@/types";
+import { PostAddRelationFields } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const posts: PostInTag[] = await db.post.findMany({
+    const posts: PostAddRelationFields[] = await db.post.findMany({
       /**
      * 以下が全てのフィールドだが、
      * selectで必要なフィールドだけ返すように設定できる
@@ -21,6 +21,7 @@ export async function GET() {
         id: true,
         title: true,
         content: true,
+        image: true,
         // リレーショナルフィールドも出力できる
         tag: true,
       },
@@ -31,6 +32,7 @@ export async function GET() {
     return NextResponse.json(
       posts.map((post) => ({
         ...post,
+        image: post.image ?? undefined,
         tag: post.tag ?? undefined,
       })),
       { status: 200 }

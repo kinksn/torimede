@@ -3,10 +3,16 @@
 import { FormInputPost, Tag } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  ChangeEvent,
+} from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
@@ -22,15 +28,58 @@ const FormPost: FC<FromPostProps> = ({
   isLoadingSubmit,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const { register, handleSubmit, formState } = useForm<FormInputPost>({
-    defaultValues: !!initialValue
+    defaultValues: initialValue
       ? initialValue
-      : { title: "", content: "", tagId: "" },
+      : { title: "", content: "", tagId: "", image: "" },
   });
 
-  const handleFormSubmit = (data: FormInputPost) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      setFile(files[0]);
+    }
+  };
+
+  const uploadImage = async (
+    file: File | null,
+    currentImage: string
+  ): Promise<string | null> => {
+    if (!file) {
+      return currentImage || "";
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post("/api/posts/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (res.status !== 200) {
+        console.error("Image upload failed");
+        return null;
+      }
+      return res.data.fileUrl;
+    } catch (error) {
+      console.error("Image upload failed", error);
+      return null;
+    }
+  };
+
+  const handleFormSubmit: SubmitHandler<FormInputPost> = async (data) => {
     setIsSubmitting(true);
-    submit(data);
+
+    const imageUrl = await uploadImage(file, data.image || "");
+    if (!imageUrl) {
+      setIsSubmitting(false);
+      return;
+    }
+
+    submit({ ...data, image: imageUrl });
   };
 
   const { isDirty } = formState;
@@ -61,6 +110,12 @@ const FormPost: FC<FromPostProps> = ({
           className="textarea textarea-bordered w-full max-w-lg"
           placeholder="Post content..."
         ></textarea>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          className="input input-bordered w-full max-w-lg"
+          accept="image/*,.png,.jpg,.jpeg,.gif"
+        />
         {isLoadingTags ? (
           <span className="loading loading-dots loading-md"></span>
         ) : (
@@ -130,7 +185,6 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
 
   const beforeUnloadHandler = useCallback(
     (event: BeforeUnloadEvent) => {
-      console.log(event);
       if (!disabled) {
         event.preventDefault();
         // これがないとChromeで動作しない
