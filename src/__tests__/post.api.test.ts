@@ -69,7 +69,7 @@ describe("正常系", () => {
       return Promise.resolve({
         ...args.data,
         id: "2",
-        // `getAuthSession`でセッション情報からログインユーザーのuserIdを取得
+        // `getAuthSession`でセッション情報からログインユーザーのuserId
         userId: "1",
       });
     });
@@ -86,7 +86,7 @@ describe("正常系", () => {
       title: "Updated Title",
       content: "Updated content",
       tagId: "1",
-      // `getAuthSession`でセッション情報からログインユーザーのuserIdを取得
+      // `getAuthSession`でセッション情報からログインユーザーのuserId
       userId: "1",
     };
 
@@ -107,6 +107,7 @@ describe("正常系", () => {
   });
 
   it("投稿を削除できること（DELETE）", async () => {
+    // `getAuthSession`でセッション情報からログインユーザーのuserId
     const body = { userId: "1" };
 
     db.post.delete.mockResolvedValue({});
@@ -118,4 +119,21 @@ describe("正常系", () => {
 
     expect(res.status).toBe(204);
   });
+
+  // it("ファイルをアップロードできること（UPLOAD）", async () => {
+  //   const filePath = path.join(__dirname, "./assets/test.jpg");
+  //   const fileBuffer = fs.readFileSync(filePath);
+  //   const { url, options } = createFileUploadRequest(
+  //     fileBuffer,
+  //     "test.jpg",
+  //     "image/jpg",
+  //     "/posts/upload"
+  //   );
+
+  //   const res = await UPLOAD(new Request(url, options));
+  //   const result = await res.json();
+
+  //   expect(res.status).toBe(200);
+  //   expect(result).toHaveProperty("fileUrl");
+  // });
 });

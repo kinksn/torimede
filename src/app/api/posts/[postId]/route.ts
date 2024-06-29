@@ -51,6 +51,7 @@ export async function PATCH(req: Request, context: ContextProps) {
       data: {
         title: body.title,
         content: body.content,
+        image: body.image || null,
         tagId: body.tagId || null,
       },
     });
