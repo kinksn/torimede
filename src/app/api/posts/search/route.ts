@@ -14,13 +14,19 @@ export async function GET(req: Request) {
       );
     }
 
+    const keywords = query
+      .split(/\s+|　+/)
+      .filter((keyword) => keyword.trim() !== "");
+
     const posts = await db.post.findMany({
       where: {
-        OR: [
-          // `mode: "insensitive"`は検索クエリの大文字小文字を区別しないオプション
-          { title: { contains: query, mode: "insensitive" } },
-          { content: { contains: query, mode: "insensitive" } },
-        ],
+        OR: keywords.map((keyword) => ({
+          OR: [
+            // `mode: "insensitive"`は検索クエリの大文字小文字を区別しないオプション
+            { title: { contains: keyword, mode: "insensitive" } },
+            { content: { contains: keyword, mode: "insensitive" } },
+          ],
+        })),
       },
       include: {
         tag: true,
@@ -30,7 +36,7 @@ export async function GET(req: Request) {
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { message: "could not get post" },
+      { message: "投稿の検索中にエラーが発生しました" },
       { status: 500 }
     );
   }
