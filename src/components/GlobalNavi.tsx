@@ -4,9 +4,16 @@ import { Bird } from "lucide-react";
 import Link from "next/link";
 import { SearchForm } from "@/components/SearchForm";
 import { signOut, useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
-export const GlobalNavi = () => {
-  const { status } = useSession();
+type GlobalNaviProps = {
+  initialSession: Session | null;
+};
+
+export const GlobalNavi = ({ initialSession }: GlobalNaviProps) => {
+  const { data: session } = useSession();
+  // サーバーから得たセッション情報とクライアントのセッション情報を組み合わせている
+  const isAuthenticated = initialSession || session;
   return (
     <div className="navbar bg-neutral-100">
       <div className="container">
@@ -19,23 +26,7 @@ export const GlobalNavi = () => {
         <SearchForm />
         <div className="flex-none">
           <div className="flex">
-            {status === "unauthenticated" && (
-              <>
-                <Link
-                  href="/login"
-                  className="btn btn-ghost hover:bg-yellow-400 hover:text-white"
-                >
-                  ログイン
-                </Link>
-                <Link
-                  href="/signup"
-                  className="btn btn-ghost hover:bg-yellow-400 hover:text-white"
-                >
-                  新規登録
-                </Link>
-              </>
-            )}
-            {status === "authenticated" && (
+            {isAuthenticated ? (
               <>
                 <Link
                   href="/create"
@@ -49,6 +40,21 @@ export const GlobalNavi = () => {
                 >
                   ログアウト
                 </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="btn btn-ghost hover:bg-yellow-400 hover:text-white"
+                >
+                  ログイン
+                </Link>
+                <Link
+                  href="/signup"
+                  className="btn btn-ghost hover:bg-yellow-400 hover:text-white"
+                >
+                  新規登録
+                </Link>
               </>
             )}
           </div>
