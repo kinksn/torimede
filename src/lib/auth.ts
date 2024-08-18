@@ -2,6 +2,8 @@ import { db } from "@/lib/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions, getServerSession } from "next-auth";
 import Google from "next-auth/providers/google";
+import LineProvider from "next-auth/providers/line";
+import TwitterProvider from "next-auth/providers/twitter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { UserId } from "@/app/api/user/model";
@@ -12,6 +14,15 @@ export const authOptions: NextAuthOptions = {
     Google({
       clientId: process.env.GOOGLE_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
+    }),
+    LineProvider({
+      clientId: process.env.LINE_CLIENT_ID!,
+      clientSecret: process.env.LINE_CLIENT_SECRET!,
+    }),
+    TwitterProvider({
+      clientId: process.env.TWITTER_CLIENT_ID!,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
+      // version: "2.0",
     }),
     CredentialsProvider({
       name: "Credentials",

@@ -82,6 +82,10 @@ const LoginPage = () => {
       <button onClick={() => signIn("google", { callbackUrl: "/" })}>
         google
       </button>
+      <button onClick={() => signIn("line", { callbackUrl: "/" })}>LINE</button>
+      <button onClick={() => signIn("twitter", { callbackUrl: "/" })}>
+        X(Twitter)
+      </button>
       <button onClick={() => signOut()}>signout</button>
     </div>
   );
