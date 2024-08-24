@@ -7,7 +7,7 @@ import { getAuthSession } from "@/lib/auth";
 import Image from "next/image";
 import CuteButton from "@/components/CuteButton";
 
-type BlogDetailPageProps = {
+type PostProps = {
   params: {
     id: string;
   };
@@ -31,7 +31,7 @@ async function getPost(id: string) {
   return response;
 }
 
-const BlogDetailPage: FC<BlogDetailPageProps> = async ({ params }) => {
+const BlogDetailPage: FC<PostProps> = async ({ params }) => {
   const post = await getPost(params.id);
   const session = await getAuthSession();
 

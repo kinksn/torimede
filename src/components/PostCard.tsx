@@ -28,7 +28,7 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
         <div className="card-actions justify-end">
           {tag && <PostTag tag={tag} />}
           <div className="card-actions justify-end">
-            <Link href={`/blog/${id}`} className="hover:underline">
+            <Link href={`/post/${id}`} className="hover:underline" passHref>
               Read more...
             </Link>
           </div>

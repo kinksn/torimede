@@ -5,6 +5,7 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import PostCard from "@/components/PostCard";
 import { PostAddRelationFields } from "@/types";
+import BackButton from "@/components/BackButton";
 
 const searchPosts = async (query: string): Promise<PostAddRelationFields[]> => {
   const { data } = await axios.get(
@@ -29,6 +30,7 @@ export default function PostsPage() {
 
   return (
     <div className="container mx-auto px-4">
+      <BackButton />
       <h1 className="text-2xl font-bold mb-4">投稿一覧</h1>
       {isLoading ? (
         <div>読み込み中...</div>

@@ -27,7 +27,7 @@ export const SearchForm = () => {
 
   const onSubmit: SubmitHandler<SearchFormInputs> = (data) => {
     if (data.searchQuery.trim()) {
-      router.push(`/posts?q=${encodeURIComponent(data.searchQuery.trim())}`);
+      router.push(`/post?q=${encodeURIComponent(data.searchQuery.trim())}`);
     }
   };
 
