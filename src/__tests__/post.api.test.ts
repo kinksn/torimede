@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
-import { GET as GET_ALL_POST } from "@/app/api/posts/route";
-import { DELETE, PATCH, GET } from "@/app/api/posts/[postId]/route";
-import { POST } from "@/app/api/posts/create/route";
+import { GET as GET_ALL_POST } from "@/app/api/post/route";
+import { DELETE, PATCH, GET } from "@/app/api/post/[postId]/route";
+import { POST } from "@/app/api/post/create/route";
 import {
   createDELETERequest,
   createPATCHRequest,

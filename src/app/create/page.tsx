@@ -15,7 +15,7 @@ const CreatePage = () => {
 
   const { mutate: createPost, isPending: isLoadingSubmit } = useMutation({
     mutationFn: (newPost: FormInputPost) => {
-      return axios.post("/api/posts/create", newPost);
+      return axios.post("/api/post/create", newPost);
     },
     onError: (error) => {
       console.error(error);

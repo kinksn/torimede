@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import { GlobalNavi } from "@/components/GlobalNavi";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,13 +15,21 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="ja">
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <GlobalNavi initialSession={session} />
+          <div className="container h-full pt-12">{children}</div>
+          {modal}
+        </Providers>
       </body>
     </html>
   );

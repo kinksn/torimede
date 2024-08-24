@@ -9,7 +9,7 @@ import BackButton from "@/components/BackButton";
 
 const searchPosts = async (query: string): Promise<PostAddRelationFields[]> => {
   const { data } = await axios.get(
-    `/api/posts/search?q=${encodeURIComponent(query)}`
+    `/api/post/search?q=${encodeURIComponent(query)}`
   );
   return data;
 };

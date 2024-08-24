@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SearchForm } from "@/components/SearchForm";
 import { signOut, useSession } from "next-auth/react";
 import { Session } from "next-auth";
+import { usePathname } from "next/navigation";
 
 type GlobalNaviProps = {
   initialSession: Session | null;
@@ -12,8 +13,15 @@ type GlobalNaviProps = {
 
 export const GlobalNavi = ({ initialSession }: GlobalNaviProps) => {
   const { data: session } = useSession();
+  const pathname = usePathname();
   // サーバーから得たセッション情報とクライアントのセッション情報を組み合わせている
   const isAuthenticated = initialSession || session;
+
+  const ignorePath = ["/login", "/signup"];
+  const isIgnoredPath = ignorePath.includes(pathname);
+
+  if (isIgnoredPath) return null;
+
   return (
     <div className="navbar bg-neutral-100">
       <div className="container">

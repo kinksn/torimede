@@ -22,14 +22,14 @@ const EditPostPage: FC<EditPostPageProps> = ({ params }) => {
   const { data: dataPosts, isLoading: isLoadingPost } = useQuery({
     queryKey: ["posts", id],
     queryFn: async () => {
-      const response = await axios.get(`/api/posts/${id}`);
+      const response = await axios.get(`/api/post/${id}`);
       return response.data;
     },
   });
 
   const { mutate: updatePost, isPending: isLoadingSubmit } = useMutation({
     mutationFn: (newPost: FormInputPost) => {
-      return axios.patch(`/api/posts/${id}`, newPost);
+      return axios.patch(`/api/post/${id}`, newPost);
     },
     onError: (error) => {
       console.error(error);

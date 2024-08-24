@@ -16,7 +16,7 @@ const ButtonAction: FC<ButtonActionProps> = ({ id, userId }) => {
   const router = useRouter();
   const { mutate: deletePost, isPending } = useMutation({
     mutationFn: async (userId: string) => {
-      return axios.delete(`/api/posts/${id}`, { data: { userId } });
+      return axios.delete(`/api/post/${id}`, { data: { userId } });
     },
     onError: (error) => {
       console.error(error);

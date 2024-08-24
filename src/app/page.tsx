@@ -1,5 +1,5 @@
 import PostCard from "@/components/PostCard";
-import { GET } from "@/app/api/posts/route";
+import { GET } from "@/app/api/post/route";
 import { PostAddRelationFields } from "@/types";
 
 export default async function Home() {
