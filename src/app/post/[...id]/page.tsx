@@ -7,7 +7,9 @@ import { getAuthSession } from "@/lib/auth";
 import Image from "next/image";
 import CuteButton from "@/components/CuteButton";
 import PostCard from "@/components/PostCard";
+import { ShareButtons } from "@/components/ShareButtons";
 import { PostAddRelationFields } from "@/types";
+import { UrlCopyButton } from "@/components/UrlCopyButton";
 
 type PostProps = {
   params: {
@@ -83,6 +85,10 @@ const BlogDetailPage: FC<PostProps> = async ({ params }) => {
         <Image src={post.image} alt="" width="100" height="100" />
       )}
       <p className="text-state-700">{post?.content}</p>
+      <div>
+        <ShareButtons text={post.title} />
+        <UrlCopyButton />
+      </div>
       {userPost.map((post) => (
         <PostCard post={post} key={post.id} />
       ))}

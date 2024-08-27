@@ -8,6 +8,8 @@ import { FC } from "react";
 import Modal from "@/components/Modal";
 import { PostAddRelationFields } from "@/types";
 import PostCard from "@/components/PostCard";
+import { ShareButtons } from "@/components/ShareButtons";
+import { UrlCopyButton } from "@/components/UrlCopyButton";
 
 type PostProps = {
   params: {
@@ -78,6 +80,10 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
         <Image src={post.image} alt="" width="100" height="100" />
       )}
       <p className="text-state-700">{post?.content}</p>
+      <div>
+        <ShareButtons text={post.title} />
+        <UrlCopyButton />
+      </div>
       {userPost.map((post: PostAddRelationFields) => (
         <PostCard post={post} key={post.id} />
       ))}
