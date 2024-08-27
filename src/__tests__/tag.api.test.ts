@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
-import { GET, POST } from "@/app/api/tags/route";
-import { DELETE } from "@/app/api/tags/[tagId]/route";
+import { GET, POST } from "@/app/api/tag/route";
+import { DELETE } from "@/app/api/tag/[tagId]/route";
 import { createDELETERequest, createPOSTRequest } from "@/lib/test/testUtil";
 import { Prisma } from "@prisma/client";
 

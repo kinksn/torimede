@@ -22,6 +22,7 @@ export async function GET() {
         title: true,
         content: true,
         image: true,
+        userId: true,
         // リレーショナルフィールドも出力できる
         tag: true,
       },

@@ -9,6 +9,7 @@ import { FC } from "react";
 type PostCardProps = {
   post: {
     id: string;
+    userId: string;
     title: string;
     content: string;
     image?: string;
@@ -17,7 +18,7 @@ type PostCardProps = {
 };
 
 const PostCard: FC<PostCardProps> = ({ post }) => {
-  const { id, title, content, image, tag } = post;
+  const { id, userId, title, content, image, tag } = post;
 
   return (
     <div className="card w-full bg-base-100 shadow-xl border">
@@ -28,7 +29,11 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
         <div className="card-actions justify-end">
           {tag && <PostTag tag={tag} />}
           <div className="card-actions justify-end">
-            <Link href={`/post/${id}`} className="hover:underline" passHref>
+            <Link
+              href={`/post/${id}/${userId}`}
+              className="hover:underline"
+              passHref
+            >
               Read more...
             </Link>
           </div>

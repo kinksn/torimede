@@ -88,7 +88,7 @@ const FormPost: FC<FromPostProps> = ({
   const { data: dataTags, isLoading: isLoadingTags } = useQuery<Tag[]>({
     queryKey: ["tags"],
     queryFn: async () => {
-      const response = await axios.get("/api/tags");
+      const response = await axios.get("/api/tag");
       return response.data;
     },
   });
