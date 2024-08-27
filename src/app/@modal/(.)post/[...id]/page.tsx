@@ -59,8 +59,6 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
   const userPost = await getPostByUserId(userId, postId);
   const session = await getAuthSession();
 
-  console.log("userPost = ", userPost);
-
   return (
     <Modal>
       <div className="mb-8">

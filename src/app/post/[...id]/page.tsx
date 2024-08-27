@@ -63,8 +63,6 @@ const BlogDetailPage: FC<PostProps> = async ({ params }) => {
   const userPost = await getPostByUserId(userId, postId);
   const session = await getAuthSession();
 
-  console.log("userPost = ", userPost);
-
   return (
     <div>
       <BackButton />
