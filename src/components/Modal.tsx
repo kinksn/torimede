@@ -7,7 +7,7 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
   const dialogRef = useRef<ElementRef<"dialog">>(null);
-  const [currentPath, setCurrentPath] = useState(pathname);
+  const [currentPath, _setCurrentPath] = useState(pathname);
 
   useEffect(() => {
     if (!dialogRef.current?.open) {

@@ -3,15 +3,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const getTags = async () => {
-  return (await axios.get<Tag[]>("/api/tags")).data;
+  return (await axios.get<Tag[]>("/api/tag")).data;
 };
 
 const createTag = async (data: Pick<Tag, "name">) => {
-  return await axios.post<Tag>("/api/tags", data);
+  return await axios.post<Tag>("/api/tag", data);
 };
 
 const deleteTag = async (id: string) => {
-  return await axios.delete(`/api/tags/${id}`);
+  return await axios.delete(`/api/tag/${id}`);
 };
 
 export function useGetTags() {
