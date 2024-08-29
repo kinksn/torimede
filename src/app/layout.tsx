@@ -1,12 +1,31 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import {
+  Comfortaa,
+  Zen_Kaku_Gothic_New,
+  Zen_Maru_Gothic,
+} from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import { GlobalNavi } from "@/components/GlobalNavi";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-const inter = Inter({ subsets: ["latin"] });
+const comfortaa = Comfortaa({
+  subsets: ["latin"],
+  variable: "--font-comfortaa",
+});
+const zenKakuGothicNew = Zen_Kaku_Gothic_New({
+  weight: ["400", "700"],
+  display: "swap",
+  variable: "--font-zen-kaku-gothic-new",
+  subsets: ["latin"],
+});
+const zenMaruGothic = Zen_Maru_Gothic({
+  weight: ["400", "700"],
+  display: "swap",
+  variable: "--font-zen-maru-gothic",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,8 +42,11 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="ja">
-      <body className={inter.className}>
+    <html
+      lang="ja"
+      className={`${zenKakuGothicNew.variable} ${zenMaruGothic.variable} ${comfortaa.variable}`}
+    >
+      <body>
         <Providers>
           <GlobalNavi initialSession={session} />
           <div className="container h-full pt-12">{children}</div>
