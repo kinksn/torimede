@@ -10,12 +10,61 @@ import PostCard from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
 import { PostAddRelationFields } from "@/types";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
+import type { Metadata, ResolvingMetadata } from "next";
 
 type PostProps = {
   params: {
     id: [postId: string, userId: string];
   };
 };
+
+type OgParams = {
+  param: string;
+  value: string;
+};
+
+const ogParamsGenerate = (params: OgParams[]) => {
+  const result = params.map((item, index) => {
+    const isFirstElement = index === 0;
+    const isLastElement = index === params.length - 1;
+    if (isLastElement) {
+      return `${item.param}=${item.value}`;
+    } else {
+      return `${isFirstElement ? "?" : ""}${item.param}=${item.value}&`;
+    }
+  });
+
+  return result.join("");
+};
+
+export async function generateMetadata(
+  { params }: PostProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const [postId] = params.id;
+  const post = await getPost(postId);
+
+  const ogParams: OgParams[] = [
+    { param: "title", value: post.title },
+    { param: "image", value: post.image },
+    { param: "userName", value: post.user.name },
+  ];
+
+  const ogImage = new URL(
+    `${process.env.NEXT_PUBLIC_API_URL}/og${ogParamsGenerate(ogParams)}`
+  );
+
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: post.title,
+    openGraph: {
+      images: [ogImage, ...previousImages],
+    },
+  };
+}
 
 async function getPost(postId: string) {
   const response = await db.post.findFirst({
@@ -30,6 +79,7 @@ async function getPost(postId: string) {
       tag: true,
       userId: true,
       cutes: true,
+      user: true,
     },
   });
   return response;
