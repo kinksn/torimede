@@ -18,8 +18,12 @@ async function calculateImageWidth(
   targetHeight: number
 ): Promise<number> {
   const res = await fetch(imageUrl);
-  const buffer = await res.arrayBuffer(); // isomorphic-fetch を使ってバッファを取得
-  const { width, height } = await sharp(Buffer.from(buffer)).metadata(); // sharpでサイズを取得
+  // arrayBuffer()メソッドはfetchで取得したレスポンスを「生のバイナリデータ」（ArrayBuffer）として取得する
+  // 画像やファイルなどバイナリデータを扱うために使う
+  const buffer = await res.arrayBuffer();
+  // BufferはNode.js環境でバイナリデータを扱うためのオブジェクト
+  // `Buffer.from(buffer)`はfetchで取得→変換したArrayBufferをNode.jsで扱えるBufferオブジェクトに変換する処理
+  const { width, height } = await sharp(Buffer.from(buffer)).metadata();
 
   // アスペクト比を保持しつつ高さを`targetHeight`に縮小した際の横幅を計算
   const aspectRatio = width! / height!;
