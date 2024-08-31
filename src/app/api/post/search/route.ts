@@ -7,6 +7,23 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q");
 
+    // 検索関数を定義
+    const fetchPostsByQuery = async (keywords: string[]) => {
+      return db.post.findMany({
+        where: {
+          OR: keywords.map((keyword) => ({
+            OR: [
+              { title: { contains: keyword, mode: "insensitive" } },
+              { content: { contains: keyword, mode: "insensitive" } },
+            ],
+          })),
+        },
+        include: {
+          tag: true,
+        },
+      });
+    };
+
     if (!query) {
       return NextResponse.json(
         { message: "検索クエリが必要です" },
@@ -18,25 +35,12 @@ export async function GET(req: Request) {
       .split(/\s+|　+/)
       .filter((keyword) => keyword.trim() !== "");
 
-    const posts = await db.post.findMany({
-      where: {
-        OR: keywords.map((keyword) => ({
-          OR: [
-            // `mode: "insensitive"`は検索クエリの大文字小文字を区別しないオプション
-            { title: { contains: keyword, mode: "insensitive" } },
-            { content: { contains: keyword, mode: "insensitive" } },
-          ],
-        })),
-      },
-      include: {
-        tag: true,
-      },
-    });
+    const posts = await fetchPostsByQuery(keywords);
 
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { message: "投稿の検索中にエラーが発生しました" },
+      { message: `投稿の検索中にエラーが発生しました： ${error}` },
       { status: 500 }
     );
   }
