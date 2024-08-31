@@ -30,6 +30,7 @@ async function getPost(postId: string) {
       tag: true,
       userId: true,
       cutes: true,
+      user: true,
     },
   });
   return response;
@@ -60,6 +61,7 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
   const post = await getPost(postId);
   const userPost = await getPostByUserId(userId, postId);
   const session = await getAuthSession();
+  const { name: userName, image: userProfileImage } = post.user;
 
   return (
     <Modal>
@@ -75,11 +77,17 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
           </>
         )}
       </div>
-      {post?.tag && <Tag tag={post.tag} />}
       {post?.image && (
         <Image src={post.image} alt="" width="100" height="100" />
       )}
+      <div className="flex">
+        {userProfileImage && (
+          <Image src={userProfileImage} alt="" width="28" height="28" />
+        )}
+        <p>{userName}</p>
+      </div>
       <p className="text-state-700">{post?.content}</p>
+      {post?.tag && <Tag tag={post.tag} />}
       <div>
         <ShareButtons text={post.title} />
         <UrlCopyButton />
