@@ -32,7 +32,7 @@ const FormPost: FC<FromPostProps> = ({
   const { register, handleSubmit, formState } = useForm<FormInputPost>({
     defaultValues: initialValue
       ? initialValue
-      : { title: "", content: "", tagId: "", image: "" },
+      : { title: "", content: "", tags: [], image: "" },
   });
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +102,7 @@ const FormPost: FC<FromPostProps> = ({
         <input
           type="text"
           {...register("title", { required: true })}
-          placeholder="post title..."
+          placeholder="Post title..."
           className="input input-bordered w-full max-w-lg"
         />
         <textarea
@@ -120,11 +120,11 @@ const FormPost: FC<FromPostProps> = ({
           <span className="loading loading-dots loading-md"></span>
         ) : (
           <select
-            {...register("tagId")}
             className="select select-bordered w-full max-w-lg"
-            defaultValue={""}
+            multiple
+            defaultValue={initialValue?.tags?.map((tag) => tag.id) || []}
+            {...register("tags")}
           >
-            <option value="">Select tags</option>
             {dataTags?.map((tag) => (
               <option key={tag.id} value={tag.id}>
                 {tag.name}

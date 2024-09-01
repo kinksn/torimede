@@ -4,9 +4,9 @@ import { Post } from "@prisma/client";
 
 export type FormInputPost = {
   title: string;
-  content: string;
+  content?: string;
   image?: string;
-  tagId?: string;
+  tags: Tag[];
   userId?: string;
 };
 
@@ -16,7 +16,7 @@ export type Tag = {
 };
 
 export type PostAddRelationFields = Post & {
-  tag?: Tag;
+  tags?: Tag[];
   image?: string;
 };
 

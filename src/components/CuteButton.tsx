@@ -20,7 +20,7 @@ const CuteButton = ({ post }: { post: Post }) => {
     onSuccess: () => {
       router.refresh();
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Error adding cute:", error);
     },
   });

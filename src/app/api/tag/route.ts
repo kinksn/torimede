@@ -1,9 +1,10 @@
 import { db } from "@/lib/db";
+import { Tag } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const tags = await db.tag.findMany();
+    const tags: Tag = await db.tag.findMany();
     return NextResponse.json(tags, { status: 200 });
   } catch (error) {
     return NextResponse.json(

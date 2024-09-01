@@ -2,7 +2,8 @@ import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 import ButtonAction from "@/components/ButtonAction";
 import CuteButton from "@/components/CuteButton";
-import Tag from "@/components/Tag";
+import { default as PostTag } from "@/components/Tag";
+import { Tag } from "@prisma/client";
 import Image from "next/image";
 import { FC } from "react";
 import Modal from "@/components/Modal";
@@ -18,7 +19,7 @@ type PostProps = {
 };
 
 async function getPost(postId: string) {
-  const response = await db.post.findFirst({
+  const post = await db.post.findFirst({
     where: {
       id: postId,
     },
@@ -27,17 +28,40 @@ async function getPost(postId: string) {
       title: true,
       content: true,
       image: true,
-      tag: true,
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
       userId: true,
       cutes: true,
       user: true,
     },
   });
-  return response;
+
+  const formattedPosts = {
+    ...post,
+    tags: post.tags.map((tagRelation: any) => {
+      return {
+        name: tagRelation.tag.name,
+        id: tagRelation.tag.id,
+      };
+    }),
+  };
+
+  return formattedPosts;
 }
 
-async function getPostByUserId(userId: string, postId: string) {
-  const response = await db.post.findMany({
+async function getPostByUserId(
+  userId: string,
+  postId: string
+): Promise<PostAddRelationFields[]> {
+  const posts = await db.post.findMany({
     where: {
       userId,
       id: {
@@ -49,12 +73,32 @@ async function getPostByUserId(userId: string, postId: string) {
       title: true,
       content: true,
       image: true,
-      tag: true,
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
       userId: true,
       cutes: true,
     },
   });
-  return response;
+
+  const formattedPosts = posts.map((post: any) => ({
+    ...post,
+    tags: post.tags.map((tagRelation: any) => {
+      return {
+        name: tagRelation.tag.name,
+        id: tagRelation.tag.id,
+      };
+    }),
+  }));
+
+  return formattedPosts;
 }
 const PostDetail: FC<PostProps> = async ({ params }) => {
   const [postId, userId] = params.id;
@@ -87,7 +131,9 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
         <p>{userName}</p>
       </div>
       <p className="text-state-700">{post?.content}</p>
-      {post?.tag && <Tag tag={post.tag} />}
+      {post.tags.map((tag: Tag, index: string) => (
+        <PostTag tag={tag} key={index} />
+      ))}
       <div>
         <ShareButtons text={post.title} />
         <UrlCopyButton />

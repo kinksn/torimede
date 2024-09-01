@@ -4,10 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import PostCard from "@/components/PostCard";
-import { PostAddRelationFields } from "@/types";
 import BackButton from "@/components/BackButton";
+import { GetPostOutput } from "@/app/api/post/model";
 
-const searchPosts = async (query: string): Promise<PostAddRelationFields[]> => {
+const searchPosts = async (query: string): Promise<GetPostOutput[]> => {
   const { data } = await axios.get(
     `/api/post/search?q=${encodeURIComponent(query)}`
   );
