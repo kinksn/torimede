@@ -27,7 +27,9 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
         <Image src={image} alt="" width="100" height="100" />
         <p>{content?.slice(0, 60)}</p>
         <div className="card-actions justify-end">
-          {tags && tags.map((tag, index) => <PostTag tag={tag} key={index} />)}
+          {tags.map((tag, index) => (
+            <PostTag tag={tag} key={index} />
+          ))}
           <div className="card-actions justify-end">
             <Link
               href={`/post/${id}/${userId}`}

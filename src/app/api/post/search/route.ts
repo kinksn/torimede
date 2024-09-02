@@ -35,12 +35,10 @@ export async function GET(req: Request) {
 
       const formattedPosts: GetPostOutput[] = posts.map((post) => ({
         ...post,
-        tags: post.tags.map((tagRelation) => {
-          return {
-            name: tagRelation.tag.name,
-            id: tagRelation.tag.id,
-          };
-        }),
+        tags: post.tags.map((tagRelation) => ({
+          name: tagRelation.tag.name,
+          id: tagRelation.tag.id,
+        })),
       }));
 
       return formattedPosts;
@@ -73,12 +71,10 @@ export async function GET(req: Request) {
 
       const formattedPosts: GetPostOutput[] = posts.map((post) => ({
         ...post,
-        tags: post.tags.map((tagRelation) => {
-          return {
-            name: tagRelation.tag.name,
-            id: tagRelation.tag.id,
-          };
-        }),
+        tags: post.tags.map((tagRelation) => ({
+          name: tagRelation.tag.name,
+          id: tagRelation.tag.id,
+        })),
       }));
 
       return formattedPosts;

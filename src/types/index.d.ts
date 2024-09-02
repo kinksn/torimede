@@ -15,11 +15,6 @@ export type Tag = {
   name: string;
 };
 
-export type PostAddRelationFields = Post & {
-  tags?: Tag[];
-  image?: string;
-};
-
 export type Login = {
   email: string;
   password: string;

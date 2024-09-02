@@ -41,12 +41,10 @@ export async function GET() {
 
     const formattedPosts = posts.map((post) => ({
       ...post,
-      tags: post.tags.map((tagRelation) => {
-        return {
-          name: tagRelation.tag.name,
-          id: tagRelation.tag.id,
-        };
-      }),
+      tags: post.tags.map((tagRelation) => ({
+        name: tagRelation.tag.name,
+        id: tagRelation.tag.id,
+      })),
     }));
 
     return NextResponse.json(formattedPosts, { status: 200 });
