@@ -1,3 +1,4 @@
+import { GetPostOutput, GetPostSelectTags } from "@/app/api/post/model";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
@@ -6,10 +7,10 @@ export async function GET(req: Request) {
     // @see(https://developer.mozilla.org/ja/docs/Web/API/URL/searchParams)
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q");
+    const tag = searchParams.get("tag");
 
-    // 検索関数を定義
     const fetchPostsByQuery = async (keywords: string[]) => {
-      return db.post.findMany({
+      const posts: GetPostSelectTags[] = await db.post.findMany({
         where: {
           OR: keywords.map((keyword) => ({
             OR: [
@@ -19,23 +20,83 @@ export async function GET(req: Request) {
           })),
         },
         include: {
-          tags: true,
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  name: true,
+                  id: true,
+                },
+              },
+            },
+          },
         },
       });
+
+      const formattedPosts: GetPostOutput[] = posts.map((post) => ({
+        ...post,
+        tags: post.tags.map((tagRelation) => {
+          return {
+            name: tagRelation.tag.name,
+            id: tagRelation.tag.id,
+          };
+        }),
+      }));
+
+      return formattedPosts;
     };
 
-    if (!query) {
+    const fetchPostsByTag = async (tagName: string) => {
+      const posts: GetPostSelectTags[] = await db.post.findMany({
+        where: {
+          tags: {
+            some: {
+              tag: {
+                name: { contains: tagName, mode: "insensitive" },
+              },
+            },
+          },
+        },
+        include: {
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  name: true,
+                  id: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const formattedPosts: GetPostOutput[] = posts.map((post) => ({
+        ...post,
+        tags: post.tags.map((tagRelation) => {
+          return {
+            name: tagRelation.tag.name,
+            id: tagRelation.tag.id,
+          };
+        }),
+      }));
+
+      return formattedPosts;
+    };
+
+    // クエリパラメータに基づいて関数を選択し、実行
+    const posts = query
+      ? await fetchPostsByQuery(query.split(/\s+|　+/).filter(Boolean))
+      : tag
+      ? await fetchPostsByTag(tag)
+      : null;
+
+    if (!posts) {
       return NextResponse.json(
-        { message: "検索クエリが必要です" },
+        { message: "検索クエリまたはタグが必要です" },
         { status: 400 }
       );
     }
-
-    const keywords = query
-      .split(/\s+|　+/)
-      .filter((keyword) => keyword.trim() !== "");
-
-    const posts = await fetchPostsByQuery(keywords);
 
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {

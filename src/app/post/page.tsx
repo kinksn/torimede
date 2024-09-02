@@ -7,25 +7,31 @@ import PostCard from "@/components/PostCard";
 import BackButton from "@/components/BackButton";
 import { GetPostOutput } from "@/app/api/post/model";
 
-const searchPosts = async (query: string): Promise<GetPostOutput[]> => {
-  const { data } = await axios.get(
-    `/api/post/search?q=${encodeURIComponent(query)}`
-  );
+const searchPosts = async (
+  query: string,
+  tag: string
+): Promise<GetPostOutput[]> => {
+  const params = new URLSearchParams();
+  if (query) params.append("q", query);
+  if (tag) params.append("tag", tag);
+
+  const { data } = await axios.get(`/api/post/search?${params.toString()}`);
   return data;
 };
 
 export default function PostsPage() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
+  const searchTag = searchParams.get("tag") || "";
 
   const {
     data: posts,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["posts", searchQuery],
-    queryFn: () => searchPosts(searchQuery),
-    enabled: !!searchQuery,
+    queryKey: ["posts", searchQuery, searchTag],
+    queryFn: () => searchPosts(searchQuery, searchTag),
+    enabled: !!searchQuery || !!searchTag,
   });
 
   return (
@@ -42,7 +48,7 @@ export default function PostsPage() {
             <PostCard key={post.id} post={post} />
           ))}
         </div>
-      ) : searchQuery ? (
+      ) : searchQuery || searchTag ? (
         <p>検索結果が見つかりませんでした。</p>
       ) : (
         <p>検索ワードを入力してください。</p>

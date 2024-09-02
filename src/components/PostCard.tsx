@@ -13,7 +13,7 @@ type PostCardProps = {
     title: string;
     content?: string;
     image: string;
-    tags?: Tag[];
+    tags: Tag[];
   };
 };
 

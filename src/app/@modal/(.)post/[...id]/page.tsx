@@ -11,6 +11,7 @@ import { PostAddRelationFields } from "@/types";
 import PostCard from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
+import { GetPostOutput } from "@/app/api/post/model";
 
 type PostProps = {
   params: {
@@ -57,10 +58,7 @@ async function getPost(postId: string) {
   return formattedPosts;
 }
 
-async function getPostByUserId(
-  userId: string,
-  postId: string
-): Promise<PostAddRelationFields[]> {
+async function getPostByUserId(userId: string, postId: string) {
   const posts = await db.post.findMany({
     where: {
       userId,
@@ -88,7 +86,7 @@ async function getPostByUserId(
     },
   });
 
-  const formattedPosts = posts.map((post: any) => ({
+  const formattedPosts: GetPostOutput[] = posts.map((post: any) => ({
     ...post,
     tags: post.tags.map((tagRelation: any) => {
       return {
@@ -138,7 +136,7 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
         <ShareButtons text={post.title} />
         <UrlCopyButton />
       </div>
-      {userPost.map((post: PostAddRelationFields) => (
+      {userPost.map((post) => (
         <PostCard post={post} key={post.id} />
       ))}
     </Modal>

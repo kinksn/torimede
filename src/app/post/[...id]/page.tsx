@@ -9,10 +9,9 @@ import Image from "next/image";
 import CuteButton from "@/components/CuteButton";
 import PostCard from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
-import { PostAddRelationFields } from "@/types";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
 import type { Metadata, ResolvingMetadata } from "next";
-import { GetPostSelectTags } from "@/app/api/post/model";
+import { GetPostOutput } from "@/app/api/post/model";
 
 type PostProps = {
   params: {
@@ -107,10 +106,7 @@ async function getPost(postId: string) {
   return formattedPosts;
 }
 
-async function getPostByUserId(
-  userId: string,
-  postId: string
-): Promise<PostAddRelationFields[]> {
+async function getPostByUserId(userId: string, postId: string) {
   const posts = await db.post.findMany({
     where: {
       userId,
@@ -138,7 +134,7 @@ async function getPostByUserId(
     },
   });
 
-  const formattedPosts = posts.map((post: any) => ({
+  const formattedPosts: GetPostOutput[] = posts.map((post: any) => ({
     ...post,
     tags: post.tags.map((tagRelation: any) => {
       return {

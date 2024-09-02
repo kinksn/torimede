@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { FC } from "react";
 import type { Tag } from "@prisma/client";
 import { useDeleteTag } from "@/hooks/useTags";
+import Link from "next/link";
 
 type TagProps = {
   tag: Tag;
@@ -16,7 +17,7 @@ const Tag: FC<TagProps> = ({ tag, isEdit = false }) => {
 
   return (
     <span className="badge badge-neutral flex px-2 py-3">
-      {name}
+      <Link href={`/post?tag=${name}`}>{name}</Link>
       {isEdit && (
         <button
           className="btn btn-circle w-4 h-4 min-h-4 flex items-center justify-center ml-3"
