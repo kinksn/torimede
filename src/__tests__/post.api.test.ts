@@ -22,16 +22,27 @@ const mockPost = {
   content: "Post content",
   createdAt: new Date(),
   updatedAt: new Date(),
-  tagId: "1",
-  tag: {
-    id: "1",
-    name: "Tag1",
-  },
+  tags: [
+    {
+      id: "1",
+      name: "Tag1",
+    },
+  ],
 };
 
 describe("正常系", () => {
   it("投稿一覧が取得できること（GET_ALL_POST）", async () => {
-    const mockPosts = [mockPost];
+    const mockPosts = [
+      {
+        ...mockPost,
+        tags: mockPost.tags.map((tag) => ({
+          tag: {
+            id: tag.id,
+            name: tag.name,
+          },
+        })),
+      },
+    ];
 
     db.post.findMany.mockResolvedValue(mockPosts);
 
@@ -40,12 +51,28 @@ describe("正常系", () => {
 
     expect(res.status).toBe(200);
     expect(posts).toEqual(
-      mockPosts.map((post) => ({ ...post, tag: post.tag ?? undefined }))
+      mockPosts.map((post) => ({
+        ...post,
+        tags: post.tags.map((tagRelation) => ({
+          id: tagRelation.tag.id,
+          name: tagRelation.tag.name,
+        })),
+      }))
     );
   });
 
   it("特定の投稿を取得できること（GET）", async () => {
-    db.post.findFirst.mockResolvedValue(mockPost);
+    const mockPostWithTags = {
+      ...mockPost,
+      tags: mockPost.tags.map((tag) => ({
+        tag: {
+          id: tag.id,
+          name: tag.name,
+        },
+      })),
+    };
+
+    db.post.findFirst.mockResolvedValue(mockPostWithTags);
 
     const req = new Request(`${process.env.API_URL}/${mockPost.id}`);
     const context = { params: { postId: mockPost.id } };
@@ -54,13 +81,21 @@ describe("正常系", () => {
     const post = await res.json();
 
     expect(res.status).toBe(200);
-    expect(post).toEqual(mockPost);
+    expect(post).toEqual({
+      ...mockPostWithTags,
+      tags: mockPost.tags.map((tag) => ({
+        id: tag.id,
+        name: tag.name,
+      })),
+    });
   });
 
   it("投稿を新規作成できること（POST）", async () => {
     const body = {
       title: "New Post",
       content: "New content",
+      image: "imageURL",
+      tags: ["1"], // タグIDの配列を設定
     };
 
     const req = createPOSTRequest(body, "/posts/create");
@@ -69,30 +104,45 @@ describe("正常系", () => {
       return Promise.resolve({
         ...args.data,
         id: "2",
-        // `getAuthSession`でセッション情報からログインユーザーのuserId
-        userId: "1",
+        userId: "1", // セッションから取得
+        tags: body.tags.map((tagId) => ({
+          id: tagId,
+          name: mockPost.tags[0].name,
+        })),
       });
     });
 
     const res = await POST(req);
-    const posts = await res.json();
+    const post = await res.json();
 
     expect(res.status).toBe(200);
-    expect(posts).toEqual(expect.objectContaining({ ...body, userId: "1" }));
+    expect(post).toEqual(
+      expect.objectContaining({
+        ...body,
+        userId: "1",
+        tags: body.tags.map((tagId) => ({
+          id: tagId,
+          name: "Tag1",
+        })),
+      })
+    );
   });
 
   it("投稿を更新できること（PATCH）", async () => {
     const body = {
       title: "Updated Title",
       content: "Updated content",
-      tagId: "1",
-      // `getAuthSession`でセッション情報からログインユーザーのuserId
-      userId: "1",
+      userId: "1", // セッションから取得
+      tags: ["1"],
     };
 
     db.post.update.mockImplementation((args: Prisma.PostUpdateArgs) => {
       return Promise.resolve({
         ...args.data,
+        tags: body.tags.map((tagId) => ({
+          id: tagId,
+          name: "Tag1", // テスト用のモックデータとして適切なタグ名を設定
+        })),
       });
     });
 
@@ -100,10 +150,10 @@ describe("正常系", () => {
     const context = { params: { postId: mockPost.id } };
 
     const res = await PATCH(req, context);
-    const posts = await res.json();
+    const post = await res.json();
 
     expect(res.status).toBe(200);
-    expect(posts).toEqual({ message: "update success" });
+    expect(post).toEqual({ message: "update success" });
   });
 
   it("投稿を削除できること（DELETE）", async () => {

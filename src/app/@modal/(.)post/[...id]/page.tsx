@@ -2,14 +2,15 @@ import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 import ButtonAction from "@/components/ButtonAction";
 import CuteButton from "@/components/CuteButton";
-import Tag from "@/components/Tag";
+import { default as PostTag } from "@/components/Tag";
 import Image from "next/image";
 import { FC } from "react";
 import Modal from "@/components/Modal";
-import { PostAddRelationFields } from "@/types";
 import PostCard from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
+import { GetPostOutput, GetPostSelectTags } from "@/app/api/post/model";
+import { Cute, User } from "@prisma/client";
 
 type PostProps = {
   params: {
@@ -18,26 +19,45 @@ type PostProps = {
 };
 
 async function getPost(postId: string) {
-  const response = await db.post.findFirst({
-    where: {
-      id: postId,
-    },
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      image: true,
-      tag: true,
-      userId: true,
-      cutes: true,
-      user: true,
-    },
-  });
-  return response;
+  const post: GetPostSelectTags & { user: User; cutes: Cute[] } =
+    await db.post.findFirst({
+      where: {
+        id: postId,
+      },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        image: true,
+        tags: {
+          select: {
+            tag: {
+              select: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+        userId: true,
+        cutes: true,
+        user: true,
+      },
+    });
+
+  const formattedPosts = {
+    ...post,
+    tags: post.tags.map((tagRelation) => ({
+      name: tagRelation.tag.name,
+      id: tagRelation.tag.id,
+    })),
+  };
+
+  return formattedPosts;
 }
 
 async function getPostByUserId(userId: string, postId: string) {
-  const response = await db.post.findMany({
+  const posts = await db.post.findMany({
     where: {
       userId,
       id: {
@@ -49,12 +69,32 @@ async function getPostByUserId(userId: string, postId: string) {
       title: true,
       content: true,
       image: true,
-      tag: true,
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
       userId: true,
       cutes: true,
     },
   });
-  return response;
+
+  const formattedPosts: GetPostOutput[] = posts.map((post: any) => ({
+    ...post,
+    tags: post.tags.map((tagRelation: any) => {
+      return {
+        name: tagRelation.tag.name,
+        id: tagRelation.tag.id,
+      };
+    }),
+  }));
+
+  return formattedPosts;
 }
 const PostDetail: FC<PostProps> = async ({ params }) => {
   const [postId, userId] = params.id;
@@ -72,7 +112,12 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
         )}
         {post.userId !== session?.user?.id && session !== null && (
           <>
-            <CuteButton post={post} />
+            <CuteButton
+              ids={{
+                postId: post.id,
+                userId: post.userId,
+              }}
+            />
             <span>{post.cutes.length}</span>
           </>
         )}
@@ -87,12 +132,14 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
         <p>{userName}</p>
       </div>
       <p className="text-state-700">{post?.content}</p>
-      {post?.tag && <Tag tag={post.tag} />}
+      {post.tags.map((tag) => (
+        <PostTag tag={tag} key={tag.id} />
+      ))}
       <div>
         <ShareButtons text={post.title} />
         <UrlCopyButton />
       </div>
-      {userPost.map((post: PostAddRelationFields) => (
+      {userPost.map((post) => (
         <PostCard post={post} key={post.id} />
       ))}
     </Modal>

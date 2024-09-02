@@ -9,6 +9,7 @@ import { FC } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import hash from "stable-hash";
+import { GetPostOutput } from "@/app/api/post/model";
 
 type EditPostPageProps = {
   params: {
@@ -19,13 +20,15 @@ type EditPostPageProps = {
 const EditPostPage: FC<EditPostPageProps> = ({ params }) => {
   const router = useRouter();
   const { id } = params;
-  const { data: dataPosts, isLoading: isLoadingPost } = useQuery({
-    queryKey: ["posts", id],
-    queryFn: async () => {
-      const response = await axios.get(`/api/post/${id}`);
-      return response.data;
-    },
-  });
+  const { data: dataPosts, isLoading: isLoadingPost } = useQuery<GetPostOutput>(
+    {
+      queryKey: ["posts", id],
+      queryFn: async () => {
+        const response = await axios.get(`/api/post/${id}`);
+        return response.data;
+      },
+    }
+  );
 
   const { mutate: updatePost, isPending: isLoadingSubmit } = useMutation({
     mutationFn: (newPost: FormInputPost) => {
@@ -35,15 +38,14 @@ const EditPostPage: FC<EditPostPageProps> = ({ params }) => {
       console.error(error);
     },
     onSuccess: () => {
-      router.push("/");
+      // location.href = `/post/${id}`;
+      router.push(`/post/${id}`);
       router.refresh();
     },
   });
 
-  const handleEditPost: SubmitHandler<FormInputPost> = (newPost) => {
-    // リクエストオブジェクトにuserIdを追加
-    if (dataPosts?.userId) newPost.userId = dataPosts.userId;
-    updatePost(newPost);
+  const handleEditPost: SubmitHandler<FormInputPost> = (post) => {
+    updatePost(post);
   };
 
   if (isLoadingPost) {

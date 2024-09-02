@@ -1,26 +1,33 @@
 "use client";
 
-import React from "react";
+import React, { FC } from "react";
 import axiosInstance from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Post } from "@prisma/client";
 
-const addCute = async (post: Post) => {
-  const response = await axiosInstance.post(`/cute/${post.id}`, {
-    userId: post.userId,
+type CuteButtonProps = {
+  ids: {
+    postId: string;
+    userId: string;
+  };
+};
+
+const addCute = async ({ ids }: CuteButtonProps) => {
+  const response = await axiosInstance.post(`/cute/${ids.postId}`, {
+    userId: ids.userId,
   });
   return response.data;
 };
 
-const CuteButton = ({ post }: { post: Post }) => {
+const CuteButton: FC<CuteButtonProps> = ({ ids }) => {
   const router = useRouter();
   const { mutate } = useMutation({
-    mutationFn: () => addCute(post),
+    mutationFn: () => addCute({ ids }),
     onSuccess: () => {
       router.refresh();
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Error adding cute:", error);
     },
   });

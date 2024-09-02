@@ -11,23 +11,25 @@ type PostCardProps = {
     id: string;
     userId: string;
     title: string;
-    content: string;
-    image?: string;
-    tag?: Tag;
+    content?: string;
+    image: string;
+    tags: Tag[];
   };
 };
 
 const PostCard: FC<PostCardProps> = ({ post }) => {
-  const { id, userId, title, content, image, tag } = post;
+  const { id, userId, title, content, image, tags } = post;
 
   return (
     <div className="card w-full bg-base-100 shadow-xl border">
       <div className="card-body">
         <h2 className="card-title">{title}</h2>
-        {image && <Image src={image} alt="" width="100" height="100" />}
-        <p>{content.slice(0, 60)}</p>
+        <Image src={image} alt="" width="100" height="100" />
+        <p>{content?.slice(0, 60)}</p>
         <div className="card-actions justify-end">
-          {tag && <PostTag tag={tag} />}
+          {tags.map((tag, index) => (
+            <PostTag tag={tag} key={index} />
+          ))}
           <div className="card-actions justify-end">
             <Link
               href={`/post/${id}/${userId}`}

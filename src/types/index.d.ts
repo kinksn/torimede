@@ -4,20 +4,15 @@ import { Post } from "@prisma/client";
 
 export type FormInputPost = {
   title: string;
-  content: string;
+  content?: string;
   image?: string;
-  tagId?: string;
+  tags: Tag[];
   userId?: string;
 };
 
 export type Tag = {
   id: string;
   name: string;
-};
-
-export type PostAddRelationFields = Post & {
-  tag?: Tag;
-  image?: string;
 };
 
 export type Login = {

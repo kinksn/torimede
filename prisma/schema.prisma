@@ -14,9 +14,18 @@ datasource db {
 }
 
 model Tag {
-  id   String @id @default(cuid())
-  name String @db.VarChar(100)
-  post Post[]
+  id    String    @id @default(cuid())
+  name  String    @db.VarChar(100)
+  posts PostTag[]
+}
+
+model PostTag {
+  postId String @map("post_id")
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tagId  String @map("tag_id")
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
 }
 
 model Cute {
@@ -27,16 +36,15 @@ model Cute {
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  title     String   @db.VarChar(225)
-  content   String
-  image     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tagId     String?
-  tag       Tag?     @relation(fields: [tagId], references: [id])
+  id        String    @id @default(cuid())
+  title     String    @db.VarChar(225)
+  content   String?
+  image     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tags      PostTag[]
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
   cutes     Cute[]
 }
 

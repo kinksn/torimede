@@ -10,8 +10,9 @@ import { SubmitHandler } from "react-hook-form";
 
 const CreatePage = () => {
   const router = useRouter();
-  const handleCreatePost: SubmitHandler<FormInputPost> = (data) =>
+  const handleCreatePost: SubmitHandler<FormInputPost> = (data) => {
     createPost(data);
+  };
 
   const { mutate: createPost, isPending: isLoadingSubmit } = useMutation({
     mutationFn: (newPost: FormInputPost) => {
