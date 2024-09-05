@@ -1,5 +1,11 @@
 type RequestBody = Record<string, any>;
 
+export const createGETRequest = (endpoint: string) => {
+  return new Request(`${process.env.API_URL}${endpoint}`, {
+    method: "GET",
+  });
+};
+
 export const createPOSTRequest = (body: RequestBody, endpoint: string) => {
   return new Request(`${process.env.API_URL}${endpoint}`, {
     method: "POST",
