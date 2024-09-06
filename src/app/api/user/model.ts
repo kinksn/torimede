@@ -23,3 +23,13 @@ export const getUserOutputSchema = z.object({
   cutedPosts: getUserPostsSchema,
   isMe: z.boolean(),
 });
+
+export const updateUserNameInputSchema = z.object({
+  name: z.string().max(15),
+});
+
+export const updateUserProfileSchema = z.object({
+  name: updateUserNameInputSchema.shape.name,
+  userId: userIdSchema,
+});
+export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
