@@ -19,7 +19,6 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        console.log("credentials = ", credentials);
         if (!credentials) {
           return null;
         }

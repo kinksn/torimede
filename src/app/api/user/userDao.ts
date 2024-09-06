@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import {
   getUserPostsSchema,
   getUserProfileSchema,
+  UpdateUserProfile,
   UserId,
 } from "@/app/api/user/model";
 import { unique } from "@/lib/util/unique";
@@ -25,7 +26,7 @@ export const getUserProfileByUserId = async ({ userId }: InputUserId) =>
   handleDaoError(
     { errorMessage: "database error by getUserProfileByUserId" },
     async () => {
-      const data = await db.user.findFirst({
+      const data = await db.user.findUnique({
         where: {
           id: userId,
         },
@@ -79,5 +80,24 @@ export const getUserCutedPostsByUserId = async ({ userId }: InputUserId) =>
       return unique(
         getUserPostsSchema.parse(data.map((post: ParsedCutedPost) => post.post))
       );
+    }
+  );
+
+export const updateUserProfile = async ({ name, userId }: UpdateUserProfile) =>
+  handleDaoError(
+    { errorMessage: "database error by getUserProfileByUserId" },
+    async () => {
+      const data = await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          name,
+        },
+      });
+
+      if (!data) {
+        throw new Error("failed to update user profile in the database");
+      }
     }
   );
