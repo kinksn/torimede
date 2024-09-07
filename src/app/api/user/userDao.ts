@@ -65,11 +65,13 @@ export const getUserCutedPostsByUserId = async ({ userId }: InputUserId) =>
       const data = await db.cute.findMany({
         where: {
           post: {
-            userId, // CuteされたPostのuserIdでフィルタ
+            NOT: {
+              userId, // 自分の投稿ではない
+            },
           },
         },
         include: {
-          post: true,
+          post: true, // 投稿の情報を取得
         },
       });
 

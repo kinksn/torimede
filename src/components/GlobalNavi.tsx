@@ -6,6 +6,7 @@ import { SearchForm } from "@/components/SearchForm";
 import { signOut, useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 type GlobalNaviProps = {
   initialSession: Session | null;
@@ -14,6 +15,7 @@ type GlobalNaviProps = {
 export const GlobalNavi = ({ initialSession }: GlobalNaviProps) => {
   const { data: session } = useSession();
   const pathname = usePathname();
+
   // サーバーから得たセッション情報とクライアントのセッション情報を組み合わせている
   const isAuthenticated = initialSession || session;
 
@@ -33,7 +35,7 @@ export const GlobalNavi = ({ initialSession }: GlobalNaviProps) => {
         </div>
         <SearchForm />
         <div className="flex-none">
-          <div className="flex">
+          <div className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
                 <Link
@@ -42,12 +44,31 @@ export const GlobalNavi = ({ initialSession }: GlobalNaviProps) => {
                 >
                   投稿
                 </Link>
-                <button
-                  className="btn btn-ghost hover:bg-yellow-400 hover:text-white"
-                  onClick={() => signOut()}
-                >
-                  ログアウト
-                </button>
+                <div className="dropdown dropdown-end h-8">
+                  <div tabIndex={0} className="avatar">
+                    <div className="w-8 rounded-full">
+                      <Image
+                        src={session?.user?.image!}
+                        alt=""
+                        width="16"
+                        height="16"
+                      />
+                    </div>
+                  </div>
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                  >
+                    <li>
+                      <Link href={`/user/${session?.user?.id}`}>
+                        マイページ
+                      </Link>
+                    </li>
+                    <li onClick={() => signOut()}>
+                      <a>ログアウト</a>
+                    </li>
+                  </ul>
+                </div>
               </>
             ) : (
               <>

@@ -74,15 +74,15 @@ describe("正常系", () => {
     };
 
     const mockUserPosts = [
-      { id: "post-1", image: "http://example.com/post1.jpg" },
-      { id: "post-2", image: "http://example.com/post2.jpg" },
+      { id: "post-1", userId, image: "http://example.com/post1.jpg" },
+      { id: "post-2", userId, image: "http://example.com/post2.jpg" },
     ];
 
     const mockCutedPosts = [
-      { id: "post-3", image: "http://example.com/post3.jpg" },
+      { id: "post-3", userId, image: "http://example.com/post3.jpg" },
     ];
 
-    db.user.findFirst.mockResolvedValue(mockUserProfile);
+    db.user.findUnique.mockResolvedValue(mockUserProfile);
     db.post.findMany.mockResolvedValue(mockUserPosts);
     db.cute.findMany.mockResolvedValue(
       mockCutedPosts.map((post) => ({
@@ -99,7 +99,6 @@ describe("正常系", () => {
       profile: mockUserProfile,
       posts: mockUserPosts,
       cutedPosts: mockCutedPosts,
-      isMe: false,
     });
 
     expect(res.status).toBe(200);

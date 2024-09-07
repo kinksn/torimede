@@ -1,5 +1,9 @@
 import { TagIdSchema, TagObjectSchema } from "@/app/api/tag/model";
+import { idWithBrandSchema } from "@/lib/util/entity";
 import { z } from "zod";
+
+export const postIdSchema = idWithBrandSchema("PostId");
+export type PostId = z.infer<typeof postIdSchema>;
 
 export const UpdatePostBodySchema = z.object({
   title: z.string(),
