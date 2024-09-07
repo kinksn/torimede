@@ -55,7 +55,7 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
   }
 
   return (
-    <>
+    <div>
       <div className="avatar">
         <div className="w-24 rounded-full">
           <Image src={userProfile.image} alt="" width="24" height="24" />
@@ -87,7 +87,7 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
           編集
         </button>
       )}
-    </>
+    </div>
   );
 };
 

@@ -142,6 +142,7 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
         <ShareButtons text={post.title} />
         <UrlCopyButton />
       </div>
+      <h2 className="text-1xl font-bold my-4">{userName}の投稿</h2>
       {userPost.map((post) => (
         <PostCard post={post} key={post.id} />
       ))}

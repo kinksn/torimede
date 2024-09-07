@@ -1,5 +1,6 @@
 import { GetUserOutput } from "@/app/api/user/model";
 import { UserProfile } from "@/app/user/[userId]/_components/UserProfile";
+import BackButton from "@/components/BackButton";
 import PostCard from "@/components/PostCard";
 import React from "react";
 
@@ -13,6 +14,7 @@ export const UserPage = ({ profile, isMe }: UserPageProps) => {
 
   return (
     <div>
+      <BackButton />
       <UserProfile userProfile={userProfile} readonly={!isMe} />
 
       <div role="tablist" className="tabs tabs-bordered">
@@ -25,7 +27,7 @@ export const UserPage = ({ profile, isMe }: UserPageProps) => {
           defaultChecked
         />
         <div role="tabpanel" className="tab-content">
-          {posts ? (
+          {posts.length > 0 ? (
             posts.map((post) => <PostCard post={post} key={post.id} />)
           ) : (
             <div>まだ投稿がありません</div>
@@ -42,7 +44,7 @@ export const UserPage = ({ profile, isMe }: UserPageProps) => {
               aria-label="めで履歴"
             />
             <div role="tabpanel" className="tab-content">
-              {cutedPosts ? (
+              {cutedPosts.length > 0 ? (
                 cutedPosts.map((post) => <PostCard post={post} key={post.id} />)
               ) : (
                 <div>まだ鳥さんを愛でてません</div>

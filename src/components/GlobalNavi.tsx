@@ -30,7 +30,7 @@ export const GlobalNavi = ({ initialSession }: GlobalNaviProps) => {
         <div className="flex-1">
           <Link className="flex items-center gap-1" href="/">
             <Bird />
-            <span className="text-md font-bold leading-tight">PIPI BLOG</span>
+            <span className="text-md font-bold leading-tight">トリメデ</span>
           </Link>
         </div>
         <SearchForm />
