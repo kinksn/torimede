@@ -22,9 +22,6 @@ type ContextProps = {
 export async function GET(_req: Request, context: ContextProps) {
   try {
     const userId = context.params.userId;
-    const session = await getAuthSession();
-    const isMe = userId === session?.user?.id;
-
     const profile = await getUserProfileByUserId({ userId });
     const posts = await getUserPostsByUserId({ userId });
     const cutedPosts = await getUserCutedPostsByUserId({ userId });
@@ -33,7 +30,6 @@ export async function GET(_req: Request, context: ContextProps) {
       profile,
       posts,
       cutedPosts,
-      isMe: isMe,
     };
 
     return NextResponse.json(getUserOutputSchema.parse(response), {

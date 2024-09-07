@@ -12,6 +12,7 @@ import { UrlCopyButton } from "@/components/UrlCopyButton";
 import type { Metadata, ResolvingMetadata } from "next";
 import { GetPostOutput, GetPostSelectTags } from "@/app/api/post/model";
 import { Cute, User } from "@prisma/client";
+import Link from "next/link";
 
 type PostProps = {
   params: {
@@ -180,7 +181,9 @@ const BlogDetailPage: FC<PostProps> = async ({ params }) => {
       )}
       <div className="flex">
         {userProfileImage && (
-          <Image src={userProfileImage} alt="" width="28" height="28" />
+          <Link href={`/user/${userId}`}>
+            <Image src={userProfileImage} alt="" width="28" height="28" />
+          </Link>
         )}
         <p>{userName}</p>
       </div>
