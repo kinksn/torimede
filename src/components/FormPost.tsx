@@ -13,6 +13,7 @@ import {
 } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
@@ -28,7 +29,7 @@ const FormPost: FC<FromPostProps> = ({
   isLoadingSubmit,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const { register, handleSubmit, formState } = useForm<FormInputPost>({
     defaultValues: initialValue
       ? initialValue
@@ -38,7 +39,7 @@ const FormPost: FC<FromPostProps> = ({
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files[0]) {
-      setFile(files[0]);
+      setImageFile(files[0]);
     }
   };
 
@@ -73,7 +74,9 @@ const FormPost: FC<FromPostProps> = ({
   const handleFormSubmit: SubmitHandler<FormInputPost> = async (data) => {
     setIsSubmitting(true);
 
-    const imageUrl = await uploadImage(file, data.image || "");
+    const imageUrl = isEditing
+      ? initialValue?.image
+      : await uploadImage(imageFile, data.image || "");
     if (!imageUrl) {
       setIsSubmitting(false);
       return;
@@ -99,6 +102,9 @@ const FormPost: FC<FromPostProps> = ({
         onSubmit={handleSubmit(handleFormSubmit)}
         className="flex flex-col items-center justify-center gap-5 mt-10"
       >
+        {isEditing && (
+          <Image src={initialValue?.image!} width="300" height="300" alt="" />
+        )}
         <input
           type="text"
           {...register("title", { required: true })}
@@ -110,12 +116,15 @@ const FormPost: FC<FromPostProps> = ({
           className="textarea textarea-bordered w-full max-w-lg"
           placeholder="Post content..."
         ></textarea>
-        <input
-          type="file"
-          onChange={handleFileChange}
-          className="input input-bordered w-full max-w-lg"
-          accept="image/*,.png,.jpg,.jpeg,.gif"
-        />
+        {!isEditing && (
+          <input
+            type="file"
+            onChange={handleFileChange}
+            className="input input-bordered w-full max-w-lg"
+            accept="image/*,.png,.jpg,.jpeg,.gif"
+          />
+        )}
+
         {isLoadingTags ? (
           <span className="loading loading-dots loading-md"></span>
         ) : (

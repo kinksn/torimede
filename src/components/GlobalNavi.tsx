@@ -53,7 +53,7 @@ export const GlobalNavi = ({
                     <div className="w-8 rounded-full">
                       {profileImage && (
                         <Image
-                          src={session?.user?.image!}
+                          src={profileImage}
                           alt=""
                           width="16"
                           height="16"
@@ -66,7 +66,7 @@ export const GlobalNavi = ({
                     className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
                   >
                     <li>
-                      <Link href={`/user/${session?.user?.id}`}>
+                      <Link href={`/user/${initialSession?.user?.id}`}>
                         マイページ
                       </Link>
                     </li>
