@@ -10,9 +10,13 @@ import Image from "next/image";
 
 type GlobalNaviProps = {
   initialSession: Session | null;
+  profileImage: string | null | undefined;
 };
 
-export const GlobalNavi = ({ initialSession }: GlobalNaviProps) => {
+export const GlobalNavi = ({
+  initialSession,
+  profileImage,
+}: GlobalNaviProps) => {
   const { data: session } = useSession();
   const pathname = usePathname();
 
@@ -47,12 +51,14 @@ export const GlobalNavi = ({ initialSession }: GlobalNaviProps) => {
                 <div className="dropdown dropdown-end h-8">
                   <div tabIndex={0} className="avatar">
                     <div className="w-8 rounded-full">
-                      <Image
-                        src={session?.user?.image!}
-                        alt=""
-                        width="16"
-                        height="16"
-                      />
+                      {profileImage && (
+                        <Image
+                          src={session?.user?.image!}
+                          alt=""
+                          width="16"
+                          height="16"
+                        />
+                      )}
                     </div>
                   </div>
                   <ul

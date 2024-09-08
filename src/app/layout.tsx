@@ -40,6 +40,7 @@ export default async function RootLayout({
   modal: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
+  const profileImage = session?.user?.image;
 
   return (
     <html
@@ -48,7 +49,7 @@ export default async function RootLayout({
     >
       <body>
         <Providers>
-          <GlobalNavi initialSession={session} />
+          <GlobalNavi initialSession={session} profileImage={profileImage} />
           <div className="container h-full pt-12">{children}</div>
           {modal}
         </Providers>

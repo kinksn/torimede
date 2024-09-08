@@ -94,12 +94,7 @@ export async function GET(_req: Request, context: ContextProps) {
       include: {
         tags: {
           select: {
-            tag: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
+            tag: true,
           },
         },
       },
