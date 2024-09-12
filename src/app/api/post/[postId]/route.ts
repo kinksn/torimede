@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
-import { GetPostSelectTags, UpdatePostBodySchema } from "@/app/api/post/model";
+import { GetPostSelectTags, updatePostBodySchema } from "@/app/api/post/model";
 
 type ContextProps = {
   params: {
@@ -41,7 +41,7 @@ export async function PATCH(req: Request, context: ContextProps) {
   try {
     const session = await getAuthSession();
     const { params } = context;
-    const body = UpdatePostBodySchema.parse(await req.json());
+    const body = updatePostBodySchema.parse(await req.json());
 
     if (session?.user?.id !== body.userId) {
       return NextResponse.json(
