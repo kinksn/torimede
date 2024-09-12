@@ -18,15 +18,30 @@ export const ShareButtons = ({ text }: ShareButtonProps) => {
   const facebookUrl = `https://www.facebook.com/sharer.php?u=${currentUrl}`;
 
   return (
-    <div>
-      <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-        <button>Share on Twitter</button>
+    <div className="flex gap-2">
+      <a
+        className="btn"
+        href={twitterUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <button>Twitter</button>
       </a>
-      <a href={lineUrl} target="_blank" rel="noopener noreferrer">
-        <button>Share on LINE</button>
+      <a
+        className="btn"
+        href={lineUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <button>LINE</button>
       </a>
-      <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
-        <button>Share on Facebook</button>
+      <a
+        className="btn"
+        href={facebookUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <button>Facebook</button>
       </a>
     </div>
   );

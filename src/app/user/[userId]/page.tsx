@@ -12,10 +12,9 @@ type UserProps = {
 export default async function User({ params }: UserProps) {
   const session = await getAuthSession();
   const userId = params.userId;
-  const isMe = session?.user?.id === userId;
   const profile: GetUserOutput = await (
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`)
   ).json();
 
-  return <UserPage profile={profile} isMe={isMe} />;
+  return <UserPage profile={profile} session={session} />;
 }

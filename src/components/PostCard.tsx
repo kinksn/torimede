@@ -1,44 +1,47 @@
-"use client";
-
-import { default as PostTag } from "@/components/Tag";
-import { Tag } from "@prisma/client";
 import Link from "next/link";
 import Image from "next/image";
 import { FC } from "react";
+import ButtonAction from "@/components/ButtonAction";
+import { Session } from "next-auth";
 
 type PostCardProps = {
   post: {
     id: string;
     userId: string;
     image: string;
-    title?: string;
-    content?: string;
-    tags?: Tag[];
   };
+  session: Session | null;
 };
 
-const PostCard: FC<PostCardProps> = ({ post }) => {
+const PostCard: FC<PostCardProps> = async ({ post, session }) => {
   const { id, userId, image } = post;
 
+  const isMyPost = session?.user?.id === userId;
+
   return (
-    <Link
-      href={`/post/${id}/${userId}`}
-      passHref
-      className="card w-full bg-base-100 shadow-xl border block overflow-hidden"
-      scroll={false}
-    >
-      <div className="card-body p-0">
-        <div className="card-actions justify-end">
-          <Image
-            src={image}
-            alt=""
-            width="200"
-            height="200"
-            className="w-auto h-auto"
-          />
-        </div>
+    <div className="relative">
+      <div className="absolute top-2 right-2 z-10">
+        {isMyPost && <ButtonAction id={id} userId={userId} />}
       </div>
-    </Link>
+      <Link
+        href={`/post/${id}/${userId}`}
+        passHref
+        className="card w-full bg-base-100 shadow-xl border block overflow-hidden"
+        scroll={false}
+      >
+        <div className="card-body p-0">
+          <div className="card-actions justify-center">
+            <Image
+              src={image}
+              alt=""
+              width="200"
+              height="200"
+              className="w-auto h-auto"
+            />
+          </div>
+        </div>
+      </Link>
+    </div>
   );
 };
 
