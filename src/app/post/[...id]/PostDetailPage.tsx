@@ -1,6 +1,6 @@
 import BackButton from "@/components/BackButton";
 import ButtonAction from "@/components/ButtonAction";
-import { default as PostTag } from "@/components/Tag";
+import { PostTag } from "@/components/Tag";
 import { getAuthSession } from "@/lib/auth";
 import Image from "next/image";
 import CuteButton from "@/components/CuteButton";
@@ -62,7 +62,7 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
           <p className="text-state-700 mt-4 mb-4">{post?.content}</p>
           <div className="flex gap-2">
             {post.tags.map((tag) => (
-              <PostTag tag={tag} key={tag.id} />
+              <PostTag tag={tag} key={tag.id} session={session} />
             ))}
           </div>
         </div>

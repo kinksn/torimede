@@ -5,20 +5,25 @@ import { FC } from "react";
 import type { Tag } from "@prisma/client";
 import { useDeleteTag } from "@/hooks/useTags";
 import Link from "next/link";
+import { Session } from "next-auth";
 
-type TagProps = {
+type PostTagProps = {
   tag: Tag;
-  isEdit?: boolean;
+  session: Session | null;
 };
 
-const Tag: FC<TagProps> = ({ tag, isEdit = false }) => {
+export const PostTag: FC<PostTagProps> = ({ tag, session }) => {
   const { id, name } = tag;
   const { mutate: deleteTag } = useDeleteTag();
+
+  const isAdmin = session?.user?.isAdmin;
+
+  console.log("isAdmin = ", isAdmin);
 
   return (
     <span className="badge badge-neutral flex px-2 py-3">
       <Link href={`/post?tag=${name}`}>{name}</Link>
-      {isEdit && (
+      {isAdmin && (
         <button
           className="btn btn-circle w-4 h-4 min-h-4 flex items-center justify-center ml-3"
           style={{
@@ -33,5 +38,3 @@ const Tag: FC<TagProps> = ({ tag, isEdit = false }) => {
     </span>
   );
 };
-
-export default Tag;
