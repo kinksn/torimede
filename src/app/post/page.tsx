@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import PostCard from "@/components/PostCard";
 import BackButton from "@/components/BackButton";
 import { GetPostOutput } from "@/app/api/post/model";
+import { useSession } from "next-auth/react";
 
 const searchPosts = async (
   query: string,
@@ -23,6 +24,7 @@ export default function PostsPage() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
   const searchTag = searchParams.get("tag") || "";
+  const { data: session } = useSession();
 
   const {
     data: posts,
@@ -45,7 +47,7 @@ export default function PostsPage() {
       ) : posts && posts.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard key={post.id} post={post} session={session} />
           ))}
         </div>
       ) : searchQuery || searchTag ? (

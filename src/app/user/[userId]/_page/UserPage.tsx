@@ -2,15 +2,18 @@ import { GetUserOutput } from "@/app/api/user/model";
 import { UserProfile } from "@/app/user/[userId]/_components/UserProfile";
 import BackButton from "@/components/BackButton";
 import PostCard from "@/components/PostCard";
+import { Session } from "next-auth";
 import React from "react";
 
 type UserPageProps = {
   profile: GetUserOutput;
-  isMe: boolean;
+  session: Session | null;
 };
 
-export const UserPage = ({ profile, isMe }: UserPageProps) => {
+export const UserPage = ({ profile, session }: UserPageProps) => {
   const { profile: userProfile, posts, cutedPosts } = profile;
+
+  const isMe = session?.user?.id === userProfile.id;
 
   return (
     <div>
@@ -28,7 +31,9 @@ export const UserPage = ({ profile, isMe }: UserPageProps) => {
         />
         <div role="tabpanel" className="tab-content">
           {posts.length > 0 ? (
-            posts.map((post) => <PostCard post={post} key={post.id} />)
+            posts.map((post) => (
+              <PostCard post={post} key={post.id} session={session} />
+            ))
           ) : (
             <div>まだ投稿がありません</div>
           )}
@@ -45,7 +50,9 @@ export const UserPage = ({ profile, isMe }: UserPageProps) => {
             />
             <div role="tabpanel" className="tab-content">
               {cutedPosts.length > 0 ? (
-                cutedPosts.map((post) => <PostCard post={post} key={post.id} />)
+                cutedPosts.map((post) => (
+                  <PostCard post={post} key={post.id} session={session} />
+                ))
               ) : (
                 <div>まだ鳥さんを愛でてません</div>
               )}

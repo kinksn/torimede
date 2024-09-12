@@ -20,36 +20,18 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
   const session = await getAuthSession();
   const { name: userName, image: userProfileImage } = post.user;
 
+  const isMyPost = post.userId === session?.user?.id;
+
   return (
     <div>
-      <BackButton />
+      <div className="flex justify-between">
+        <BackButton />
+        {isMyPost && <ButtonAction id={post.id} userId={post.userId} />}
+      </div>
       <div className="mb-8">
         <h2 className="text-2xl font-bold my-4">{post?.title}</h2>
-        {post.userId === session?.user?.id && (
-          <ButtonAction id={post.id} userId={post.userId} />
-        )}
-        {post.userId !== session?.user?.id && session !== null && (
-          <>
-            <CuteButton
-              ids={{
-                postId: post.id,
-                userId: post.userId,
-              }}
-            />
-            <span>{post.cutes.length}</span>
-          </>
-        )}
       </div>
-      {post?.image && (
-        <Image
-          src={post.image}
-          alt=""
-          width="900"
-          height="900"
-          className="w-full h-auto"
-        />
-      )}
-      <div className="flex">
+      <div className="flex mb-4">
         {userProfileImage && (
           <Link href={`/user/${post.userId}`}>
             <Image src={userProfileImage} alt="" width="28" height="28" />
@@ -57,17 +39,41 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
         )}
         <p>{userName}</p>
       </div>
-      <p className="text-state-700">{post?.content}</p>
-      {post.tags.map((tag) => (
-        <PostTag tag={tag} key={tag.id} />
-      ))}
-      <div>
-        <ShareButtons text={post.title} />
-        <UrlCopyButton />
+      <Image
+        src={post.image}
+        alt=""
+        width="900"
+        height="900"
+        className="w-full h-auto"
+      />
+      {!isMyPost && session !== null && (
+        <div className="flex justify-center items-center mt-4 mb-4">
+          <CuteButton
+            ids={{
+              postId: post.id,
+              userId: post.userId,
+            }}
+          />
+          <span>{post.cutes.length}</span>
+        </div>
+      )}
+      <div className="flex justify-between mt-4">
+        <div>
+          <p className="text-state-700 mt-4 mb-4">{post?.content}</p>
+          <div className="flex gap-2">
+            {post.tags.map((tag) => (
+              <PostTag tag={tag} key={tag.id} />
+            ))}
+          </div>
+        </div>
+        <div>
+          <ShareButtons text={post.title} />
+          <UrlCopyButton />
+        </div>
       </div>
       <h2 className="text-1xl font-bold my-4">{userName}の投稿</h2>
       {userPosts.map((post) => (
-        <PostCard post={post} key={post.id} />
+        <PostCard post={post} key={post.id} session={session} />
       ))}
     </div>
   );

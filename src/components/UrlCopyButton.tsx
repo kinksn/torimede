@@ -21,7 +21,9 @@ export const UrlCopyButton = () => {
 
   return (
     <div>
-      <button onClick={onCopy}>URLをコピー</button>
+      <button className="btn mt-2" onClick={onCopy}>
+        URLをコピー
+      </button>
     </div>
   );
 };
