@@ -1,8 +1,9 @@
 import { z } from "zod";
 
-export const TagIdSchema = z.string();
+// TODO: idWidthBrandSchema("TagId")にする
+export const tagIdSchema = z.string();
 
-export const TagObjectSchema = z.object({
+export const tagObjectSchema = z.object({
   id: z.string(),
   name: z.string(),
 });

@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
-import { CreatePostBodySchema } from "@/app/api/post/model";
+import { createPostBodySchema } from "@/app/api/post/model";
 
 export async function POST(req: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     if (!session?.user) {
       return NextResponse.json({ message: "not login" }, { status: 401 });
     }
-    const body = CreatePostBodySchema.parse(await req.json());
+    const body = createPostBodySchema.parse(await req.json());
     const post = await db.post.create({
       data: {
         title: body.title,

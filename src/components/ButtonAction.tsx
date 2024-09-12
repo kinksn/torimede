@@ -79,8 +79,12 @@ const ConfirmModal = React.forwardRef<HTMLDialogElement, ConfirmModalProps>(
     return (
       <dialog ref={ref} id="my_modal_1" className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">投稿を削除しますか？</p>
+          <h3 className="font-bold text-lg">削除する</h3>
+          <p className="py-4">
+            1度削除した投稿は元に戻すことはできません
+            <br />
+            削除してもよろしいでしょうか？
+          </p>
           <div className="modal-action">
             <button className="btn" onClick={onDeletePost}>
               削除

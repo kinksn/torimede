@@ -12,8 +12,10 @@ import {
   ChangeEvent,
 } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { createPostSchema, updatePostBodySchema } from "@/app/api/post/model";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
@@ -30,10 +32,15 @@ const FormPost: FC<FromPostProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const { register, handleSubmit, formState } = useForm<FormInputPost>({
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty, errors },
+  } = useForm<FormInputPost>({
     defaultValues: initialValue
       ? initialValue
       : { title: "", content: "", tags: [], image: "" },
+    resolver: zodResolver(isEditing ? updatePostBodySchema : createPostSchema),
   });
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +84,7 @@ const FormPost: FC<FromPostProps> = ({
     const imageUrl = isEditing
       ? initialValue?.image
       : await uploadImage(imageFile, data.image || "");
+    console.log("imageUrl = ", imageUrl);
     if (!imageUrl) {
       setIsSubmitting(false);
       return;
@@ -85,9 +93,7 @@ const FormPost: FC<FromPostProps> = ({
     submit({ ...data, image: imageUrl });
   };
 
-  const { isDirty } = formState;
-
-  // fetch list tags
+  // fetch tags
   const { data: dataTags, isLoading: isLoadingTags } = useQuery<Tag[]>({
     queryKey: ["tags"],
     queryFn: async () => {
@@ -105,25 +111,37 @@ const FormPost: FC<FromPostProps> = ({
         {isEditing && (
           <Image src={initialValue?.image!} width="300" height="300" alt="" />
         )}
+        {!isEditing && (
+          <>
+            <input
+              type="file"
+              className="input input-bordered w-full max-w-lg"
+              {...register("image", { required: true })}
+              onChange={handleFileChange}
+            />
+            {errors.image && (
+              <p className="text-red-500 text-left w-full max-w-lg text-xs ml-1">
+                {errors.image.message}
+              </p>
+            )}
+          </>
+        )}
         <input
           type="text"
-          {...register("title", { required: true })}
           placeholder="Post title..."
           className="input input-bordered w-full max-w-lg"
+          {...register("title", { required: true })}
         />
+        {errors.title && (
+          <p className="text-red-500 text-left w-full max-w-lg text-xs ml-1">
+            {errors.title.message}
+          </p>
+        )}
         <textarea
-          {...register("content", { required: true })}
           className="textarea textarea-bordered w-full max-w-lg"
           placeholder="Post content..."
+          {...register("content")}
         ></textarea>
-        {!isEditing && (
-          <input
-            type="file"
-            onChange={handleFileChange}
-            className="input input-bordered w-full max-w-lg"
-            accept="image/*,.png,.jpg,.jpeg,.gif"
-          />
-        )}
 
         {isLoadingTags ? (
           <span className="loading loading-dots loading-md"></span>

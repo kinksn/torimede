@@ -1,25 +1,33 @@
-import { TagIdSchema, TagObjectSchema } from "@/app/api/tag/model";
+import { uploadPostImageSchema } from "@/app/api/post/upload/model";
+import { tagIdSchema, tagObjectSchema } from "@/app/api/tag/model";
 import { idWithBrandSchema } from "@/lib/util/entity";
 import { z } from "zod";
 
 export const postIdSchema = idWithBrandSchema("PostId");
 export type PostId = z.infer<typeof postIdSchema>;
 
-export const UpdatePostBodySchema = z.object({
-  title: z.string(),
+export const updatePostBodySchema = z.object({
+  title: z.string().min(2, "タイトルは2文字以上入力してください"),
   content: z.string().optional(),
   userId: z.string(),
-  tags: z.array(z.union([TagIdSchema, TagObjectSchema])),
+  tags: z.array(z.union([tagIdSchema, tagObjectSchema])),
 });
 
-export const CreatePostBodySchema = z.object({
-  title: z.string(),
+export const createPostSchema = z.object({
+  title: z.string().min(2, "タイトルは2文字以上入力してください"),
   content: z.string().optional(),
-  image: z.string(),
-  tags: z.array(TagIdSchema),
+  image: uploadPostImageSchema,
+  tags: z.array(tagIdSchema),
 });
 
-export const GetPostSelectTagsSchema = z.object({
+export const createPostBodySchema = z.object({
+  title: z.string().min(2, "タイトルは2文字以上入力してください"),
+  content: z.string().optional(),
+  image: z.string().url(),
+  tags: z.array(tagIdSchema),
+});
+
+export const getPostSelectTagsSchema = z.object({
   id: z.string(),
   title: z.string(),
   content: z.string().optional(),
@@ -27,18 +35,18 @@ export const GetPostSelectTagsSchema = z.object({
   userId: z.string(),
   tags: z.array(
     z.object({
-      tag: TagObjectSchema,
+      tag: tagObjectSchema,
     })
   ),
 });
-export type GetPostSelectTags = z.infer<typeof GetPostSelectTagsSchema>;
+export type GetPostSelectTags = z.infer<typeof getPostSelectTagsSchema>;
 
-export const GetPostOutputSchema = z.object({
+export const getPostOutputSchema = z.object({
   id: z.string(),
   title: z.string(),
   content: z.string().optional(),
   image: z.string(),
   userId: z.string(),
-  tags: z.array(TagObjectSchema),
+  tags: z.array(tagObjectSchema),
 });
-export type GetPostOutput = z.infer<typeof GetPostOutputSchema>;
+export type GetPostOutput = z.infer<typeof getPostOutputSchema>;

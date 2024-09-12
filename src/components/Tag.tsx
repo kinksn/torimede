@@ -18,8 +18,6 @@ export const PostTag: FC<PostTagProps> = ({ tag, session }) => {
 
   const isAdmin = session?.user?.isAdmin;
 
-  console.log("isAdmin = ", isAdmin);
-
   return (
     <span className="badge badge-neutral flex px-2 py-3">
       <Link href={`/post?tag=${name}`}>{name}</Link>
