@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { signUpFormSchema } from "@/app/api/user/schema";
+import { signUpFormSchema } from "@/app/api/user/model";
 
 export async function POST(req: Request) {
   try {

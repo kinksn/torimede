@@ -94,11 +94,9 @@ describe("正常系", () => {
     const body = {
       title: "New Post",
       content: "New content",
-      image: "imageURL",
+      image: "https://example.com/image/bird.jpg",
       tags: ["1"], // タグIDの配列を設定
     };
-
-    const req = createPOSTRequest(body, "/posts/create");
 
     db.post.create.mockImplementation((args: Prisma.PostCreateArgs) => {
       return Promise.resolve({
@@ -112,6 +110,7 @@ describe("正常系", () => {
       });
     });
 
+    const req = createPOSTRequest(body, "/posts/create");
     const res = await POST(req);
     const post = await res.json();
 

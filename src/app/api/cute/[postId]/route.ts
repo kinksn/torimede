@@ -1,34 +1,50 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
+import { createCuteBodySchema } from "@/app/api/cute/[postId]/model";
+import { PostId } from "@/app/api/post/model";
+import {
+  createManyCute,
+  getCuteCountByPostId,
+} from "@/app/api/cute/[postId]/cuteDao";
+
+export const MAX_CUTE_COUNT = 50;
 
 type ContextPropds = {
   params: {
-    postId: string;
+    postId: PostId;
   };
 };
 
 export async function POST(req: Request, context: ContextPropds) {
   try {
     const session = await getAuthSession();
-    const { params } = context;
-    const body = await req.json();
-    if (session?.user?.id === body.userId || session == null) {
+    const { postId } = context.params;
+    const { userId, cuteCount } = createCuteBodySchema.parse(await req.json());
+
+    if (session == null || session?.user?.id === userId) {
       return NextResponse.json(
         { message: "not arrow add cute" },
-        { status: 500 }
+        { status: 403 }
       );
     }
-    const cute = await db.cute.create({
-      data: {
-        postId: params.postId,
-      },
-    });
-    return NextResponse.json(cute, { status: 200 });
-  } catch (error) {
+
+    const currentCuteCount = await getCuteCountByPostId({ postId });
+
+    if (currentCuteCount + cuteCount > MAX_CUTE_COUNT) {
+      return NextResponse.json(
+        { message: "maximum number of cute has been exceeded" },
+        { status: 413 }
+      );
+    }
+
+    await createManyCute({ postId, cuteCount });
+
     return NextResponse.json(
-      { message: "could not add cute" },
-      { status: 500 }
+      { message: `cutes added: ${cuteCount}` },
+      { status: 200 }
     );
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 500 });
   }
 }

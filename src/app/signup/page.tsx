@@ -4,9 +4,9 @@ import React from "react";
 import { SignUp } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpFormSchema } from "@/app/api/user/schema";
 import { useRouter } from "next/navigation";
 import { useCreateUser } from "@/hooks/useUsers";
+import { signUpFormSchema } from "@/app/api/user/model";
 
 const SignUpPage = () => {
   const {

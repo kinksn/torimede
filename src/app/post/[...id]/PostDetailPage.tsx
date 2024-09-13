@@ -53,8 +53,8 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
               postId: post.id,
               userId: post.userId,
             }}
+            initialCuteCount={post.cutes.length}
           />
-          <span>{post.cutes.length}</span>
         </div>
       )}
       <div className="flex justify-between mt-4">
