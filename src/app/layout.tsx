@@ -9,6 +9,7 @@ import Providers from "@/components/Providers";
 import { GlobalNavi } from "@/components/GlobalNavi";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Footer } from "@/components/Footer";
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],
@@ -52,6 +53,7 @@ export default async function RootLayout({
           <GlobalNavi initialSession={session} profileImage={profileImage} />
           <div className="container h-full pt-12">{children}</div>
           {modal}
+          <Footer />
         </Providers>
       </body>
     </html>
