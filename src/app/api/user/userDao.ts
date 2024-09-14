@@ -2,7 +2,8 @@ import { db } from "@/lib/db";
 import {
   getUserPostsSchema,
   getUserProfileSchema,
-  UpdateUserProfile,
+  UpdateUserIsFirstLogin,
+  UpdateUserName,
   UserId,
 } from "@/app/api/user/model";
 import { unique } from "@/lib/util/unique";
@@ -85,9 +86,9 @@ export const getUserCutedPostsByUserId = async ({ userId }: InputUserId) =>
     }
   );
 
-export const updateUserProfile = async ({ name, userId }: UpdateUserProfile) =>
+export const updateUserName = async ({ name, userId }: UpdateUserName) =>
   handleDaoError(
-    { errorMessage: "database error by getUserProfileByUserId" },
+    { errorMessage: "database error by updateUserName" },
     async () => {
       const data = await db.user.update({
         where: {
@@ -99,7 +100,29 @@ export const updateUserProfile = async ({ name, userId }: UpdateUserProfile) =>
       });
 
       if (!data) {
-        throw new Error("failed to update user profile in the database");
+        throw new Error("failed to update user name in the database");
+      }
+    }
+  );
+
+export const updateUserIsFirstLogin = async ({
+  isFirstLogin,
+  userId,
+}: UpdateUserIsFirstLogin) =>
+  handleDaoError(
+    { errorMessage: "database error by updateUserIsFirstLogin" },
+    async () => {
+      const data = await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          isFirstLogin,
+        },
+      });
+
+      if (!data) {
+        throw new Error("failed to update user isFirstLogin in the database");
       }
     }
   );

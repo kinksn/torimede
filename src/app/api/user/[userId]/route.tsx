@@ -3,14 +3,15 @@ import { getAuthSession } from "@/lib/auth";
 import {
   UserId,
   getUserOutputSchema,
-  updateUserNameInputSchema,
+  updateUserInputSchema,
 } from "@/app/api/user/model";
 import {
   USER_NOTFOUND_MESSAGE,
   getUserCutedPostsByUserId,
   getUserPostsByUserId,
   getUserProfileByUserId,
-  updateUserProfile,
+  updateUserIsFirstLogin,
+  updateUserName,
 } from "@/app/api/user/userDao";
 
 type ContextProps = {
@@ -50,8 +51,10 @@ export async function PATCH(req: Request, context: ContextProps) {
   try {
     const userId = context.params.userId;
     const session = await getAuthSession();
-    const input = updateUserNameInputSchema.parse(await req.json());
-    const { name } = input;
+    const input = updateUserInputSchema.parse(await req.json());
+    const { name, isFirstLogin } = input;
+
+    console.log("input isFirstLogin = ", isFirstLogin);
 
     if (session?.user?.id !== userId) {
       return NextResponse.json(
@@ -60,7 +63,8 @@ export async function PATCH(req: Request, context: ContextProps) {
       );
     }
 
-    await updateUserProfile({ name, userId });
+    if (name) await updateUserName({ name, userId });
+    if (!isFirstLogin) await updateUserIsFirstLogin({ isFirstLogin, userId });
 
     return NextResponse.json({ message: "update success" }, { status: 200 });
   } catch (error) {

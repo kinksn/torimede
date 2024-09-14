@@ -33,16 +33,19 @@ declare module "next-auth" {
       name: string | null;
       email?: string | null;
       image?: string | null;
-      isAdmin: boolean; // ここにisAdminを追加
+      isAdmin: boolean;
+      isFirstLogin: boolean;
       id: string | null;
     };
   }
 
   interface User {
-    isAdmin: boolean; // ここにisAdminを追加
+    isAdmin: boolean;
+    isFirstLogin: boolean;
   }
 
   interface JWT {
-    isAdmin: boolean; // ここにisAdminを追加
+    isAdmin: boolean;
+    isFirstLogin: boolean;
   }
 }

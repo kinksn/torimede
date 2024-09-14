@@ -27,15 +27,25 @@ export const getUserOutputSchema = z.object({
 });
 export type GetUserOutput = z.infer<typeof getUserOutputSchema>;
 
-export const updateUserNameInputSchema = z.object({
-  name: z.string().min(1).max(15),
+export const updateUserInputSchema = z.object({
+  name: z.string().min(1).max(15).optional(),
+  isFirstLogin: z.boolean().optional(),
 });
+export type UpdateUserInput = z.infer<typeof updateUserInputSchema>;
 
-export const updateUserProfileSchema = z.object({
-  name: updateUserNameInputSchema.shape.name,
+export const updateUserNameSchema = z.object({
+  name: updateUserInputSchema.shape.name,
   userId: userIdSchema,
 });
-export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>;
+export type UpdateUserName = z.infer<typeof updateUserNameSchema>;
+
+export const updateUserIsFirstLoginSchema = z.object({
+  isFirstLogin: updateUserInputSchema.shape.isFirstLogin,
+  userId: userIdSchema,
+});
+export type UpdateUserIsFirstLogin = z.infer<
+  typeof updateUserIsFirstLoginSchema
+>;
 
 export const signUpFormSchema = z
   .object({
