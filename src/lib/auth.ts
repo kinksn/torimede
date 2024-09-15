@@ -51,12 +51,15 @@ export const authOptions: NextAuthOptions = {
           email: token.email!,
         },
       });
+      token.isFirstLogin = userInDb?.isFirstLogin;
       token.isAdmin = userInDb?.isAdmin ?? false;
+      token.name = userInDb?.name ?? "";
       return token;
     },
     async session({ token, session }) {
       if (token && session.user) {
         session.user.isAdmin = token.isAdmin as boolean;
+        session.user.isFirstLogin = token.isFirstLogin as boolean;
         session.user.id = token.sub || null;
       }
       return session;

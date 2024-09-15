@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { GetUserProfile, UpdateUserProfile } from "@/app/api/user/model";
+import { GetUserProfile } from "@/app/api/user/model";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
