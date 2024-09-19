@@ -64,7 +64,7 @@ describe("異常系", () => {
     const res = await POST(req, context);
     const cute = await res.json();
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(403);
     expect(cute).toEqual(
       expect.objectContaining({ message: "not arrow add cute" })
     );
@@ -89,7 +89,7 @@ describe("異常系", () => {
     const res = await POST(req, context);
     const cute = await res.json();
 
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(403);
     expect(cute).toEqual(
       expect.objectContaining({ message: "not arrow add cute" })
     );

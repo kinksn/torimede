@@ -13,7 +13,7 @@ type PostCardProps = {
   session: Session | null;
 };
 
-const PostCard: FC<PostCardProps> = async ({ post, session }) => {
+const PostCard: FC<PostCardProps> = ({ post, session }) => {
   const { id, userId, image } = post;
 
   const isMyPost = session?.user?.id === userId;

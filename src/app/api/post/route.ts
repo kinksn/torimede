@@ -2,40 +2,59 @@ import { GetPostSelectTags } from "@/app/api/post/model";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+
+  const take = Number(url.searchParams.get("take"));
+  const lastCursor = url.searchParams.get("lastCursor");
+
   try {
     const posts: GetPostSelectTags[] = await db.post.findMany({
-      /**
-     * フィールドには`createdAt`なども含まれているが、
-     * selectで必要なフィールドだけ返すように設定できる
-     * {
-        id: 'clwj2ksp20004qhn05byuh7wy',
-        title: 'test',
-        content: 'content',
-        createdAt: 2024-05-23T09:47:47.654Z,
-        updatedAt: 2024-05-23T09:47:33.370Z,
-      }
-     */
+      take: take ?? 10,
+      ...(lastCursor && {
+        skip: 1,
+        cursor: {
+          id: lastCursor,
+        },
+      }),
       select: {
         id: true,
         title: true,
         content: true,
         image: true,
         userId: true,
-        // リレーショナルフィールドも出力できる
         tags: {
           select: {
-            tag: {
-              select: {
-                name: true,
-                id: true,
-              },
-            },
+            tag: true,
           },
         },
       },
       orderBy: {
         createdAt: "desc",
+      },
+    });
+
+    if (posts.length === 0) {
+      return NextResponse.json(
+        {
+          posts: [],
+          metaData: {
+            lastCursor: null,
+            hasNextPage: false,
+          },
+        },
+        { status: 200 }
+      );
+    }
+
+    const lastPost = posts[posts.length - 1];
+    const cursor = lastPost.id;
+
+    const nextPage = await db.post.findMany({
+      take: take ?? 10,
+      skip: 1,
+      cursor: {
+        id: cursor,
       },
     });
 
@@ -47,7 +66,15 @@ export async function GET() {
       })),
     }));
 
-    return NextResponse.json(formattedPosts, { status: 200 });
+    const result = {
+      posts: formattedPosts,
+      metaData: {
+        lastCursor: cursor,
+        hasNextPage: nextPage.length > 0,
+      },
+    };
+
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: `could not fetch posts: ${error}` },

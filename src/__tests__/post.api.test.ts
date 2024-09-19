@@ -3,6 +3,7 @@ import { GET as GET_ALL_POST } from "@/app/api/post/route";
 import { DELETE, PATCH, GET } from "@/app/api/post/[postId]/route";
 import { POST } from "@/app/api/post/create/route";
 import {
+  createGETRequest,
   createDELETERequest,
   createPATCHRequest,
   createPOSTRequest,
@@ -46,11 +47,12 @@ describe("正常系", () => {
 
     db.post.findMany.mockResolvedValue(mockPosts);
 
-    const res = await GET_ALL_POST();
-    const posts = await res.json();
+    const req = createGETRequest(`/post?take=1`);
+    const res = await GET_ALL_POST(req);
+    const data = await res.json();
 
     expect(res.status).toBe(200);
-    expect(posts).toEqual(
+    expect(data.posts).toEqual(
       mockPosts.map((post) => ({
         ...post,
         tags: post.tags.map((tagRelation) => ({
