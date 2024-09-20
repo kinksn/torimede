@@ -12,16 +12,35 @@ export async function middleware(req: NextRequest) {
     },
   });
 
+  /**
+   * ログイン前
+   */
+  if (!token && url.pathname.startsWith("/create")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+  if (!token && url.pathname.startsWith("/edit")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+  if (!token && url.pathname === "/change-username") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   // トークンが存在しない場合はそのまま処理を続行
   if (!token) return NextResponse.next();
 
-  // isFirstLogin が true なら /change-username にリダイレクト
+  /**
+   * ログイン後
+   */
   if (token.isFirstLogin === true && url.pathname === "/") {
     return NextResponse.redirect(new URL("/change-username", req.url));
   }
-
-  // isFirstLogin が false なのに /change-username を開こうとした場合、トップページにリダイレクト
   if (token.isFirstLogin === false && url.pathname === "/change-username") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+  if (!!token && url.pathname === "/login") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+  if (!!token && url.pathname === "/signup") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -30,5 +49,12 @@ export async function middleware(req: NextRequest) {
 
 // matcher で適用するパスを指定
 export const config = {
-  matcher: ["/", "/change-username"],
+  matcher: [
+    "/",
+    "/change-username",
+    "/login",
+    "/signup",
+    "/create/:path*",
+    "/edit/:path*",
+  ],
 };
