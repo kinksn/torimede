@@ -16,7 +16,7 @@ export async function middleware(req: NextRequest) {
   if (!token) return NextResponse.next();
 
   // isFirstLogin が true なら /change-username にリダイレクト
-  if (token.isFirstLogin === true && url.pathname !== "/change-username") {
+  if (token.isFirstLogin === true && url.pathname === "/") {
     return NextResponse.redirect(new URL("/change-username", req.url));
   }
 

@@ -28,7 +28,7 @@ export const createPostBodySchema = z.object({
 });
 
 export const getPostSelectTagsSchema = z.object({
-  id: z.string(),
+  id: postIdSchema,
   title: z.string(),
   content: z.string().optional(),
   image: z.string(),
@@ -42,11 +42,19 @@ export const getPostSelectTagsSchema = z.object({
 export type GetPostSelectTags = z.infer<typeof getPostSelectTagsSchema>;
 
 export const getPostOutputSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  content: z.string().optional(),
-  image: z.string(),
-  userId: z.string(),
-  tags: z.array(tagObjectSchema),
+  posts: z.array(
+    z.object({
+      id: postIdSchema,
+      title: z.string(),
+      content: z.string().optional(),
+      image: z.string(),
+      userId: z.string(),
+      tags: z.array(tagObjectSchema),
+    })
+  ),
+  metaData: z.object({
+    lastCursor: postIdSchema,
+    hasNextPage: z.boolean(),
+  }),
 });
 export type GetPostOutput = z.infer<typeof getPostOutputSchema>;
