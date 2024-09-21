@@ -7,13 +7,12 @@ import CuteButton from "@/components/CuteButton";
 import PostCard from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
-import { GetPostOutput } from "@/app/api/post/model";
-import { Cute, User } from "@prisma/client";
+import { GetPostDetailOutput, GetUserPostsOutput } from "@/app/api/post/model";
 import Link from "next/link";
 
 type PostDetailPageProps = {
-  post: GetPostOutput & { user: User; cutes: Cute[] };
-  userPosts: GetPostOutput[];
+  post: GetPostDetailOutput;
+  userPosts: GetUserPostsOutput;
 };
 
 export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {

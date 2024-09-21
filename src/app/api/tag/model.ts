@@ -4,6 +4,6 @@ import { z } from "zod";
 export const tagIdSchema = z.string();
 
 export const tagObjectSchema = z.object({
-  id: z.string(),
+  id: tagIdSchema,
   name: z.string(),
 });

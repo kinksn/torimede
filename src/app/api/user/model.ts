@@ -5,6 +5,14 @@ import { z } from "zod";
 export const userIdSchema = idWithBrandSchema("UserId");
 export type UserId = z.infer<typeof userIdSchema>;
 
+export const userSchema = z.object({
+  id: userIdSchema,
+  name: z.string(),
+  email: z.string().email(),
+  image: z.string().url(),
+  isAdmin: z.boolean(),
+});
+
 export const getUserProfileSchema = z.object({
   id: userIdSchema,
   name: z.string(),
@@ -14,7 +22,8 @@ export type GetUserProfile = z.infer<typeof getUserProfileSchema>;
 
 export const getUserPostsSchema = z.array(
   z.object({
-    id: postIdSchema,
+    // TODO: postIdSchemaにしたいが循環参照でエラーになる
+    id: z.string(),
     userId: userIdSchema,
     image: z.string().url(),
   })

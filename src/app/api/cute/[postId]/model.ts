@@ -1,11 +1,20 @@
-import { postIdSchema } from "@/app/api/post/model";
 import { userIdSchema } from "@/app/api/user/model";
+import { idWithBrandSchema } from "@/lib/util/entity";
 import { z } from "zod";
 
 export const MAX_CUTE_COUNT = 50;
 
+export const cuteIdSchema = idWithBrandSchema("CuteId");
+
+export const cuteSchema = z.object({
+  id: cuteIdSchema,
+  // TODO: postIdSchemaにしたいが循環参照でエラーになる
+  postId: z.string(),
+});
+
 export const createCuteSchema = z.object({
-  postId: postIdSchema,
+  // TODO: postIdSchemaにしたいが循環参照でエラーになる
+  postId: z.string(),
   cuteCount: z.number(),
 });
 export type CreateCute = z.infer<typeof createCuteSchema>;

@@ -1,11 +1,12 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Pen, Trash } from "lucide-react";
 import Link from "next/link";
 import React, { FC, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { postKeys } from "@/service/post/key";
 
 type ButtonActionProps = {
   id: string;
@@ -14,6 +15,7 @@ type ButtonActionProps = {
 
 const ButtonAction: FC<ButtonActionProps> = ({ id, userId }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const modalRef = useRef<HTMLDialogElement>(null);
   const { mutate: deletePost, isPending } = useMutation({
     mutationFn: async (userId: string) => {
@@ -23,8 +25,8 @@ const ButtonAction: FC<ButtonActionProps> = ({ id, userId }) => {
       console.error(error);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: postKeys.infiniteList() });
       router.push("/");
-      router.refresh();
     },
   });
 

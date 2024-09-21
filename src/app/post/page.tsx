@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 const searchPosts = async (
   query: string,
   tag: string
-): Promise<GetPostOutput[]> => {
+): Promise<GetPostOutput["posts"]> => {
   const params = new URLSearchParams();
   if (query) params.append("q", query);
   if (tag) params.append("tag", tag);

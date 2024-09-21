@@ -4,8 +4,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-
-export const MAX_CUTE_COUNT = 50;
+import { MAX_CUTE_COUNT } from "@/app/api/cute/[postId]/model";
 
 type CuteButtonProps = {
   ids: {
