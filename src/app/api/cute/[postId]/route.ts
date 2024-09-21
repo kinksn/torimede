@@ -1,14 +1,14 @@
-import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
-import { createCuteBodySchema } from "@/app/api/cute/[postId]/model";
+import {
+  createCuteBodySchema,
+  MAX_CUTE_COUNT,
+} from "@/app/api/cute/[postId]/model";
 import { PostId } from "@/app/api/post/model";
 import {
   createManyCute,
   getCuteCountByPostId,
 } from "@/app/api/cute/[postId]/cuteDao";
-
-export const MAX_CUTE_COUNT = 50;
 
 type ContextPropds = {
   params: {

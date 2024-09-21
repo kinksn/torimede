@@ -2,14 +2,16 @@
 
 import BackButton from "@/components/BackButton";
 import FormPost from "@/components/FormPost";
+import { postKeys } from "@/service/post/key";
 import { FormInputPost } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { SubmitHandler } from "react-hook-form";
 
 const CreatePage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const handleCreatePost: SubmitHandler<FormInputPost> = (data) => {
     createPost(data);
   };
@@ -21,9 +23,12 @@ const CreatePage = () => {
     onError: (error) => {
       console.error(error);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: postKeys.infiniteList(),
+        refetchType: "inactive",
+      });
       router.push("/");
-      router.refresh();
     },
   });
 

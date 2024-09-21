@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["@types/jest"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "target": "es2015",

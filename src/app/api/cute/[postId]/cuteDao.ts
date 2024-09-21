@@ -37,11 +37,7 @@ export const getCuteCountByPostId = async ({ postId }: { postId: PostId }) =>
         },
       };
 
-      console.log("postId = ", postId);
-
       const data = await db.cute.count(query);
-
-      console.log("data = ", data);
 
       return getCuteCountByPostIdOutputSchema.parse(data);
     }

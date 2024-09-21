@@ -15,12 +15,16 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { createPostSchema, updatePostBodySchema } from "@/app/api/post/model";
+import {
+  createPostSchema,
+  EditPost,
+  updatePostBodySchema,
+} from "@/app/api/post/model";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
   isEditing: boolean;
-  initialValue?: FormInputPost;
+  initialValue?: EditPost;
   isLoadingSubmit: boolean;
 }
 
@@ -36,7 +40,7 @@ const FormPost: FC<FromPostProps> = ({
     register,
     handleSubmit,
     formState: { isDirty, errors },
-  } = useForm<FormInputPost>({
+  } = useForm<EditPost>({
     defaultValues: initialValue
       ? initialValue
       : { title: "", content: "", tags: [], image: "" },
@@ -84,7 +88,7 @@ const FormPost: FC<FromPostProps> = ({
     const imageUrl = isEditing
       ? initialValue?.image
       : await uploadImage(imageFile, data.image || "");
-    console.log("imageUrl = ", imageUrl);
+
     if (!imageUrl) {
       setIsSubmitting(false);
       return;

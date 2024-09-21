@@ -1,7 +1,7 @@
 "use client";
 
 import { Login } from "@/types";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -16,10 +16,7 @@ const loginFormSchema = z
   .strict();
 
 const LoginPage = () => {
-  const { data, status } = useSession();
   const router = useRouter();
-  console.log("data = " + JSON.stringify(data));
-  console.log("status = " + status);
 
   const {
     register,
@@ -37,12 +34,9 @@ const LoginPage = () => {
       password: data.password,
     });
 
-    console.log("res = ", res);
-
     if (res?.error) {
       alert("could not login your account");
     } else {
-      console.log("Signed in successfully");
       router.push("/");
     }
   };

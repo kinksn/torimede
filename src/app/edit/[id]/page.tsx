@@ -9,7 +9,8 @@ import { FC } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import hash from "stable-hash";
-import { GetPostOutput } from "@/app/api/post/model";
+import { editPostSchema, EditPost } from "@/app/api/post/model";
+import { postKeys } from "@/service/post/key";
 
 type EditPostPageProps = {
   params: {
@@ -20,15 +21,17 @@ type EditPostPageProps = {
 const EditPostPage: FC<EditPostPageProps> = ({ params }) => {
   const router = useRouter();
   const { id } = params;
-  const { data: dataPosts, isLoading: isLoadingPost } = useQuery<GetPostOutput>(
-    {
-      queryKey: ["posts", id],
-      queryFn: async () => {
-        const response = await axios.get(`/api/post/${id}`);
-        return response.data;
-      },
-    }
-  );
+  const { data: dataPosts, isLoading: isLoadingPost } = useQuery<EditPost>({
+    queryKey: postKeys.edit(id),
+    queryFn: async () => {
+      const response = await axios.get(`/api/post/${id}`);
+      return response.data;
+    },
+    select: (data) => {
+      const newPost = { ...data };
+      return editPostSchema.parse(newPost);
+    },
+  });
 
   const { mutate: updatePost, isPending: isLoadingSubmit } = useMutation({
     mutationFn: (newPost: FormInputPost) => {
@@ -38,9 +41,7 @@ const EditPostPage: FC<EditPostPageProps> = ({ params }) => {
       console.error(error);
     },
     onSuccess: () => {
-      // location.href = `/post/${id}`;
       router.push(`/post/${id}`);
-      router.refresh();
     },
   });
 

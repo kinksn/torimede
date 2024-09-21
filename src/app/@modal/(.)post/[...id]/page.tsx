@@ -1,13 +1,19 @@
 import { db } from "@/lib/db";
 import { FC } from "react";
 import Modal from "@/components/Modal";
-import { GetPostOutput, GetPostSelectTags } from "@/app/api/post/model";
+import {
+  getPostDetailOutputSchema,
+  getUserPostsOutputSchema,
+  GetPostSelectTags,
+  PostId,
+} from "@/app/api/post/model";
 import { Cute, User } from "@prisma/client";
 import { PostDetailPage } from "@/app/post/[...id]/PostDetailPage";
+import { UserId } from "@/app/api/user/model";
 
 type PostProps = {
   params: {
-    id: [postId: string, userId: string];
+    id: [postId: PostId, userId: UserId];
   };
 };
 
@@ -41,7 +47,7 @@ async function getPost(postId: string) {
     })),
   };
 
-  return formattedPosts;
+  return getPostDetailOutputSchema.parse(formattedPosts);
 }
 
 async function getPostByUserId(userId: string, postId: string) {
@@ -67,7 +73,7 @@ async function getPostByUserId(userId: string, postId: string) {
     },
   });
 
-  const formattedPosts: GetPostOutput[] = posts.map((post: any) => ({
+  const formattedPosts = posts.map((post: any) => ({
     ...post,
     tags: post.tags.map((tagRelation: any) => {
       return {
@@ -77,7 +83,7 @@ async function getPostByUserId(userId: string, postId: string) {
     }),
   }));
 
-  return formattedPosts;
+  return getUserPostsOutputSchema.parse(formattedPosts);
 }
 const PostDetail: FC<PostProps> = async ({ params }) => {
   const [postId, userId] = params.id;

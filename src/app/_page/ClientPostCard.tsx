@@ -7,6 +7,7 @@ import { Session } from "next-auth";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { postKeys } from "@/service/post/key";
+import { GetPostOutput } from "@/app/api/post/model";
 
 type ClientSideFetchProps = {
   session: Session | null;
@@ -18,7 +19,7 @@ type FetchPostParams = {
 };
 
 const fetchPosts = async ({ take, lastCursor }: FetchPostParams) => {
-  const response = await axios.get("/api/post", {
+  const response = await axios.get<GetPostOutput>("/api/post", {
     params: { take, lastCursor },
   });
   return response?.data;

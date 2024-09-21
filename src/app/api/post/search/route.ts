@@ -22,18 +22,13 @@ export async function GET(req: Request) {
         include: {
           tags: {
             select: {
-              tag: {
-                select: {
-                  name: true,
-                  id: true,
-                },
-              },
+              tag: true,
             },
           },
         },
       });
 
-      const formattedPosts: GetPostOutput[] = posts.map((post) => ({
+      const formattedPosts: GetPostOutput["posts"] = posts.map((post) => ({
         ...post,
         tags: post.tags.map((tagRelation) => ({
           name: tagRelation.tag.name,
@@ -69,7 +64,7 @@ export async function GET(req: Request) {
         },
       });
 
-      const formattedPosts: GetPostOutput[] = posts.map((post) => ({
+      const formattedPosts: GetPostOutput["posts"] = posts.map((post) => ({
         ...post,
         tags: post.tags.map((tagRelation) => ({
           name: tagRelation.tag.name,

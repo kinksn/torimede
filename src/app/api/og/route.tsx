@@ -6,7 +6,7 @@ import "isomorphic-fetch";
 // App router includes @vercel/og.
 // No need to install it.
 
-export const urlParamsSchema = z.object({
+const urlParamsSchema = z.object({
   title: z.string().min(1),
   image: z.string().url(),
   userName: z.string().min(1),

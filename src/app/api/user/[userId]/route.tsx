@@ -54,8 +54,6 @@ export async function PATCH(req: Request, context: ContextProps) {
     const input = updateUserInputSchema.parse(await req.json());
     const { name, isFirstLogin } = input;
 
-    console.log("input isFirstLogin = ", isFirstLogin);
-
     if (session?.user?.id !== userId) {
       return NextResponse.json(
         { message: "not allowed to update user name" },

@@ -1,12 +1,18 @@
-import { GetPostOutput, GetPostSelectTags } from "@/app/api/post/model";
+import {
+  getPostDetailOutputSchema,
+  GetPostSelectTags,
+  getUserPostsOutputSchema,
+  PostId,
+} from "@/app/api/post/model";
 import { PostDetailPage } from "@/app/post/[...id]/PostDetailPage";
 import { Cute, User } from "@prisma/client";
 import { Metadata, ResolvingMetadata } from "next";
 import { db } from "@/lib/db";
+import { UserId } from "@/app/api/user/model";
 
 type PostProps = {
   params: {
-    id: [postId: string, userId: string];
+    id: [postId: PostId, userId: UserId];
   };
 };
 
@@ -88,11 +94,11 @@ async function getPost(postId: string) {
     })),
   };
 
-  return formattedPosts;
+  return getPostDetailOutputSchema.parse(formattedPosts);
 }
 
 async function getPostByUserId(userId: string, postId: string) {
-  const posts: Omit<GetPostSelectTags, "user">[] = await db.post.findMany({
+  const posts = await db.post.findMany({
     where: {
       userId,
       id: {
@@ -114,9 +120,9 @@ async function getPostByUserId(userId: string, postId: string) {
     },
   });
 
-  const formattedPosts: GetPostOutput[] = posts.map((post) => ({
+  const formattedPosts = posts.map((post: any) => ({
     ...post,
-    tags: post.tags.map((tagRelation) => {
+    tags: post.tags.map((tagRelation: any) => {
       return {
         name: tagRelation.tag.name,
         id: tagRelation.tag.id,
@@ -124,7 +130,7 @@ async function getPostByUserId(userId: string, postId: string) {
     }),
   }));
 
-  return formattedPosts;
+  return getUserPostsOutputSchema.parse(formattedPosts);
 }
 
 export default async function PostDetail({ params }: PostProps) {
