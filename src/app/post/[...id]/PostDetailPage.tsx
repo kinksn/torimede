@@ -47,13 +47,7 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
       />
       {!isMyPost && session !== null && (
         <div className="flex justify-center items-center mt-4 mb-4">
-          <CuteButton
-            ids={{
-              postId: post.id,
-              userId: post.userId,
-            }}
-            initialCuteCount={post.cutes.length}
-          />
+          <CuteButton postId={post.id} />
         </div>
       )}
       <div className="flex justify-between mt-4">

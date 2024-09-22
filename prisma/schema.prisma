@@ -32,6 +32,8 @@ model Cute {
   id        String   @id @default(cuid())
   postId    String
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 
@@ -62,6 +64,7 @@ model User {
   isAdmin       Boolean   @default(false)
   isFirstLogin  Boolean   @default(true)
   Post          Post[]
+  Cute          Cute[]
 
   @@map("users")
 }
