@@ -2,8 +2,7 @@ import { db } from "@/lib/db";
 import { handleDaoError } from "@/lib/api/daoUtil";
 import {
   CreateCute,
-  getCuteCountByPostIdOutputSchema,
-  getCuteCountByUserIdOutputSchema,
+  getUserCuteCountForPostSchema,
 } from "@/app/api/cute/[postId]/model";
 import { PostId } from "@/app/api/post/model";
 import { PrismaClient } from "@prisma/client";
@@ -34,23 +33,7 @@ export const createManyCute = async ({
     }
   );
 
-export const getCuteCountByPostId = async ({ postId }: { postId: PostId }) =>
-  handleDaoError(
-    { errorMessage: "database error by getCuteCountByPostId" },
-    async () => {
-      const query = {
-        where: {
-          postId,
-        },
-      };
-
-      const data = await db.cute.count(query);
-
-      return getCuteCountByPostIdOutputSchema.parse(data);
-    }
-  );
-
-export const getCuteCountByUserId = async ({
+export const getUserCuteCountForPost = async ({
   postId,
   userId,
 }: {
@@ -58,7 +41,7 @@ export const getCuteCountByUserId = async ({
   userId: UserId;
 }) =>
   handleDaoError(
-    { errorMessage: "database error by getCuteCountByPostId" },
+    { errorMessage: "database error by getUserCuteCountForPost" },
     async () => {
       const query = {
         where: {
@@ -69,6 +52,6 @@ export const getCuteCountByUserId = async ({
 
       const data = await db.cute.count(query);
 
-      return getCuteCountByUserIdOutputSchema.parse(data);
+      return getUserCuteCountForPostSchema.parse(data);
     }
   );

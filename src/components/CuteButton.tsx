@@ -8,38 +8,35 @@ import {
   CreateCuteOutput,
   MAX_CUTE_COUNT,
 } from "@/app/api/cute/[postId]/model";
+import { PostId } from "@/app/api/post/model";
 
 type CuteButtonProps = {
-  ids: {
-    postId: string;
-    userId: string;
-  };
+  postId: PostId;
 };
 
 type AddCuteProps = {
-  ids: CuteButtonProps["ids"];
+  postId: PostId;
   cuteCount: number;
 };
 
-const addCute = async ({ ids, cuteCount }: AddCuteProps) => {
+const addCute = async ({ postId, cuteCount }: AddCuteProps) => {
   const response = await axiosInstance.post<CreateCuteOutput>(
-    `/cute/${ids.postId}`,
+    `/cute/${postId}`,
     {
-      userId: ids.userId,
       cuteCount,
     }
   );
   return response.data;
 };
 
-const CuteButton: React.FC<CuteButtonProps> = ({ ids }) => {
+const CuteButton: React.FC<CuteButtonProps> = ({ postId }) => {
   const [userCuteCount, setUserCuteCount] = useState(0);
   const [tempCuteCount, setTempCuteCount] = useState(0);
   const [isClapping, setIsClapping] = useState(false);
   const router = useRouter();
 
   const { mutate } = useMutation({
-    mutationFn: () => addCute({ ids, cuteCount: tempCuteCount }),
+    mutationFn: () => addCute({ postId, cuteCount: tempCuteCount }),
     onSuccess: (data) => {
       setUserCuteCount(data.totalCuteCount);
       setTempCuteCount(0);

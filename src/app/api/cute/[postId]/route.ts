@@ -8,8 +8,9 @@ import {
 import { PostId } from "@/app/api/post/model";
 import {
   createManyCute,
-  getCuteCountByUserId,
+  getUserCuteCountForPost,
 } from "@/app/api/cute/[postId]/cuteDao";
+import { getPostByPostId } from "@/app/api/post/postDao";
 
 type ContextPropds = {
   params: {
@@ -21,20 +22,21 @@ export async function POST(req: Request, context: ContextPropds) {
   try {
     const session = await getAuthSession();
     const { postId } = context.params;
-    const { userId: postUserId, cuteCount } = createCuteBodySchema.parse(
-      await req.json()
-    );
+    const { cuteCount } = createCuteBodySchema.parse(await req.json());
+
+    const post = await getPostByPostId({ postId });
+    const postUserId = post.userId;
 
     if (session?.user === undefined || session?.user?.id === postUserId) {
       return NextResponse.json(
-        { message: "not arrow add cute" },
+        { message: "not allowed to add cute" },
         { status: 403 }
       );
     }
 
     const cutedUserId = session.user.id;
 
-    const userCuteCount = await getCuteCountByUserId({
+    const userCuteCount = await getUserCuteCountForPost({
       postId,
       userId: cutedUserId,
     });
@@ -44,7 +46,7 @@ export async function POST(req: Request, context: ContextPropds) {
     if (totalCuteCount > MAX_CUTE_COUNT) {
       return NextResponse.json(
         { message: "maximum number of cute has been exceeded" },
-        { status: 413 }
+        { status: 429 }
       );
     }
 

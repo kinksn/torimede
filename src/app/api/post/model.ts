@@ -8,10 +8,22 @@ import { z } from "zod";
 export const postIdSchema = idWithBrandSchema("PostId");
 export type PostId = z.infer<typeof postIdSchema>;
 
+export const getPostByPostIdInputSchema = postIdSchema;
+export type GetPostByPostIdInput = z.infer<typeof getPostByPostIdInputSchema>;
+
+export const getPostByPostIdOutputSchema = z.object({
+  id: postIdSchema,
+  title: z.string(),
+  content: z.string().optional(),
+  image: z.string(),
+  userId: userIdSchema,
+});
+export type GetPostByPostIdOutput = z.infer<typeof getPostByPostIdOutputSchema>;
+
 export const updatePostBodySchema = z.object({
   title: z.string().min(2, "タイトルは2文字以上入力してください"),
   content: z.string().optional(),
-  userId: z.string(),
+  userId: userIdSchema,
   tags: z.array(z.union([tagIdSchema, tagObjectSchema])),
 });
 
@@ -43,7 +55,7 @@ export const getPostSelectTagsSchema = z.object({
   title: z.string(),
   content: z.string().optional(),
   image: z.string(),
-  userId: z.string(),
+  userId: userIdSchema,
   tags: z.array(
     z.object({
       tag: tagObjectSchema,
