@@ -4,6 +4,7 @@ import { NextAuthOptions, getServerSession } from "next-auth";
 import Google from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { UserId } from "@/app/api/user/model";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -60,7 +61,8 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.isFirstLogin = token.isFirstLogin as boolean;
-        session.user.id = token.sub || null;
+        // TODO: asで無理やり型エラーが出ないようにした
+        session.user.id = token.sub as UserId;
       }
       return session;
     },

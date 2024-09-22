@@ -38,7 +38,8 @@ export const ChangeUserName = ({ session }: ChangeUserNameProps) => {
     try {
       const token = await axios.get("/api/auth/session"); // セッションの再取得
       if (token.data.user.isFirstLogin === false) {
-        router.replace("/");
+        // TODO: 本番環境でrouter.push()でもいけるか調べる
+        location.href = "/";
       } else {
         // 状態が更新されるまでポーリング
         setTimeout(checkFirstLogin, 500); // 0.5秒後に再確認

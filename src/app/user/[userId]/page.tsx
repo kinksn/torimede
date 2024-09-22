@@ -12,9 +12,13 @@ type UserProps = {
 export default async function User({ params }: UserProps) {
   const session = await getAuthSession();
   const userId = params.userId;
-  const profile: GetUserOutput = await (
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`)
-  ).json();
+  const profile: GetUserOutput =
+    await // 本番環境だと名前を変更してもすぐに反映しなかったので `{chache: "no-store"}` を設定したら変更が反映されるようになった
+    (
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`, {
+        cache: "no-store",
+      })
+    ).json();
 
   return <UserPage profile={profile} session={session} />;
 }
