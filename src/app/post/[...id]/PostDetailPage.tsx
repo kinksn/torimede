@@ -52,7 +52,6 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
               postId: post.id,
               userId: post.userId,
             }}
-            initialCuteCount={post.cutes.length}
           />
         </div>
       )}

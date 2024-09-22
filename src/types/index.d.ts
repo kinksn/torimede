@@ -1,6 +1,7 @@
 import { z } from "zod";
 import NextAuth from "next-auth";
 import { Post } from "@prisma/client";
+import { UserId } from "@/app/api/user/model";
 
 export type FormInputPost = {
   title: string;
@@ -32,10 +33,10 @@ declare module "next-auth" {
     user?: {
       name: string | null;
       email?: string | null;
-      image?: string | null;
+      image: string | null;
       isAdmin: boolean;
       isFirstLogin: boolean;
-      id: string | null;
+      id: UserId;
     };
   }
 
