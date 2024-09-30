@@ -8,6 +8,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { postKeys } from "@/service/post/key";
 import { GetPostOutput } from "@/app/api/post/model";
+import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
 
 type ClientSideFetchProps = {
   session: Session | null;
@@ -27,7 +28,7 @@ const fetchPosts = async ({ take, lastCursor }: FetchPostParams) => {
 
 const ClientPostCard = ({ session }: ClientSideFetchProps) => {
   const { ref, inView } = useInView();
-  // React Queryを使ってフェッチする関数
+
   const {
     data,
     error,
@@ -56,6 +57,7 @@ const ClientPostCard = ({ session }: ClientSideFetchProps) => {
 
   return (
     <>
+      <InitialPagePathSetter />
       {isSuccess &&
         data?.pages.map((page) =>
           page.posts.map((post: any, index: number) => {

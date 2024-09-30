@@ -8,7 +8,6 @@ import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 
 type ChangeUserNameProps = {
   session: Session | null;
@@ -22,7 +21,6 @@ const formSchema = z.object({
 });
 
 export const ChangeUserName = ({ session }: ChangeUserNameProps) => {
-  const router = useRouter();
   const userId = session?.user?.id;
   const userName = session?.user?.name;
   const {

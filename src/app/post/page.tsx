@@ -7,6 +7,7 @@ import PostCard from "@/components/PostCard";
 import BackButton from "@/components/BackButton";
 import { GetPostOutput } from "@/app/api/post/model";
 import { useSession } from "next-auth/react";
+import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
 
 const searchPosts = async (
   query: string,
@@ -38,6 +39,7 @@ export default function PostsPage() {
 
   return (
     <div className="container mx-auto px-4">
+      <InitialPagePathSetter />
       <BackButton />
       <h1 className="text-2xl font-bold mb-4">投稿一覧</h1>
       {isLoading ? (
