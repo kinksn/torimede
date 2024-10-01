@@ -8,7 +8,6 @@ import PostCard from "@/components/PostCard";
 import { ShareButtons } from "@/components/ShareButtons";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
 import { GetPostDetailOutput, GetUserPostsOutput } from "@/app/api/post/model";
-import Link from "next/link";
 
 type PostDetailPageProps = {
   post: GetPostDetailOutput;
@@ -32,9 +31,13 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
       </div>
       <div className="flex mb-4">
         {userProfileImage && (
-          <Link href={`/user/${post.userId}`}>
+          // 投稿詳細モーダルからユーザーページに遷移する際、
+          // なぜかユーザーページで投稿詳細モーダルを開いて閉じると移前のモーダルが残ったまま表示されてしまうため、
+          // aタグでページ遷移して強制リフレッシュしている。
+          // 原因は定かではないがおそらくParallel RouteかIntercepting Routeのバグかと思われる。
+          <a href={`/user/${post.userId}`}>
             <Image src={userProfileImage} alt="" width="28" height="28" />
-          </Link>
+          </a>
         )}
         <p>{userName}</p>
       </div>

@@ -1,13 +1,18 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
+import { useAtomValue } from "jotai";
+import { initialPagePath as atomInitialPagePath } from "@/lib/atom/initialPagePath";
+import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
+import { useRouter } from "next/navigation";
 
 const Modal = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter();
   const pathname = usePathname();
   const dialogRef = useRef<ElementRef<"dialog">>(null);
   const [currentPath, _setCurrentPath] = useState(pathname);
+  const initialPagePath = useAtomValue(atomInitialPagePath);
+  const router = useRouter();
 
   useEffect(() => {
     if (!dialogRef.current?.open) {
@@ -23,11 +28,12 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
   }, [pathname, currentPath]);
 
   function onDismiss() {
-    router.back();
+    router.push(initialPagePath);
   }
 
   return (
     <dialog id="my_modal_3" ref={dialogRef} className="modal">
+      <InitialPagePathSetter />
       <div className="modal-box">
         <form method="dialog">
           <button

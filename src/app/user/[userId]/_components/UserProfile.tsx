@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axios from "axios";
-
 type UserProfile = {
   userProfile: GetUserProfile;
   readonly: boolean;

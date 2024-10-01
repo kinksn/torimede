@@ -2,6 +2,7 @@ import { GetUserOutput } from "@/app/api/user/model";
 import { UserProfile } from "@/app/user/[userId]/_components/UserProfile";
 import BackButton from "@/components/BackButton";
 import PostCard from "@/components/PostCard";
+import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
 import { Session } from "next-auth";
 import React from "react";
 
@@ -17,6 +18,7 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
 
   return (
     <div>
+      <InitialPagePathSetter />
       <BackButton />
       <UserProfile userProfile={userProfile} readonly={!isMe} />
 
