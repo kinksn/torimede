@@ -1,22 +1,28 @@
-import { postIdSchema } from "@/app/api/post/model";
+// import { postIdSchema } from "@/app/api/post/model";
 import { idWithBrandSchema } from "@/lib/util/entity";
 import { z } from "zod";
 
 export const userIdSchema = idWithBrandSchema("UserId");
 export type UserId = z.infer<typeof userIdSchema>;
 
+export const userNameSchema = z
+  .string()
+  .min(1, "1文字以上入力してください")
+  .max(15, "15文字以内で入力してください");
+
 export const userSchema = z.object({
   id: userIdSchema,
   name: z.string(),
   email: z.string().email(),
-  image: z.string().url(),
+  image: z.string(),
   isAdmin: z.boolean(),
 });
 
 export const getUserProfileSchema = z.object({
   id: userIdSchema,
   name: z.string(),
-  image: z.string().url(),
+  image: z.string(),
+  oAuthProfileImage: z.string().nullish(),
 });
 export type GetUserProfile = z.infer<typeof getUserProfileSchema>;
 
@@ -25,7 +31,7 @@ export const getUserPostsSchema = z.array(
     // TODO: postIdSchemaにしたいが循環参照でエラーになる
     id: z.string(),
     userId: userIdSchema,
-    image: z.string().url(),
+    image: z.string(),
   })
 );
 
@@ -37,16 +43,23 @@ export const getUserOutputSchema = z.object({
 export type GetUserOutput = z.infer<typeof getUserOutputSchema>;
 
 export const updateUserInputSchema = z.object({
-  name: z.string().min(1).max(15).optional(),
+  name: userNameSchema.optional(),
+  image: z.string().optional(),
   isFirstLogin: z.boolean().optional(),
 });
 export type UpdateUserInput = z.infer<typeof updateUserInputSchema>;
 
 export const updateUserNameSchema = z.object({
-  name: updateUserInputSchema.shape.name,
   userId: userIdSchema,
+  name: userNameSchema,
 });
 export type UpdateUserName = z.infer<typeof updateUserNameSchema>;
+
+export const updateUserImageSchema = z.object({
+  userId: userIdSchema,
+  image: z.string(),
+});
+export type UpdateUserImage = z.infer<typeof updateUserImageSchema>;
 
 export const updateUserIsFirstLoginSchema = z.object({
   isFirstLogin: updateUserInputSchema.shape.isFirstLogin,

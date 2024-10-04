@@ -28,7 +28,7 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
   }, [pathname, currentPath]);
 
   function onDismiss() {
-    router.push(initialPagePath);
+    router.replace(initialPagePath);
   }
 
   return (
