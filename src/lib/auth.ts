@@ -63,6 +63,20 @@ export const authOptions: NextAuthOptions = {
           email: token.email!,
         },
       });
+      if (userInDb) {
+        // OAuth画像が異なる場合にデータベースを更新
+        if (userInDb.oAuthProfileImage !== token.picture) {
+          try {
+            await db.user.update({
+              where: { email: token.email! },
+              data: { oAuthProfileImage: token.picture },
+            });
+          } catch (error) {
+            console.error("fault to update oAuthProfileImage:", error);
+          }
+        }
+        token.image = userInDb.image ?? token.picture; // プロフィール画像として使用する
+      }
       token.isFirstLogin = userInDb?.isFirstLogin;
       token.isAdmin = userInDb?.isAdmin ?? false;
       token.name = userInDb?.name ?? "";
@@ -72,6 +86,8 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.isFirstLogin = token.isFirstLogin as boolean;
+        session.user.image = token.image as string;
+        session.user.oAuthProfileImage = token.picture as string;
         // TODO: asで無理やり型エラーが出ないようにした
         session.user.id = token.sub as UserId;
       }

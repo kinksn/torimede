@@ -52,20 +52,21 @@ model Post {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  name          String
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-  password      String?
-  isAdmin       Boolean   @default(false)
-  isFirstLogin  Boolean   @default(true)
-  Post          Post[]
-  Cute          Cute[]
+  id                String    @id @default(uuid())
+  name              String
+  email             String?   @unique
+  emailVerified     DateTime? @map("email_verified")
+  image             String?
+  oAuthProfileImage String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  accounts          Account[]
+  sessions          Session[]
+  password          String?
+  isAdmin           Boolean   @default(false)
+  isFirstLogin      Boolean   @default(true)
+  Post              Post[]
+  Cute              Cute[]
 
   @@map("users")
 }

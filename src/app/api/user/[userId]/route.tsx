@@ -10,6 +10,7 @@ import {
   getUserCutedPostsByUserId,
   getUserPostsByUserId,
   getUserProfileByUserId,
+  updateUserImage,
   updateUserIsFirstLogin,
   updateUserName,
 } from "@/app/api/user/userDao";
@@ -52,7 +53,7 @@ export async function PATCH(req: Request, context: ContextProps) {
     const userId = context.params.userId;
     const session = await getAuthSession();
     const input = updateUserInputSchema.parse(await req.json());
-    const { name, isFirstLogin } = input;
+    const { name, image, isFirstLogin } = input;
 
     if (session?.user?.id !== userId) {
       return NextResponse.json(
@@ -62,6 +63,7 @@ export async function PATCH(req: Request, context: ContextProps) {
     }
 
     if (name) await updateUserName({ name, userId });
+    if (image) await updateUserImage({ image, userId });
     if (!isFirstLogin) await updateUserIsFirstLogin({ isFirstLogin, userId });
 
     return NextResponse.json({ message: "update success" }, { status: 200 });

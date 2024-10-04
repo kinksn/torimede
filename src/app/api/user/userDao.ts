@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import {
   getUserPostsSchema,
   getUserProfileSchema,
+  UpdateUserImage,
   UpdateUserIsFirstLogin,
   UpdateUserName,
   UserId,
@@ -107,6 +108,25 @@ export const updateUserName = async ({ name, userId }: UpdateUserName) =>
 
       if (!data) {
         throw new Error("failed to update user name in the database");
+      }
+    }
+  );
+
+export const updateUserImage = async ({ image, userId }: UpdateUserImage) =>
+  handleDaoError(
+    { errorMessage: "database error by updateUserImage" },
+    async () => {
+      const data = await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          image,
+        },
+      });
+
+      if (!data) {
+        throw new Error("failed to update user image in the database");
       }
     }
   );
