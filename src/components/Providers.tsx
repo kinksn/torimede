@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HistoryIndexTracker } from "@/components/HistoryIndexTracker/HistoryIndexTracker";
+import { Analytics } from "@vercel/analytics/next";
 import { PATH } from "@/lib/constants/path";
 
 const queryClient = new QueryClient({
@@ -14,14 +15,17 @@ const queryClient = new QueryClient({
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <SessionProvider>
-      <QueryClientProvider client={queryClient}>
-        <HistoryIndexTracker pathname={PATH.post}>
-          {children}
-        </HistoryIndexTracker>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </SessionProvider>
+    <>
+      <SessionProvider>
+        <QueryClientProvider client={queryClient}>
+          <HistoryIndexTracker pathname={PATH.post}>
+            {children}
+          </HistoryIndexTracker>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </SessionProvider>
+      <Analytics />
+    </>
   );
 };
 
