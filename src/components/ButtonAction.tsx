@@ -7,19 +7,21 @@ import Link from "next/link";
 import React, { FC, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { postKeys } from "@/service/post/key";
+import { PostId } from "@/app/api/post/model";
+import { UserId } from "@/app/api/user/model";
 
 type ButtonActionProps = {
-  id: string;
-  userId: string;
+  postId: PostId;
+  userId: UserId;
 };
 
-const ButtonAction: FC<ButtonActionProps> = ({ id, userId }) => {
+const ButtonAction: FC<ButtonActionProps> = ({ postId, userId }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const modalRef = useRef<HTMLDialogElement>(null);
   const { mutate: deletePost, isPending } = useMutation({
-    mutationFn: async (userId: string) => {
-      return axios.delete(`/api/post/${id}`, { data: { userId } });
+    mutationFn: async (userId: UserId) => {
+      return axios.delete(`/api/post/${postId}`, { data: { userId } });
     },
     onError: (error) => {
       console.error(error);
@@ -50,7 +52,7 @@ const ButtonAction: FC<ButtonActionProps> = ({ id, userId }) => {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
         >
           <li>
-            <Link href={`/edit/${id}`}>
+            <Link href={`/edit/${postId}`}>
               <Pen />
               編集
             </Link>

@@ -3,11 +3,13 @@ import Image from "next/image";
 import { FC } from "react";
 import ButtonAction from "@/components/ButtonAction";
 import { Session } from "next-auth";
+import { PostId } from "@/app/api/post/model";
+import { UserId } from "@/app/api/user/model";
 
 type PostCardProps = {
   post: {
-    id: string;
-    userId: string;
+    id: PostId;
+    userId: UserId;
     image: string;
   };
   session: Session | null;
@@ -21,7 +23,7 @@ const PostCard: FC<PostCardProps> = ({ post, session }) => {
   return (
     <div className="relative">
       <div className="absolute top-2 right-2 z-10">
-        {isMyPost && <ButtonAction id={id} userId={userId} />}
+        {isMyPost && <ButtonAction postId={id} userId={userId} />}
       </div>
       <Link
         href={`/post/${id}/${userId}`}

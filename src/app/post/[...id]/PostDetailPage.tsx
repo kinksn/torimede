@@ -16,7 +16,8 @@ type PostDetailPageProps = {
 
 export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
   const session = await getAuthSession();
-  const { name: userName, image: userProfileImage } = post.user;
+  const { id: postId, image: postImage } = post;
+  const { id: userId, name: userName, image: userProfileImage } = post.user;
 
   const isMyPost = post.userId === session?.user?.id;
 
@@ -24,7 +25,7 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
     <div>
       <div className="flex justify-between">
         <BackButton />
-        {isMyPost && <ButtonAction id={post.id} userId={post.userId} />}
+        {isMyPost && <ButtonAction postId={postId} userId={userId} />}
       </div>
       <div className="mb-8">
         <h2 className="text-2xl font-bold my-4">{post?.title}</h2>
