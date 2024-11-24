@@ -1,18 +1,25 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
-import { GetPostSelectTags, updatePostBodySchema } from "@/app/api/post/model";
+import {
+  GetPostSelectTags,
+  PostId,
+  updatePostBodySchema,
+} from "@/app/api/post/model";
+import { deletePostByPostId, getPostByPostId } from "@/app/api/post/postDao";
 
 type ContextProps = {
   params: {
-    postId: string;
+    postId: PostId;
+    postImage: string;
   };
 };
 
 export async function DELETE(req: Request, context: ContextProps) {
   try {
-    const session = await getAuthSession();
     const { params } = context;
+    const { postId } = params;
+    const session = await getAuthSession();
     const input = await req.json();
 
     if (session?.user?.id !== input.userId) {
@@ -22,11 +29,7 @@ export async function DELETE(req: Request, context: ContextProps) {
       );
     }
 
-    await db.post.delete({
-      where: {
-        id: params.postId,
-      },
-    });
+    await deletePostByPostId({ postId });
 
     return new Response(null, { status: 204 });
   } catch (error) {

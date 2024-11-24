@@ -26,10 +26,11 @@ export const getUserProfileSchema = z.object({
 });
 export type GetUserProfile = z.infer<typeof getUserProfileSchema>;
 
+// TODO: postIdSchemaをimportしたいが循環参照でエラーになる
+const postIdSchema = idWithBrandSchema("PostId");
 export const getUserPostsSchema = z.array(
   z.object({
-    // TODO: postIdSchemaにしたいが循環参照でエラーになる
-    id: z.string(),
+    id: postIdSchema,
     userId: userIdSchema,
     image: z.string(),
   })

@@ -16,10 +16,17 @@ const generateHash = (buffer: Buffer) => {
   return crypto.createHash("sha256").update(buffer).digest("hex");
 };
 
+const generateUniqueFileName = (buffer: Buffer, fileType: string) => {
+  const hash = generateHash(buffer);
+  const timestamp = Date.now();
+  const extension = fileType.split("/")[1];
+  return `${hash}-${timestamp}-${extension}`;
+};
+
 const allowedFileTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
 
 async function uploadFileToS3(fileBuffer: Buffer, fileType: string) {
-  const uniqueFileName = generateHash(fileBuffer);
+  const uniqueFileName = generateUniqueFileName(fileBuffer, fileType);
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     Key: uniqueFileName,
