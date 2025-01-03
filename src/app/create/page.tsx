@@ -33,7 +33,7 @@ const CreatePage = () => {
   });
 
   return (
-    <div>
+    <div className="bg-white rounded-lg p-4">
       <BackButton />
       <h1 className="text-2xl my-4 font-bold text-center">Add new post</h1>
       <FormPost

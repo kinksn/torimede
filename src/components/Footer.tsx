@@ -15,7 +15,7 @@ export const Footer = () => {
   if (isIgnoredPath) return null;
 
   return (
-    <div className="w-full py-10 px-2 max-sm:py-5 text-text-basic">
+    <div className="w-full py-10 px-2 max-sm:py-5 text-textColor-basic">
       <div className="bg-base-content py-20 px-20 rounded-20 grid grid-cols-2 max-sm:grid-cols-1 max-sm:gap-10 max-sm:py-10 max-sm:px-10">
         <div className="grid gap-4">
           <SVGIcon
