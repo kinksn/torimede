@@ -7,8 +7,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SVGIcon } from "@/components/ui/SVGIcon";
-import Check from "@/components/assets/icon/check.svg";
 import ChevronDown from "@/components/assets/icon/chevron-down.svg";
+import Check from "@/components/assets/icon/check.svg";
 import { isEqual } from "es-toolkit";
 import { FormLabel } from "@/components/basic/FormLabel";
 import { Separator } from "@/components/ui/separator";
