@@ -62,10 +62,19 @@ const config: Config = {
           // DEFAULT: "hsl(var(--primary))",
           // foreground: "hsl(var(--primary-foreground))",
           700: "#4F5667",
+          50: "#EDEEF3",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+        },
+        tertialy: {
+          oceanblue: {
+            400: "#4D6296",
+          },
+        },
+        achromatic: {
+          100: "#F0F0F0",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -93,15 +102,22 @@ const config: Config = {
           bg: "#F7F7F7",
           content: "#FFFFFF",
         },
-        text: {
+        textColor: {
           basic: "#2B2F3A",
+          weak: "#B6BBC8",
+          faint: "#D4D4D4",
+          white: "#FFFFFF",
+          link: "#285FDC",
         },
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 8px)",
         "20": "20px",
+      },
+      boxShadow: {
+        basic: "0px 2px 2px rgba(0, 0, 0, 0.16)",
       },
     },
     container: {

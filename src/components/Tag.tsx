@@ -9,7 +9,7 @@ import { Session } from "next-auth";
 
 type PostTagProps = {
   tag: Tag;
-  session: Session | null;
+  session?: Session | null;
 };
 
 export const PostTag: FC<PostTagProps> = ({ tag, session }) => {
