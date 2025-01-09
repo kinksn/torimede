@@ -27,12 +27,12 @@ export const Footer = () => {
             <br className="max-sm:hidden"></br>
             街中で野鳥を眺めるような気持ちでお楽しみください。
           </p>
-          <small className="font-comfortaa text-typography-xs">
+          <small className="font-comfortaa text-typography-xxs">
             Created By SHUNYA KATAOKA
           </small>
         </div>
         <div className="self-end justify-self-end whitespace-nowrap max-sm:justify-self-start">
-          <ul className="flex items-center gap-5 text-typography-sm font-bold max-sm:flex-col max-sm:justify-start max-sm:items-start">
+          <ul className="flex items-center gap-5 text-typography-xs font-bold max-sm:flex-col max-sm:justify-start max-sm:items-start">
             <li>
               <Link href="/">利用規約</Link>
             </li>

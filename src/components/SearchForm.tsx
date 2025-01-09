@@ -3,14 +3,21 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect } from "react";
-import { X } from "lucide-react"; // Lucide Reactのアイコンを使用
+import { SearchInput } from "@/components/basic/SearchInput";
+import { cn } from "@/lib/utils";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 
 type SearchFormInputs = {
   searchQuery: string;
 };
 
-export const SearchForm = () => {
+type SearchFormProps = {
+  className?: string;
+};
+
+export const SearchForm = ({ className }: SearchFormProps) => {
   const router = useRouter();
+  const { sm } = useBreakpoints();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
 
@@ -36,20 +43,15 @@ export const SearchForm = () => {
   };
 
   return (
-    <div className="flex-1 justify-center">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex relative">
-        <input
-          type="text"
-          placeholder="キーワードを入力"
-          className="input input-bordered w-full max-w-xs pr-8"
-          {...register("searchQuery")}
-        />
-        {searchQuery && (
-          <button type="button" onClick={handleClear}>
-            <X size={18} />
-          </button>
-        )}
-      </form>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <SearchInput
+        onClear={handleClear}
+        value={searchQuery}
+        size={sm ? "sm" : "md"}
+        placeholder="鳥さんを探す"
+        className={className}
+        {...register("searchQuery")}
+      />
+    </form>
   );
 };

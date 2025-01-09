@@ -7,12 +7,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SVGIcon } from "@/components/ui/SVGIcon";
-import Check from "@/components/assets/icon/check.svg";
 import ChevronDown from "@/components/assets/icon/chevron-down.svg";
 import { isEqual } from "es-toolkit";
 import { FormLabel } from "@/components/basic/FormLabel";
 import { Separator } from "@/components/ui/separator";
 import { Tag } from "@/components/basic/Tag";
+import { MenuItem } from "@/components/basic/MenuItem";
+import Check from "@/components/assets/icon/check.svg";
 
 type MultiSelectProps<T> = {
   options?: T[];
@@ -52,8 +53,8 @@ export const MultiSelect = <T,>({
    */
   const handleSelect = (selected: T) => {
     let newValue: T[];
-    if (currentValue.some((v) => isEqual(v, selected))) {
-      newValue = currentValue.filter((v) => !isEqual(v, selected));
+    if (currentValue.some((value) => isEqual(value, selected))) {
+      newValue = currentValue.filter((value) => !isEqual(value, selected));
     } else {
       newValue = [...currentValue, selected];
     }
@@ -71,6 +72,9 @@ export const MultiSelect = <T,>({
    */
   const defaultRenderOption = (option: T) => String(option);
   const renderFn = renderOption ?? defaultRenderOption;
+
+  const isShowMenuItemIcon = (option: T) =>
+    currentValue.some((value) => isEqual(value, option));
 
   return (
     <div className="flex flex-col gap-2">
@@ -112,16 +116,17 @@ export const MultiSelect = <T,>({
         <PopoverContent align="start" className="max-h-48 overflow-y-scroll">
           {options?.map((option, index) => (
             <>
-              <button
+              <MenuItem
                 key={`${String(option)}-${index}`}
-                className="cursor-pointer min-h-12 flex gap-1 items-center py-4 px-3 hover:bg-primary-50 w-full"
-                onClick={() => handleSelect(option)}
+                menuType="option"
+                option={option}
+                isShowIcon={isShowMenuItemIcon(option)}
+                iconSvg={Check}
+                iconSvgColor="text-textColor-basic"
+                onSelect={handleSelect}
               >
-                {currentValue.some((v) => isEqual(v, option)) && (
-                  <SVGIcon svg={Check} className="text-textColor-basic w-6" />
-                )}
                 {renderFn(option)}
-              </button>
+              </MenuItem>
               {index < options.length - 1 && (
                 <Separator className="border-[1px] border-primary-50" />
               )}
