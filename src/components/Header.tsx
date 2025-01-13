@@ -82,13 +82,13 @@ export const Header = ({ initialSession, profileImage }: HeaderProps) => {
               ) : (
                 <>
                   <TextButton
-                    className="max-sm:h-9 max-sm:text-typography-sm"
+                    className="max-sm:h-9 max-sm:text-typography-sm max-sm:font-bold"
                     asChild
                   >
                     <Link href="/login">ログイン</Link>
                   </TextButton>
                   <Button
-                    className="max-sm:h-9 max-sm:text-typography-sm"
+                    className="max-sm:h-9 max-sm:text-typography-sm max-sm:font-bold"
                     asChild
                   >
                     <Link href="/signup">新規登録</Link>
