@@ -6,7 +6,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
-import { GlobalNavi } from "@/components/GlobalNavi";
+import { Header } from "@/components/Header";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Footer } from "@/components/Footer";
@@ -50,7 +50,7 @@ export default async function RootLayout({
     >
       <body>
         <Providers>
-          <GlobalNavi initialSession={session} profileImage={profileImage} />
+          <Header initialSession={session} profileImage={profileImage} />
           <div className="container h-full pt-12">{children}</div>
           {modal}
           <Footer />
