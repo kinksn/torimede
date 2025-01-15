@@ -34,7 +34,7 @@ export const Header = ({ initialSession, profileImage }: HeaderProps) => {
 
   return (
     <>
-      <div className={`h-[80px] max-sm:h-[53px] w-full`}></div>
+      <div className={`h-[88px] max-sm:h-[53px] w-full`}></div>
       <div className="flex items-center w-full px-2 pt-2 max-sm:px-0 max-sm:pt-0 bg-neutral-100 fixed top-0 left-0 z-50 max-sm:flex-col">
         <div className="relative flex items-center bg-white rounded-20 max-sm:rounded-none justify-between w-full py-4 max-sm:py-[2px] px-10 max-sm:px-5">
           <Link

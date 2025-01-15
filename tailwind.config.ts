@@ -96,8 +96,18 @@ const config: Config = {
           50: "#EDEEF3",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          // DEFAULT: "hsl(var(--secondary))",
+          // foreground: "hsl(var(--secondary-foreground))",
+          900: "#CC5000",
+          800: "#CC7000",
+          700: "#CB8100",
+          600: "#C99200",
+          500: "#C79F00",
+          400: "#CDAC00",
+          300: "#D4BB24",
+          200: "#E0CD67",
+          100: "#EDE1A2",
+          50: "#F8F3DA",
         },
         tertialy: {
           oceanblue: {
@@ -175,9 +185,9 @@ const config: Config = {
     },
     container: {
       center: true,
-      padding: "1rem",
       screens: {
-        "2xl": "1000px",
+        "2xl": "1600px", // 2xlの画面サイズでmax-widthを1560pxに設定
+        DEFAULT: "100%", // 他の画面サイズで幅を100%に設定
       },
     },
   },
