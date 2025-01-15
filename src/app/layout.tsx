@@ -51,7 +51,7 @@ export default async function RootLayout({
       <body>
         <Providers>
           <Header initialSession={session} profileImage={profileImage} />
-          <div className="container h-full pt-12">{children}</div>
+          {children}
           {modal}
           <Footer />
         </Providers>
