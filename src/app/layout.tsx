@@ -16,7 +16,7 @@ const comfortaa = Comfortaa({
   variable: "--font-comfortaa",
 });
 const zenKakuGothicNew = Zen_Kaku_Gothic_New({
-  weight: ["400", "700"],
+  weight: ["400", "500", "700"],
   display: "swap",
   variable: "--font-zen-kaku-gothic-new",
   subsets: ["latin"],

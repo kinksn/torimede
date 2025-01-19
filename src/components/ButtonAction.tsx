@@ -1,25 +1,45 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { Pen, Trash } from "lucide-react";
-import Link from "next/link";
-import React, { FC, useRef } from "react";
+import MenuIcon from "@/components/assets/icon/menu.svg";
+import TrashIcon from "@/components/assets/icon/trash.svg";
+import EditIcon from "@/components/assets/icon/edit.svg";
+import { SVGIcon } from "@/components/ui/SVGIcon";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { postKeys } from "@/service/post/key";
 import { PostId } from "@/app/api/post/model";
 import { UserId } from "@/app/api/user/model";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { MenuItem } from "@/components/basic/MenuItem";
+import { Button } from "@/components/basic/Button";
+import { TextButton } from "@/components/basic/TextButton";
+import { RoundButton } from "@/components/basic/RoundButton";
 
 type ButtonActionProps = {
   postId: PostId;
   userId: UserId;
 };
 
-const ButtonAction: FC<ButtonActionProps> = ({ postId, userId }) => {
+const ButtonAction = ({ postId, userId }: ButtonActionProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const modalRef = useRef<HTMLDialogElement>(null);
-  const { mutate: deletePost, isPending } = useMutation({
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { mutate: deletePost } = useMutation({
     mutationFn: async (userId: UserId) => {
       return axios.delete(`/api/post/${postId}`, { data: { userId } });
     },
@@ -32,78 +52,69 @@ const ButtonAction: FC<ButtonActionProps> = ({ postId, userId }) => {
     },
   });
 
-  const handleOpenModal = () => {
-    modalRef.current?.showModal();
-  };
-
   const handleDeletePost = () => {
     deletePost(userId);
-    modalRef.current?.close();
+    setIsDialogOpen(false);
   };
 
   return (
-    <div>
-      <div className="dropdown dropdown-end">
-        <div tabIndex={0} role="button" className="btn m-1">
-          ...
-        </div>
-        <ul
-          tabIndex={0}
-          className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-        >
-          <li>
-            <Link href={`/edit/${postId}`}>
-              <Pen />
-              編集
-            </Link>
-          </li>
-          <li>
-            <div onClick={handleOpenModal}>
-              {isPending ? (
-                <span className="loading loading-spinner loading-xs"></span>
-              ) : (
-                <Trash />
-              )}
+    <>
+      <Popover>
+        <PopoverTrigger>
+          <RoundButton
+            icon={<SVGIcon svg={MenuIcon} className="w-6" />}
+            colorTheme={"white"}
+          />
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-auto">
+          <MenuItem
+            menuType="button"
+            isShowIcon
+            isLink
+            iconSvg={EditIcon}
+            href={`/edit/${postId}`}
+          >
+            編集
+          </MenuItem>
+          <MenuItem
+            menuType="button"
+            onClick={() => setIsDialogOpen(true)}
+            isShowIcon
+            iconSvg={TrashIcon}
+          >
+            削除
+          </MenuItem>
+        </PopoverContent>
+      </Popover>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <div className="hidden" />
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>削除する</DialogTitle>
+            <DialogDescription>
+              1度削除した投稿は元に戻すことはできません
+              <br className="max-sm:hidden" />
+              削除してもよろしいでしょうか？
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-1">
+            <Button colorTheme="outline" onClick={() => setIsDialogOpen(false)}>
+              キャンセル
+            </Button>
+            <TextButton
+              colorTheme="red"
+              icon={<SVGIcon svg={TrashIcon} className="w-6" />}
+              onClick={handleDeletePost}
+            >
               削除
-            </div>
-          </li>
-        </ul>
-      </div>
-      <ConfirmModal ref={modalRef} onDeletePost={handleDeletePost} />
-    </div>
+            </TextButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
-
-type ConfirmModalProps = {
-  onDeletePost: () => void;
-};
-
-const ConfirmModal = React.forwardRef<HTMLDialogElement, ConfirmModalProps>(
-  ({ onDeletePost }, ref) => {
-    return (
-      <dialog ref={ref} id="my_modal_1" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">削除する</h3>
-          <p className="py-4">
-            1度削除した投稿は元に戻すことはできません
-            <br />
-            削除してもよろしいでしょうか？
-          </p>
-          <div className="modal-action">
-            <button className="btn" onClick={onDeletePost}>
-              削除
-            </button>
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn">キャンセル</button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    );
-  }
-);
-
-ConfirmModal.displayName = "ConfirmModal";
 
 export default ButtonAction;

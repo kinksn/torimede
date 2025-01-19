@@ -26,7 +26,7 @@ export default async function Home() {
           <Link href={"/about"}>トリメデとは？</Link>
         </PillButton>
       </div>
-      <main className="container px-5 grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 max-sm:mt-5">
+      <main className="max-w-[1600px] mx-auto mt-10 px-5">
         <ClientPostCard session={session} />
       </main>
     </>
