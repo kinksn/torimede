@@ -9,6 +9,8 @@ import axios from "axios";
 import { postKeys } from "@/service/post/key";
 import { GetPostOutput } from "@/app/api/post/model";
 import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
+// メインソンリーーレイアウト実現ライブラリ：https://github.com/sibiraj-s/react-layout-masonry#readme
+import Masonry from "react-layout-masonry";
 
 type ClientSideFetchProps = {
   session: Session | null;
@@ -51,28 +53,23 @@ const ClientPostCard = ({ session }: ClientSideFetchProps) => {
     if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [hasNextPage, inView, fetchNextPage]);
+  }, [inView, hasNextPage, fetchNextPage]);
 
   if (error) return <div>エラーが発生しました: {JSON.stringify(error)}</div>;
 
   return (
     <>
       <InitialPagePathSetter />
-      {isSuccess &&
-        data?.pages.map((page) =>
-          page.posts.map((post: any, index: number) => {
-            if (page.posts.length === index + 1) {
-              return (
-                <div ref={ref} key={`${post.id}${index}`}>
-                  <PostCard post={post} key={post.id} session={session} />
-                </div>
-              );
-            } else {
+      <Masonry columns={{ 640: 1, 845: 2, 1024: 3, 1280: 4 }} gap={20}>
+        {isSuccess &&
+          data?.pages.map((pages) =>
+            pages.posts.map((post: any) => {
               return <PostCard post={post} key={post.id} session={session} />;
-            }
-          })
-        )}
+            })
+          )}
+      </Masonry>
       {(isLoading || isFetchingNextPage) && <>Loading...</>}
+      {hasNextPage && <div ref={ref} className="h-[1px] w-full"></div>}
     </>
   );
 };

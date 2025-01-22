@@ -69,6 +69,7 @@ const config: Config = {
       colors: {
         overlay: {
           icon: "rgba(43, 47, 58, 0.3)",
+          image: "rgba(43, 47, 58, 0.6)",
         },
         tomato: "#ff6347",
         background: "hsl(var(--background))",

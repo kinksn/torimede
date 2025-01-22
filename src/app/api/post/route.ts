@@ -14,6 +14,7 @@ export async function GET(req: Request) {
       ...(lastCursor && {
         skip: 1,
         cursor: {
+          // MEMO: ここにcreatedAt入れないとおかしな挙動になる可能性あり
           id: lastCursor,
         },
       }),
@@ -29,9 +30,7 @@ export async function GET(req: Request) {
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     });
 
     if (posts.length === 0) {
