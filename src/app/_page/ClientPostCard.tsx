@@ -11,6 +11,7 @@ import { GetPostOutput } from "@/app/api/post/model";
 import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
 // メインソンリーーレイアウト実現ライブラリ：https://github.com/sibiraj-s/react-layout-masonry#readme
 import Masonry from "react-layout-masonry";
+import { FaceLoader } from "@/components/basic/FaceLoader";
 
 type ClientSideFetchProps = {
   session: Session | null;
@@ -68,7 +69,11 @@ const ClientPostCard = ({ session }: ClientSideFetchProps) => {
             })
           )}
       </Masonry>
-      {(isLoading || isFetchingNextPage) && <>Loading...</>}
+      {(isLoading || isFetchingNextPage) && (
+        <div className="flex items-center justify-center py-10">
+          <FaceLoader />
+        </div>
+      )}
       {hasNextPage && <div ref={ref} className="h-[1px] w-full"></div>}
     </>
   );
