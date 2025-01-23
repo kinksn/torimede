@@ -61,7 +61,7 @@ const ClientPostCard = ({ session }: ClientSideFetchProps) => {
   return (
     <>
       <InitialPagePathSetter />
-      <Masonry columns={{ 640: 1, 845: 2, 1024: 3, 1280: 4 }} gap={20}>
+      <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
         {isSuccess &&
           data?.pages.map((pages) =>
             pages.posts.map((post: any) => {

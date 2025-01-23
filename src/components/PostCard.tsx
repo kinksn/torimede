@@ -1,10 +1,10 @@
 import { FC } from "react";
-import ButtonAction from "@/components/ButtonAction";
+// import ButtonAction from "@/components/ButtonAction";
 import { Session } from "next-auth";
 import { PostId } from "@/app/api/post/model";
 import { UserId } from "@/app/api/user/model";
 import { ImageItem } from "@/components/basic/ImageItem";
-import { motion } from "framer-motion";
+import * as motion from "motion/react-client";
 
 type PostCardProps = {
   post: {
@@ -18,7 +18,7 @@ type PostCardProps = {
 const PostCard: FC<PostCardProps> = ({ post, session }) => {
   const { id, userId, image } = post;
 
-  const isMyPost = session?.user?.id === userId;
+  // const isMyPost = session?.user?.id === userId;
 
   return (
     <motion.div
@@ -32,7 +32,7 @@ const PostCard: FC<PostCardProps> = ({ post, session }) => {
       <ImageItem
         imageUrl={image}
         href={`/post/${id}/${userId}`}
-        actionButton={isMyPost && <ButtonAction postId={id} userId={userId} />}
+        // actionButton={isMyPost && <ButtonAction postId={id} userId={userId} />}
       />
     </motion.div>
   );

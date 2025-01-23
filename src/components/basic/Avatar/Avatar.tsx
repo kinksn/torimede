@@ -22,7 +22,7 @@ const avatarStyles = cva(
 
 type AvatarProps = VariantProps<typeof avatarStyles> & {
   profileImage: string | null | undefined;
-  isPopoverOpen: boolean;
+  isPopoverOpen?: boolean;
   className?: string;
 };
 

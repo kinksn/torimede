@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useCallback } from "react";
+import LinkIcon from "@/components/assets/icon/link.svg";
+import { useCallback } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { PillButton } from "@/components/basic/PillButton";
+import { SVGIcon } from "@/components/ui/SVGIcon";
 
 export const UrlCopyButton = () => {
   const pathname = usePathname();
@@ -16,14 +19,17 @@ export const UrlCopyButton = () => {
 
   const onCopy = useCallback(() => {
     if (typeof navigator === "undefined") return;
-    navigator.clipboard.writeText(currentUrl ?? "");
+    navigator.clipboard.writeText(currentUrl);
   }, [currentUrl]);
 
   return (
-    <div>
-      <button className="btn mt-2" onClick={onCopy}>
-        URLをコピー
-      </button>
-    </div>
+    <PillButton
+      size={"sm"}
+      className="bg-primary-700"
+      iconLeft={<SVGIcon svg={LinkIcon} className="w-5" />}
+      onClick={onCopy}
+    >
+      URLをコピー
+    </PillButton>
   );
 };
