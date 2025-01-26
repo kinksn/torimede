@@ -9,9 +9,12 @@ import {
   MAX_CUTE_COUNT,
 } from "@/app/api/cute/[postId]/model";
 import { PostId } from "@/app/api/post/model";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 type CuteButtonProps = {
   postId: PostId;
+  className?: string;
 };
 
 type AddCuteProps = {
@@ -29,7 +32,7 @@ const addCute = async ({ postId, cuteCount }: AddCuteProps) => {
   return response.data;
 };
 
-const CuteButton: React.FC<CuteButtonProps> = ({ postId }) => {
+const CuteButton: React.FC<CuteButtonProps> = ({ postId, className }) => {
   const [userCuteCount, setUserCuteCount] = useState(0);
   const [tempCuteCount, setTempCuteCount] = useState(0);
   const [isClapping, setIsClapping] = useState(false);
@@ -67,9 +70,14 @@ const CuteButton: React.FC<CuteButtonProps> = ({ postId }) => {
   };
 
   return (
-    <button onClick={handleCute} className="btn">
-      Cute {userCuteCount + tempCuteCount}
-    </button>
+    <Image
+      onClick={handleCute}
+      src={`${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/image/mede-button/medebutton-default.png`}
+      className={cn("w-[68px] cursor-pointer", className)}
+      alt="cute image"
+      width={200}
+      height={200}
+    />
   );
 };
 

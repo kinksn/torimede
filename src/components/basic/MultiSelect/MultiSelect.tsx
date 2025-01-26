@@ -94,6 +94,7 @@ export const MultiSelect = <T,>({
                     key={`${selectedOption}-${index}`}
                     disabled={disabled}
                     onDelete={() => handleSelect(selectedOption)}
+                    deletable
                   >
                     {renderFn(selectedOption)}
                   </Tag>

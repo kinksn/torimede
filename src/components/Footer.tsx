@@ -4,7 +4,7 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import LogoIcon from "@/components/assets/logo.svg";
-import XIcon from "@/components/assets/icon/x.svg";
+import XIcon from "@/components/assets/icon/color-fixed/x.svg";
 import Link from "next/link";
 
 export const Footer = () => {

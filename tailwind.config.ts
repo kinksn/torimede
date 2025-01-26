@@ -10,6 +10,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        slideUp: {
+          "0%": { transform: "translateY(24px)", opacity: "0.2" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideDown: {
+          "0%": { transform: "translateY(0)", opacity: "1" },
+          "100%": { transform: "translateY(-24px)", opacity: "0" },
+        },
+      },
+      animation: {
+        slideUp: "slideUp 0.2s ease-in",
+        slideDown: "slideDown 0.2s ease-out",
+      },
       screens: {
         "max-md": { max: maxMd },
         "max-sm": { max: maxSm },
@@ -20,6 +34,14 @@ const config: Config = {
         zenKakuGothic: "var(--font-zen-kaku-gothic-new)",
       },
       fontSize: {
+        "typography-xl": [
+          "24px", // フォントサイズ
+          {
+            lineHeight: "2.2", // 行の高さ (220%)
+            letterSpacing: "0.08em", // 文字間隔 (8%)
+            fontWeight: "400", // フォントの太さ
+          },
+        ],
         "typography-lg": [
           "20px", // フォントサイズ
           {
@@ -70,6 +92,7 @@ const config: Config = {
         overlay: {
           icon: "rgba(43, 47, 58, 0.3)",
           image: "rgba(43, 47, 58, 0.6)",
+          modal: "rgba(43, 47, 58, 0.8)",
         },
         tomato: "#ff6347",
         background: "hsl(var(--background))",
@@ -113,6 +136,7 @@ const config: Config = {
         tertialy: {
           oceanblue: {
             400: "#4D6296",
+            50: "#E5E8EF",
           },
           fleshTomato: {
             100: "#FFCBD0",

@@ -3,7 +3,7 @@
 // TODO：パスアニメーションを実装する
 
 import type { SVGProps } from "react";
-import { motion } from "framer-motion";
+import * as motion from "motion/react-client";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 

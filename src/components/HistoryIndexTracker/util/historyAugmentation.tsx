@@ -81,7 +81,10 @@ export function setupHistoryAugmentationOnce({
   window.history.pushState = function (state, unused, url) {
     if (typeof url === "string") {
       // Pre-increment to avoid race condition.
-      url.startsWith(pathname) && ++renderedStateRef.current.index;
+      url.startsWith(pathname)
+        ? ++renderedStateRef.current.index
+        : // pathnameで始まるページ以外に遷移したら__history_index_tracker_indexの値をリセット
+          (renderedStateRef.current.index = 0);
     } else {
       renderedStateRef.current.index = 0;
     }
