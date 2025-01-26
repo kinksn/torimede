@@ -17,7 +17,7 @@ import Check from "@/components/assets/icon/check.svg";
 
 type MultiSelectProps<T> = {
   options?: T[];
-  type?: "optional" | "required";
+  requirement?: "optional" | "required";
   value?: T[];
   defaultValue?: T[];
   label?: string;
@@ -29,7 +29,7 @@ type MultiSelectProps<T> = {
 
 export const MultiSelect = <T,>({
   options,
-  type = "optional",
+  requirement = "optional",
   value,
   defaultValue,
   label,
@@ -78,7 +78,7 @@ export const MultiSelect = <T,>({
 
   return (
     <div className="flex flex-col gap-2">
-      {!!label && <FormLabel type={type}>{label}</FormLabel>}
+      {!!label && <FormLabel requirement={requirement}>{label}</FormLabel>}
       <Popover>
         <PopoverTrigger
           disabled={disabled}

@@ -142,6 +142,9 @@ const config: Config = {
             100: "#FFCBD0",
             50: "#FFEAEE",
           },
+          bloodOrange: {
+            50: "#F7E9E6",
+          },
         },
         achromatic: {
           100: "#F0F0F0",
@@ -192,8 +195,11 @@ const config: Config = {
         "20": "20px",
       },
       boxShadow: {
+        transparent: "0px 2px 2px rgba(0, 0, 0, 0)",
         basic: "0px 2px 2px rgba(0, 0, 0, 0.16)",
         searchInput: "0px 2px 4px rgba(105, 51, 194, 0.24)",
+        inputActive: "0px 2px 4px rgba(45, 72, 134, 0.36)",
+        inputActiveError: "0px 2px 4px rgba(204, 80, 0, 0.36)",
         buttonPrimaryDefault:
           "0px 2px 2px rgba(0, 0, 0, 0.16), inset 0px -2px 2px rgba(255, 255, 255, 0.3)",
         buttonPrimaryHover:

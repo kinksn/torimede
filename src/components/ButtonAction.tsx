@@ -62,8 +62,13 @@ const ButtonAction = ({ postId, userId }: ButtonActionProps) => {
       <Popover>
         <PopoverTrigger>
           <RoundButton
-            icon={<SVGIcon svg={MenuIcon} className="w-6" />}
+            icon={
+              <div>
+                <SVGIcon svg={MenuIcon} className="w-6" />
+              </div>
+            }
             colorTheme={"white"}
+            asChild
           />
         </PopoverTrigger>
         <PopoverContent align="end" className="w-auto">

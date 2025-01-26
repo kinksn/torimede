@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
 import { maxSm, maxMd } from "@/lib/constants/breakpoints";
 
-const useMediaQuery = (query: string) => {
-  const [matches, setMatches] = useState(false);
+export const useMediaQuery = (query: string) => {
+  const [value, setValue] = useState(false);
 
   useEffect(() => {
-    const mediaQueryList = window.matchMedia(query);
+    function onChange(event: MediaQueryListEvent) {
+      setValue(event.matches);
+    }
 
-    // 初期値
-    setMatches(mediaQueryList.matches);
+    const result = matchMedia(query);
+    result.addEventListener("change", onChange);
+    setValue(result.matches);
 
-    // イベントリスナー
-    const listener = (e: MediaQueryListEvent) => setMatches(e.matches);
-    mediaQueryList.addEventListener("change", listener);
-
-    // クリーンアップ
-    return () => mediaQueryList.removeEventListener("change", listener);
+    return () => result.removeEventListener("change", onChange);
   }, [query]);
 
-  return matches;
+  return value;
 };
 
 export const useBreakpoints = () => {
