@@ -84,7 +84,11 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
           className={`${!post?.content && post.tags.length === 0 && "hidden"}`}
         >
           {post?.content && (
-            <p className="text-typography-md mb-4">{post.content}</p>
+            <p
+              className={`text-typography-md ${post.tags.length > 0 && "mb-4"}`}
+            >
+              {post.content}
+            </p>
           )}
           {post.tags.length > 0 && (
             <div className="flex gap-2">
