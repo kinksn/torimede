@@ -26,27 +26,21 @@ export function useInterceptPopState(pathname: Pathname) {
   useIsomorphicLayoutEffect(() => {
     // NOTE: Called before Next.js router setup which is useEffect().
     // https://github.com/vercel/next.js/blob/50b9966ba9377fd07a27e3f80aecd131fa346482/packages/next/src/client/components/app-router.tsx#L518
-    if (window) {
-      setupHistoryAugmentationOnce({
-        renderedStateRef,
-        setNextIndex,
-        pathname,
-      });
-      const handlePopState = createHandlePopState();
+    setupHistoryAugmentationOnce({ renderedStateRef, setNextIndex, pathname });
+    const handlePopState = createHandlePopState();
 
-      const onPopState = (event: PopStateEvent) => {
-        handlePopState(event.state);
-      };
+    const onPopState = (event: PopStateEvent) => {
+      handlePopState(event.state);
+    };
 
-      // NOTE: Called before Next.js router setup which is useEffect().
-      // https://github.com/vercel/next.js/blob/50b9966ba9377fd07a27e3f80aecd131fa346482/packages/next/src/client/components/app-router.tsx#L518
-      // NOTE: capture on popstate listener is not working on Chrome.
-      window.addEventListener("popstate", onPopState);
+    // NOTE: Called before Next.js router setup which is useEffect().
+    // https://github.com/vercel/next.js/blob/50b9966ba9377fd07a27e3f80aecd131fa346482/packages/next/src/client/components/app-router.tsx#L518
+    // NOTE: capture on popstate listener is not working on Chrome.
+    window.addEventListener("popstate", onPopState);
 
-      return () => {
-        if (window) return window.removeEventListener("popstate", onPopState);
-      };
-    }
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+    };
   }, []);
 }
 
