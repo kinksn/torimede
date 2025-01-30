@@ -128,7 +128,10 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
                                 isEditable={true}
                               />
                             </PopoverTrigger>
-                            <PopoverContent className="p-7" align="start">
+                            <PopoverContent
+                              className="p-7 pointer-events-auto"
+                              align="start"
+                            >
                               <div className="grid grid-cols-3 gap-4 w-fit">
                                 <Avatar
                                   profileImage={userProfile.oAuthProfileImage}
