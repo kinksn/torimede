@@ -71,7 +71,7 @@ export const MenuItem = <T,>({
     return (
       <Link
         href={href}
-        className="cursor-pointer font-zenMaruGothic h-12 flex gap-1 items-center py-4 px-3 hover:bg-primary-50 w-full"
+        className="cursor-pointer font-medium font-zenMaruGothic h-12 flex gap-1 items-center py-4 px-3 hover:bg-primary-50 w-full"
       >
         {!!iconSvg && isShowIcon && (
           <SVGIcon svg={iconSvg} className={`${iconSvgColor ?? ""} w-6`} />
@@ -83,7 +83,7 @@ export const MenuItem = <T,>({
     // isLink=false の場合は <button> を返す
     return (
       <button
-        className="cursor-pointer font-zenMaruGothic h-12 flex gap-1 items-center py-4 px-3 hover:bg-primary-50 w-full"
+        className="cursor-pointer font-medium font-zenMaruGothic h-12 flex gap-1 items-center py-4 px-3 hover:bg-primary-50 w-full"
         onClick={handleClick}
         {...props}
       >

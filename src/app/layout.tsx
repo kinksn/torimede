@@ -22,7 +22,7 @@ const zenKakuGothicNew = Zen_Kaku_Gothic_New({
   subsets: ["latin"],
 });
 const zenMaruGothic = Zen_Maru_Gothic({
-  weight: ["400", "700"],
+  weight: ["400", "500", "700"],
   display: "swap",
   variable: "--font-zen-maru-gothic",
   subsets: ["latin"],
