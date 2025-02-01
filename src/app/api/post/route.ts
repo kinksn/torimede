@@ -62,6 +62,7 @@ export async function GET(req: Request) {
       tags: post.tags.map((tagRelation) => ({
         name: tagRelation.tag.name,
         id: tagRelation.tag.id,
+        userId: tagRelation.tag.userId,
       })),
     }));
 

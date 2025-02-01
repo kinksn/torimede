@@ -10,33 +10,46 @@ import {
 } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   createPostSchema,
   updatePostBodySchema,
   EditPost,
 } from "@/app/api/post/model";
-import { FormInputPost, Tag } from "@/types";
-
+import { FormInputPost } from "@/types";
 import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/basic/Input";
+import { Textarea } from "@/components/basic/Textarea";
 import { MultiSelect } from "@/components/basic/MultiSelect";
+import { Uploader } from "@/components/basic/Uploader";
+import { Tag } from "@prisma/client";
+import { Session } from "next-auth";
+import { TagEditMenu } from "@/components/TagEditMenu";
+import { Button } from "@/components/basic/Button";
+import { TextButton } from "@/components/basic/TextButton";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
-  isEditing: boolean;
+  isEditing?: boolean;
   initialValue?: EditPost;
+  tags?: Tag[];
+  session: Session | null;
   isLoadingSubmit: boolean;
 }
 
@@ -44,6 +57,8 @@ const FormPost: FC<FromPostProps> = ({
   submit,
   isEditing,
   initialValue,
+  tags,
+  session,
   isLoadingSubmit,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -99,69 +114,58 @@ const FormPost: FC<FromPostProps> = ({
     }
   };
 
-  // TODO: useQueryを使って取得する必要が無いのでprisma clientから取得するなど検討する
-  const { data: dataTags, isLoading: isLoadingTags } = useQuery<Tag[]>({
-    queryKey: ["tags"],
-    queryFn: async () => {
-      const response = await axios.get("/api/tag");
-      return response.data;
-    },
-  });
+  const createNewTag = async (tagName: string) => {
+    try {
+      const { data } = await axios.post("/api/tag", {
+        name: tagName,
+      });
+      return data;
+    } catch (error) {
+      console.error("Failed to create new tag", error);
+      return null;
+    }
+  };
 
   return (
     <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
-          className="flex flex-col items-center justify-center gap-5 mt-10"
+          className="flex flex-col items-center justify-center gap-5 mt-10 max-sm:mt-5 mx-auto max-w-lg"
         >
-          {isEditing && initialValue?.image && (
-            <Image
-              src={initialValue.image}
-              width="300"
-              height="300"
-              alt="selected image"
-            />
-          )}
-
-          {/* 画像アップロード欄 （作成時のみ表示） */}
-          {!isEditing && (
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem className="w-full max-w-lg">
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      className="input input-bordered w-full max-w-lg"
-                      // react-hook-formの field に紐付けるなら onChange etc.を手動対応
-                      // or ここでは handleFileChange で間接的に管理
-                      onChange={(e) => {
-                        handleFileChange(e);
-                        field.onChange(e.target.files);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          {/* 画像アップロード */}
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field, fieldState }) => (
+              <Uploader
+                label="画像"
+                requirement="required"
+                className="w-full"
+                error={!!fieldState.error}
+                disabled={isEditing}
+                {...(isEditing && { image: initialValue?.image })}
+                onChange={(e) => {
+                  handleFileChange(e);
+                  field.onChange(e.target.files);
+                }}
+              />
+            )}
+          />
 
           {/* タイトル */}
           <FormField
             control={form.control}
             name="title"
-            render={({ field }) => (
-              <FormItem className="w-full max-w-lg">
-                <FormLabel>Post title</FormLabel>
-                <FormControl>
-                  <Input placeholder="Post title..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+            render={({ field, fieldState }) => (
+              <Input
+                label="タイトル"
+                requirement="required"
+                placeholder="Post title..."
+                className="w-full"
+                error={!!fieldState.error}
+                {...field}
+              />
             )}
           />
 
@@ -170,49 +174,54 @@ const FormPost: FC<FromPostProps> = ({
             control={form.control}
             name="content"
             render={({ field }) => (
+              <Textarea
+                label="説明"
+                placeholder="例）生後4日のヒナがかわい過ぎた #ヒナ好きと繋がりたい"
+                className="w-full"
+                {...field}
+              />
+            )}
+          />
+
+          {/* タグ */}
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
               <FormItem className="w-full max-w-lg">
-                <FormLabel>Post content</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Post content..." rows={5} {...field} />
+                  <MultiSelect
+                    label="タグ"
+                    options={tags}
+                    defaultValue={field.value}
+                    onChange={(selectedValues) => {
+                      const selectedValueIds = selectedValues.map(
+                        (value) => value.id
+                      );
+                      field.onChange(selectedValueIds);
+                    }}
+                    renderOption={(tag) => tag.name}
+                    onCreateNewOption={createNewTag}
+                    itemMenu={(tag) => {
+                      return (
+                        session?.user?.id &&
+                        session?.user?.id === tag.userId && (
+                          <TagEditMenu tag={tag} />
+                        )
+                      );
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* タグ */}
-          {isLoadingTags ? (
-            <span className="loading loading-dots loading-md"></span>
-          ) : (
-            <FormField
-              control={form.control}
-              name="tags"
-              render={({ field }) => (
-                <FormItem className="w-full max-w-lg">
-                  <FormControl>
-                    <MultiSelect
-                      label="タグ"
-                      options={dataTags}
-                      defaultValue={field.value}
-                      onChange={(selectedValues) => {
-                        const selectedValueIds = selectedValues.map(
-                          (value) => value.id
-                        );
-                        field.onChange(selectedValueIds);
-                      }}
-                      renderOption={(tag) => tag.name}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
-
           {/* 送信ボタン */}
-          <button
+          <Button
             type="submit"
-            className="btn bg-yellow-400 hover:bg-yellow-500 w-full max-w-lg text-gray-900"
+            size={"lg"}
+            className="w-full justify-center mt-5"
             disabled={isSubmitting || isLoadingSubmit}
           >
             {isLoadingSubmit && (
@@ -220,12 +229,12 @@ const FormPost: FC<FromPostProps> = ({
             )}
             {isEditing
               ? isLoadingSubmit
-                ? "Updating..."
-                : "Update"
+                ? "保存中"
+                : "保存"
               : isLoadingSubmit
-              ? "Creating..."
-              : "Create"}
-          </button>
+              ? "投稿中"
+              : "投稿"}
+          </Button>
         </form>
       </Form>
 
@@ -240,31 +249,30 @@ type ConfirmModalProps = {
 
 const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
   const router = useRouter();
-  const modalRef = useRef<HTMLDialogElement>(null);
+  const [open, setOpen] = useState(false);
   const [nextRoute, setNextRoute] = useState<string | null>(null);
   const [isBack, setIsBack] = useState(false);
+
+  // もともと router.push/back を保持する
   const originalPush = useRef(router.push);
   const originalBack = useRef(router.back);
 
-  const handleOpenModal = () => modalRef.current?.showModal();
-
+  // モーダル「OK」時の挙動
   const handleConfirm = () => {
-    modalRef.current?.close();
-
-    // ページ遷移を実行する前にイベントリスナーを削除
+    setOpen(false);
     window.removeEventListener("beforeunload", beforeUnloadHandler);
 
     if (isBack) {
       originalBack.current();
       return;
     }
-
     if (nextRoute) {
       originalPush.current(nextRoute);
       return;
     }
   };
 
+  // beforeUnload イベント
   const beforeUnloadHandler = useCallback(
     (event: BeforeUnloadEvent) => {
       if (!disabled) {
@@ -276,6 +284,7 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
     [disabled]
   );
 
+  // ページ離脱時のダイアログ表示設定
   useEffect(() => {
     window.addEventListener("beforeunload", beforeUnloadHandler);
     return () => {
@@ -283,26 +292,26 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
     };
   }, [beforeUnloadHandler]);
 
+  // router の push/back をフックして確認モーダルを表示する
   useEffect(() => {
     if (!disabled) {
-      const handleRouteChange = (
-        url: string,
-        isBackAction: boolean = false
-      ) => {
+      const handleRouteChange = (url: string, isBackAction = false) => {
         setNextRoute(url);
         setIsBack(isBackAction);
-        handleOpenModal();
-        // throw "Route change blocked.";
+        setOpen(true);
       };
 
+      // router.push を上書き
       router.push = async (url) => {
         handleRouteChange(url);
       };
 
+      // router.back を上書き
       router.back = () => {
         handleRouteChange(document.referrer, true);
       };
 
+      // cleanup で元に戻す
       const currentPush = originalPush.current;
       const currentBack = originalBack.current;
       return () => {
@@ -312,34 +321,24 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
     }
   }, [disabled, router]);
 
+  // モーダルの描画
   return (
-    <dialog
-      ref={modalRef}
-      role="dialog"
-      id="my_modal_5"
-      className="modal modal-bottom sm:modal-middle"
-    >
-      <div className="modal-box">
-        <h3 className="font-bold text-lg">Confirm Navigation</h3>
-        <p className="py-4">
-          You have unsaved changes. Do you really want to leave?
-        </p>
-        <div className="modal-action">
-          <form method="dialog">
-            <div className="flex gap-3">
-              <button
-                type="button"
-                className="btn btn-ghost"
-                onClick={handleConfirm}
-              >
-                OK
-              </button>
-              <button className="btn">Cancel</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="max-sm:w-[calc(100%-40px)]">
+        <DialogHeader className="max-sm:text-left">
+          <DialogTitle>フォームを離れますか？</DialogTitle>
+          <DialogDescription>
+            入力中のデータはリセットされます。
+            <br className="max-sm:hidden" />
+            よろしいでしょうか？
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="flex gap-3 max-sm:flex-row">
+          <TextButton onClick={handleConfirm}>離れる</TextButton>
+          <Button onClick={() => setOpen(false)}>キャンセル</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

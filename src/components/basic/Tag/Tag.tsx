@@ -3,19 +3,24 @@
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { useRouter } from "next/navigation";
 import Xmark from "@/components/assets/icon/x-mark.svg";
+import { Button } from "@/components/basic/Button";
+import { RoundButton } from "@/components/basic/RoundButton";
+import { cn } from "@/lib/utils";
 
 type TagProps = {
   children: React.ReactNode;
   disabled?: boolean;
   deletable?: boolean;
   href?: string;
-  onDelete?: () => void;
+  className?: string;
+  onDelete?: (e: React.MouseEvent) => void;
 };
 
 export const Tag = ({
   children,
   href,
   disabled,
+  className,
   deletable,
   onDelete,
 }: TagProps) => {
@@ -32,22 +37,29 @@ export const Tag = ({
     <div
       role="listitem"
       aria-label={`タグ: ${children}`}
-      className={`text-typography-md bg-white rounded-full font-bold py-2 px-3 leading-none shadow-basic inline-flex items-center gap-1 ${
-        href ? "cursor-pointer" : "cursor-default"
-      }`}
+      className={cn(
+        `text-typography-md text-left bg-white rounded-full font-bold py-2 px-3 leading-none shadow-basic inline-flex items-center gap-1 ${
+          href ? "cursor-pointer" : "cursor-default"
+        }`,
+        className
+      )}
       onClick={() => handleClick(href)}
     >
       {children}
       {deletable && (
-        <button
-          type="button"
+        <RoundButton
           aria-label={`${children} を削除`}
+          size={"xs"}
+          colorTheme={"white"}
           className="p-[2px] m-0 leading-none rounded-full hover:bg-primary-50"
-          disabled={disabled}
           onClick={onDelete}
-        >
-          <SVGIcon svg={Xmark} className="text-textColor-basic w-2" />
-        </button>
+          icon={
+            <div>
+              <SVGIcon svg={Xmark} className="text-textColor-basic w-2" />
+            </div>
+          }
+          asChild
+        />
       )}
     </div>
   );

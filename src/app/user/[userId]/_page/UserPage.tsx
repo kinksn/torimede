@@ -24,55 +24,50 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
   return (
     <>
       <InitialPagePathSetter />
-      <div>
-        <div className="px-11 py-5 max-sm:px-5">
-          <BackButton />
-        </div>
-        <div className="rounded-20 bg-white mx-11 max-sm:mx-auto px-11 max-sm:px-5 pt-10 pb-10">
-          <UserProfile userProfile={userProfile} readonly={!isMe} />
-          <Tabs defaultValue="myPost" className="mt-10">
-            <TabsList className="grid grid-cols-2 max-w-fit h-12 p-0 bg-transparent">
+      <div className="max-sm:mx-auto">
+        <UserProfile userProfile={userProfile} readonly={!isMe} />
+        <Tabs defaultValue="myPost" className="mt-10 max-sm:mx-auto">
+          <TabsList className="grid grid-cols-2 max-w-fit h-12 p-0 bg-transparent">
+            <TabsTrigger
+              value="myPost"
+              className="relative px-4 py-0 h-11 flex justify-center before:content-[''] before:absolute before:opacity-0 before:block before:w-full before:rounded-full before:h-1 before:bg-primary-900 before:left-0 before:bottom-0 data-[state=active]:before:opacity-100 font-zenMaruGothic text-typography-sm !text-textColor-basic font-medium rounded-tr-md rounded-tl-md rounded-bl-none rounded-br-none data-[state=active]:bg-primary-50 !shadow-none "
+            >
+              投稿一覧
+            </TabsTrigger>
+            {isMe && (
               <TabsTrigger
-                value="myPost"
-                className="relative px-4 py-0 h-11 flex justify-center before:content-[''] before:absolute before:opacity-0 before:block before:w-full before:rounded-full before:h-1 before:bg-primary-900 before:left-0 before:bottom-0 data-[state=active]:before:opacity-100 font-zenMaruGothic text-typography-sm !text-textColor-basic font-medium rounded-tr-md rounded-tl-md rounded-bl-none rounded-br-none data-[state=active]:bg-primary-50 !shadow-none "
+                value="medeHistory"
+                className="relative px-4 py-0 h-11 flex justify-center before:content-[''] before:absolute before:opacity-0 before:block before:w-full before:rounded-full before:h-1 before:bg-primary-900 before:left-0 before:bottom-0 data-[state=active]:before:opacity-100 font-zenMaruGothic text-typography-sm !text-textColor-basic font-medium rounded-tr-md rounded-tl-md rounded-bl-none rounded-br-none data-[state=active]:bg-primary-50 !shadow-none"
               >
-                投稿一覧
+                めで履歴
               </TabsTrigger>
-              {isMe && (
-                <TabsTrigger
-                  value="medeHistory"
-                  className="relative px-4 py-0 h-11 flex justify-center before:content-[''] before:absolute before:opacity-0 before:block before:w-full before:rounded-full before:h-1 before:bg-primary-900 before:left-0 before:bottom-0 data-[state=active]:before:opacity-100 font-zenMaruGothic text-typography-sm !text-textColor-basic font-medium rounded-tr-md rounded-tl-md rounded-bl-none rounded-br-none data-[state=active]:bg-primary-50 !shadow-none"
-                >
-                  めで履歴
-                </TabsTrigger>
+            )}
+          </TabsList>
+          <TabsContent value="myPost">
+            <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
+              {posts.length > 0 ? (
+                posts.map((post) => (
+                  <PostCard post={post} key={post.id} session={session} />
+                ))
+              ) : (
+                <div>まだ投稿がありません</div>
               )}
-            </TabsList>
-            <TabsContent value="myPost">
+            </Masonry>
+          </TabsContent>
+          {isMe && (
+            <TabsContent value="medeHistory">
               <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
-                {posts.length > 0 ? (
-                  posts.map((post) => (
+                {cutedPosts.length > 0 ? (
+                  cutedPosts.map((post) => (
                     <PostCard post={post} key={post.id} session={session} />
                   ))
                 ) : (
-                  <div>まだ投稿がありません</div>
+                  <div>まだ鳥さんを愛でてません</div>
                 )}
               </Masonry>
             </TabsContent>
-            {isMe && (
-              <TabsContent value="medeHistory">
-                <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
-                  {cutedPosts.length > 0 ? (
-                    cutedPosts.map((post) => (
-                      <PostCard post={post} key={post.id} session={session} />
-                    ))
-                  ) : (
-                    <div>まだ鳥さんを愛でてません</div>
-                  )}
-                </Masonry>
-              </TabsContent>
-            )}
-          </Tabs>
-        </div>
+          )}
+        </Tabs>
       </div>
     </>
   );

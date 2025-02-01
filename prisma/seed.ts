@@ -87,12 +87,14 @@ async function main() {
   const tag1 = await prisma.tag.create({
     data: {
       name: "もふもふ",
+      userId: user1.id,
     },
   });
 
   const tag2 = await prisma.tag.create({
     data: {
       name: "ふわふわ",
+      userId: user2.id,
     },
   });
 

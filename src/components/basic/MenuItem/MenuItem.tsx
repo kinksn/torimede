@@ -1,4 +1,5 @@
 import { SVGIcon } from "@/components/ui/SVGIcon";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 // ボタンに広げる可能性のある標準属性
@@ -6,6 +7,7 @@ type BaseProps = {
   menuType?: "option" | "button";
   isLink?: boolean;
   isShowIcon?: boolean;
+  menu?: React.ReactNode;
   iconSvg?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   iconSvgColor?: string;
   onClick?: () => void;
@@ -49,10 +51,12 @@ export const MenuItem = <T,>({
   iconSvg,
   iconSvgColor,
   isShowIcon,
+  menu,
   isLink,
   href,
   option,
   children,
+  className,
   onSelect,
   onClick,
   ...props
@@ -69,29 +73,72 @@ export const MenuItem = <T,>({
   if (isLink) {
     // isLink=true の場合は <Link> を返す
     return (
-      <Link
-        href={href}
-        className="cursor-pointer font-medium font-zenMaruGothic h-12 flex gap-1 items-center py-4 px-3 hover:bg-primary-50 w-full"
-      >
-        {!!iconSvg && isShowIcon && (
-          <SVGIcon svg={iconSvg} className={`${iconSvgColor ?? ""} w-6`} />
-        )}
-        {children}
-      </Link>
+      <div className="relative flex w-full cursor-pointer font-medium font-zenMaruGothic min-h-12">
+        <Link
+          className={cn(
+            "h-auto flex gap-1 items-center px-3 hover:bg-primary-50 w-full",
+            className
+          )}
+          href={href}
+        >
+          <div
+            className={`flex items-center w-full ${
+              !!menu && "justify-between"
+            }`}
+          >
+            <div className="flex">
+              {!!iconSvg && isShowIcon && (
+                <SVGIcon
+                  svg={iconSvg}
+                  className={`${iconSvgColor ?? ""} w-6`}
+                />
+              )}
+              {children}
+            </div>
+          </div>
+        </Link>
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+          {menu}
+        </div>
+      </div>
     );
   } else {
     // isLink=false の場合は <button> を返す
     return (
-      <button
-        className="cursor-pointer font-medium font-zenMaruGothic h-12 flex gap-1 items-center py-4 px-3 hover:bg-primary-50 w-full"
-        onClick={handleClick}
-        {...props}
+      <div
+        className="relative flex w-full cursor-pointer font-medium font-zenMaruGothic min-h-12"
+        role="menuitem"
+        aria-haspopup={!!menu}
       >
-        {!!iconSvg && isShowIcon && (
-          <SVGIcon svg={iconSvg} className={`${iconSvgColor ?? ""} w-6`} />
-        )}
-        {children}
-      </button>
+        <button
+          className={cn(
+            "h-auto flex gap-1 items-center px-3 hover:bg-primary-50 w-full",
+            className
+          )}
+          onClick={handleClick}
+          aria-label={typeof children === "string" ? children : undefined}
+          {...props}
+        >
+          <div
+            className={`flex items-center w-full ${
+              !!menu && "justify-between"
+            }`}
+          >
+            <div className="flex">
+              {!!iconSvg && isShowIcon && (
+                <SVGIcon
+                  svg={iconSvg}
+                  className={`${iconSvgColor ?? ""} w-6`}
+                />
+              )}
+              {children}
+            </div>
+          </div>
+        </button>
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+          {menu}
+        </div>
+      </div>
     );
   }
 };
