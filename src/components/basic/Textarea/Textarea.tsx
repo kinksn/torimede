@@ -1,20 +1,21 @@
+import React from "react";
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Input as ShadcnInput } from "@/components/ui/input";
-import React from "react";
 import { FormLabel } from "@/components/basic/FormLabel";
 import { FormControl, FormItem, FormMessage } from "@/components/ui/form";
+import { Textarea as ShadcnTextarea } from "@/components/ui/textarea";
 
-const inputStylesProps = cva(
-  "px-3 bg-primary-50 border-2 border-transparent !text-base transition-all !mt-0 font-medium shadow-transparent placeholder:text-faint",
+// TODO：transition-allをborderとshadowに絞って効かせる
+const textareaStylesProps = cva(
+  "px-3 bg-primary-50 rounded-md border-2 border-transparent !text-base !transition-all   !mt-0 font-medium shadow-transparent placeholder:text-faint !outline-none",
   {
     variants: {
       size: {
-        md: "h-[60px]",
+        md: "min-h-20",
       },
       colorTheme: {
         primary:
-          "hover:border-tertialy-oceanblue-400 focus:!shadow-inputActive focus:border-tertialy-oceanblue-400",
+          "hover:border-tertialy-oceanblue-400 focus:!shadow-inputActive focus:border-tertialy-oceanblue-400 focus-visible:!border-tertialy-oceanblue-400",
       },
       isDesabled: {
         true: "bg-achromatic-100 hover:border-transparent",
@@ -34,14 +35,17 @@ const inputStylesProps = cva(
   }
 );
 
-type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> &
-  VariantProps<typeof inputStylesProps> & {
+type TextareaProps = Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "size"
+> &
+  VariantProps<typeof textareaStylesProps> & {
     label?: string;
     requirement?: "optional" | "required";
     error?: boolean;
   };
 
-export const Input = ({
+export const Textarea = ({
   size,
   className,
   label,
@@ -50,26 +54,25 @@ export const Input = ({
   disabled,
   error = false,
   ...props
-}: InputProps) => {
+}: TextareaProps) => {
   return (
-    <FormItem className={cn("flex flex-col", className)}>
+    <FormItem className={cn("flex flex-col h-full", className)}>
       {label && (
         <FormLabel requirement={requirement} className="mb-2">
           {label}
         </FormLabel>
       )}
       <FormControl>
-        <ShadcnInput
+        <ShadcnTextarea
           disabled={disabled}
           className={cn(
-            inputStylesProps({
+            textareaStylesProps({
               size,
               colorTheme,
               isDesabled: disabled ? true : false,
               isError: error ? true : false,
             })
           )}
-          style={{ boxShadow: "unset", outline: "unset" }}
           {...props}
         />
       </FormControl>

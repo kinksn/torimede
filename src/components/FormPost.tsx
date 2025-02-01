@@ -25,12 +25,11 @@ import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/basic/Input";
+import { Textarea } from "@/components/basic/Textarea";
 import { MultiSelect } from "@/components/basic/MultiSelect";
 
 interface FromPostProps {
@@ -113,7 +112,7 @@ const FormPost: FC<FromPostProps> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
-          className="flex flex-col items-center justify-center gap-5 mt-10"
+          className="flex flex-col items-center justify-center gap-5 mt-10 mx-auto max-w-lg"
         >
           {isEditing && initialValue?.image && (
             <Image
@@ -130,22 +129,18 @@ const FormPost: FC<FromPostProps> = ({
               control={form.control}
               name="image"
               render={({ field }) => (
-                <FormItem className="w-full max-w-lg">
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      className="input input-bordered w-full max-w-lg"
-                      // react-hook-formの field に紐付けるなら onChange etc.を手動対応
-                      // or ここでは handleFileChange で間接的に管理
-                      onChange={(e) => {
-                        handleFileChange(e);
-                        field.onChange(e.target.files);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <Input
+                  label="画像"
+                  requirement="required"
+                  type="file"
+                  className="w-full"
+                  // react-hook-formの field に紐付けるなら onChange etc.を手動対応
+                  // or ここでは handleFileChange で間接的に管理
+                  onChange={(e) => {
+                    handleFileChange(e);
+                    field.onChange(e.target.files);
+                  }}
+                />
               )}
             />
           )}
@@ -155,13 +150,13 @@ const FormPost: FC<FromPostProps> = ({
             control={form.control}
             name="title"
             render={({ field }) => (
-              <FormItem className="w-full max-w-lg">
-                <FormLabel>Post title</FormLabel>
-                <FormControl>
-                  <Input placeholder="Post title..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <Input
+                label="タイトル"
+                requirement="required"
+                placeholder="Post title..."
+                className="w-full"
+                {...field}
+              />
             )}
           />
 
@@ -170,13 +165,12 @@ const FormPost: FC<FromPostProps> = ({
             control={form.control}
             name="content"
             render={({ field }) => (
-              <FormItem className="w-full max-w-lg">
-                <FormLabel>Post content</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Post content..." rows={5} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <Textarea
+                label="説明"
+                placeholder="例）生後4日のヒナがかわい過ぎた #ヒナ好きと繋がりたい"
+                className="w-full"
+                {...field}
+              />
             )}
           />
 

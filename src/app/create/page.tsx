@@ -35,7 +35,7 @@ const CreatePage = () => {
   return (
     <div className="bg-white rounded-lg p-4">
       <BackButton />
-      <h1 className="text-2xl my-4 font-bold text-center">Add new post</h1>
+      <h1 className="text-2xl my-4 font-bold text-center">新規投稿</h1>
       <FormPost
         isLoadingSubmit={isLoadingSubmit}
         submit={handleCreatePost}
