@@ -10,7 +10,8 @@ import { postKeys } from "@/service/post/key";
 import { GetPostOutput } from "@/app/api/post/model";
 import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
 // メインソンリーーレイアウト実現ライブラリ：https://github.com/sibiraj-s/react-layout-masonry#readme
-import Masonry from "react-layout-masonry";
+// 本家だとSSR時にwindowオブジェクトがエラーになるバグがあったため直接プロジェクトに入れて読み込んでいる
+import Masonry from "@/components/react-layout-masonry";
 import { FaceLoader } from "@/components/basic/FaceLoader";
 
 type ClientSideFetchProps = {

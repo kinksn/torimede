@@ -3,7 +3,9 @@
 import { Session } from "next-auth";
 import { GetUserPostsOutput } from "@/app/api/post/model";
 import PostCard from "@/components/PostCard";
-import Masonry from "react-layout-masonry";
+// メインソンリーーレイアウト実現ライブラリ：https://github.com/sibiraj-s/react-layout-masonry#readme
+// 本家だとSSR時にwindowオブジェクトがエラーになるバグがあったため直接プロジェクトに入れて読み込んでいる
+import Masonry from "@/components/react-layout-masonry";
 
 type PostCardProps = {
   userName: string;

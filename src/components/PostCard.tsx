@@ -1,5 +1,4 @@
 import { FC } from "react";
-// import ButtonAction from "@/components/ButtonAction";
 import { Session } from "next-auth";
 import { PostId } from "@/app/api/post/model";
 import { UserId } from "@/app/api/user/model";
@@ -18,8 +17,6 @@ type PostCardProps = {
 const PostCard: FC<PostCardProps> = ({ post, session }) => {
   const { id, userId, image } = post;
 
-  // const isMyPost = session?.user?.id === userId;
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
@@ -29,11 +26,7 @@ const PostCard: FC<PostCardProps> = ({ post, session }) => {
         scale: { type: "spring", visualDuration: 0.4, bounce: 0.2 },
       }}
     >
-      <ImageItem
-        imageUrl={image}
-        href={`/post/${id}/${userId}`}
-        // actionButton={isMyPost && <ButtonAction postId={id} userId={userId} />}
-      />
+      <ImageItem imageUrl={image} href={`/post/${id}/${userId}`} />
     </motion.div>
   );
 };
