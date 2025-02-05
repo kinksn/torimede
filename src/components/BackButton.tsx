@@ -5,7 +5,11 @@ import { PillButton } from "@/components/basic/PillButton";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { useRouter } from "next/navigation";
 
-const BackButton = () => {
+type BackButtonProps = {
+  className?: string;
+};
+
+const BackButton = ({ className }: BackButtonProps) => {
   const router = useRouter();
 
   return (
@@ -13,6 +17,7 @@ const BackButton = () => {
       colorTheme={"outline"}
       iconLeft={<SVGIcon svg={ArrowLeft} className="w-6" />}
       onClick={() => router.back()}
+      className={className}
     >
       戻る
     </PillButton>

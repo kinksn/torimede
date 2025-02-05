@@ -9,7 +9,7 @@ type TagProps = {
   disabled?: boolean;
   deletable?: boolean;
   href?: string;
-  onDelete?: () => void;
+  onDelete?: (e: React.MouseEvent) => void;
 };
 
 export const Tag = ({

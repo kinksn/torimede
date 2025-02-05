@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Input as ShadcnInput } from "@/components/ui/input";
-import React from "react";
 import { FormLabel } from "@/components/basic/FormLabel";
 import { FormControl, FormItem, FormMessage } from "@/components/ui/form";
 
@@ -11,6 +10,7 @@ const inputStylesProps = cva(
     variants: {
       size: {
         md: "h-[60px]",
+        sm: "h-9",
       },
       colorTheme: {
         primary:
@@ -21,7 +21,7 @@ const inputStylesProps = cva(
         false: "",
       },
       isError: {
-        true: "!bg-tertialy-bloodOrange-50 !border-state-error !shadow-inputActiveError focus:!shadow-inputActiveError",
+        true: "!bg-tertialy-bloodOrange-50 !border-state-error focus:!shadow-inputActiveError",
         false: "",
       },
     },
@@ -39,11 +39,13 @@ type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> &
     label?: string;
     requirement?: "optional" | "required";
     error?: boolean;
+    inputClassName?: string;
   };
 
 export const Input = ({
   size,
   className,
+  inputClassName,
   label,
   colorTheme,
   requirement,
@@ -54,7 +56,7 @@ export const Input = ({
   return (
     <FormItem className={cn("flex flex-col", className)}>
       {label && (
-        <FormLabel requirement={requirement} className="mb-2">
+        <FormLabel requirement={requirement} size={size} className="mb-2">
           {label}
         </FormLabel>
       )}
@@ -67,7 +69,8 @@ export const Input = ({
               colorTheme,
               isDesabled: disabled ? true : false,
               isError: error ? true : false,
-            })
+            }),
+            inputClassName
           )}
           style={{ boxShadow: "unset", outline: "unset" }}
           {...props}

@@ -15,9 +15,11 @@ datasource db {
 }
 
 model Tag {
-  id    String    @id @default(cuid())
-  name  String    @db.VarChar(100)
-  posts PostTag[]
+  id     String    @id @default(cuid())
+  name   String    @unique @db.VarChar(100)
+  posts  PostTag[]
+  userId String
+  user   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PostTag {
@@ -67,6 +69,7 @@ model User {
   isFirstLogin      Boolean   @default(true)
   Post              Post[]
   Cute              Cute[]
+  Tag               Tag[]
 
   @@map("users")
 }

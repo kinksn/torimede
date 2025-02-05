@@ -109,6 +109,7 @@ export async function GET(_req: Request, context: ContextProps) {
         post?.tags?.map((tagRelation) => ({
           id: tagRelation.tag.id,
           name: tagRelation.tag.name,
+          userId: tagRelation.tag.userId,
         })) || [],
     };
 
