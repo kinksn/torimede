@@ -1,6 +1,5 @@
 "use client";
 
-import BackButton from "@/components/BackButton";
 import FormPost from "@/components/FormPost";
 import { postKeys } from "@/service/post/key";
 import { FormInputPost } from "@/types";
@@ -40,21 +39,16 @@ const CreatePostPage = ({ tags, session }: CreatePostPageProps) => {
   });
 
   return (
-    <div className="px-11 mt-4 max-sm:px-0">
-      <BackButton className="max-sm:ml-5" />
-      <div className="bg-white rounded-20 py-10 mt-5 max-sm:px-5 max-sm:py-5">
-        <div className="max-w-[420px] mx-auto">
-          <h1 className="text-2xl my-4 font-bold text-center font-zenMaruGothic">
-            新規投稿
-          </h1>
-          <FormPost
-            isLoadingSubmit={isLoadingSubmit}
-            submit={handleCreatePost}
-            session={session}
-            tags={tags}
-          />
-        </div>
-      </div>
+    <div className="max-w-[420px] w-[inherit] mx-auto">
+      <h1 className="text-2xl my-4 font-bold text-center font-zenMaruGothic">
+        新規投稿
+      </h1>
+      <FormPost
+        isLoadingSubmit={isLoadingSubmit}
+        submit={handleCreatePost}
+        session={session}
+        tags={tags}
+      />
     </div>
   );
 };

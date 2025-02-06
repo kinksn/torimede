@@ -37,7 +37,7 @@ export function PostDetailPage({
 
   return (
     <div className="relative overflow-y-scroll">
-      <div className="max-w-[1064px] mx-auto mt-10 px-5">
+      <div className="max-w-[1064px] mx-auto mt-10 max-sm:px-5">
         <div className="flex flex-col gap-3">
           <h2 className="text-typography-xl font-bold leading-normal font-zenMaruGothic">
             {post?.title}
@@ -117,7 +117,7 @@ export function PostDetailPage({
         <div
           className={`${
             !post?.content && post.tags.length === 0 && "w-full justify-center"
-          } flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[386px] max-sm:min-w-max border border-primary-50 bg-base-content rounded-20 p-6 max-sm:p-3 max-sm:w-full`}
+          } flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[386px] max-sm:min-w-[unset] border border-primary-50 bg-base-content rounded-20 p-6 max-sm:p-3 max-sm:w-full`}
         >
           <p className="text-typography-xs">共有</p>
           <div className="flex gap-3">

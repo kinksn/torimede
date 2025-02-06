@@ -50,10 +50,14 @@ export default async function RootLayout({
     >
       <body>
         <Providers>
-          <Header initialSession={session} profileImage={profileImage} />
-          {children}
-          {modal}
-          <Footer />
+          <div className="grid grid-rows-[auto_1fr_auto] min-h-[100vh]">
+            <Header initialSession={session} profileImage={profileImage} />
+            <main>
+              {children}
+              {modal}
+            </main>
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>

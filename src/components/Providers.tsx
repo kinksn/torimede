@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <>
+    <div>
       <SessionProvider>
         <QueryClientProvider client={queryClient}>
           <HistoryIndexTracker pathname={PATH.post}>
@@ -25,7 +25,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         </QueryClientProvider>
       </SessionProvider>
       <Analytics />
-    </>
+    </div>
   );
 };
 

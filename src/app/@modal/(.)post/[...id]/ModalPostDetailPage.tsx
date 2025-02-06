@@ -9,6 +9,7 @@ import type {
 } from "@/app/api/post/model";
 import { Session } from "next-auth";
 import { PostDetailPage } from "@/app/post/[...id]/PostDetailPage";
+import { useState } from "react";
 
 type ModalPostDetailPageProps = {
   post: GetPostDetailOutput;
@@ -30,7 +31,7 @@ const ModalPostDetailPage = ({
   return (
     <Dialog defaultOpen onOpenChange={onDismiss}>
       <DialogContent
-        className="max-h-[98svh] p-0 h-full bg-base-bg translate-x-0 translate-y-0 overflow-y-scroll bottom-0 w-full rounded-br-none rounded-bl-none data-[state=open]:!animate-slideUp data-[state=closed]:!animate-slideDown"
+        className="max-h-[98svh] p-0 h-full bg-base-bg translate-x-0 translate-y-0 overflow-y-scroll bottom-0 w-full rounded-br-none rounded-bl-none data-[state=open]:!animate-slideUp data-[state=closed]:transition-none data-[state=closed]:!animate-none"
         style={{ top: "unset", left: "unset" }}
       >
         <PostDetailPage

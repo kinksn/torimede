@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const roundButtonStyles = cva(
-  "rounded-full flex items-center justify-center transition",
+  "rounded-full flex items-center justify-center transition cursor-pointer",
   {
     variants: {
       size: {
@@ -13,7 +13,7 @@ const roundButtonStyles = cva(
       },
       colorTheme: {
         primary:
-          "bg-primary-700 hover:bg-primary-800 ata-[active=true]:bg-primary-900",
+          "bg-primary-700 hover:bg-primary-800 data-[active=true]:bg-primary-900",
         white:
           "bg-white hover:bg-primary-100 active:bg-primary-200 data-[active=true]:bg-primary-200",
       },

@@ -1,4 +1,5 @@
 import { SVGIcon } from "@/components/ui/SVGIcon";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 // ボタンに広げる可能性のある標準属性
@@ -55,6 +56,7 @@ export const MenuItem = <T,>({
   href,
   option,
   children,
+  className,
   onSelect,
   onClick,
   ...props
@@ -71,9 +73,12 @@ export const MenuItem = <T,>({
   if (isLink) {
     // isLink=true の場合は <Link> を返す
     return (
-      <div className="relative flex w-full cursor-pointer font-medium font-zenMaruGothic h-12">
+      <div className="relative flex w-full cursor-pointer font-medium font-zenMaruGothic min-h-12">
         <Link
-          className=" h-full flex gap-1 items-center px-3 hover:bg-primary-50 w-full"
+          className={cn(
+            "h-auto flex gap-1 items-center px-3 hover:bg-primary-50 w-full",
+            className
+          )}
           href={href}
         >
           <div
@@ -100,10 +105,18 @@ export const MenuItem = <T,>({
   } else {
     // isLink=false の場合は <button> を返す
     return (
-      <div className="relative flex w-full cursor-pointer font-medium font-zenMaruGothic h-12">
+      <div
+        className="relative flex w-full cursor-pointer font-medium font-zenMaruGothic min-h-12"
+        role="menuitem"
+        aria-haspopup={!!menu}
+      >
         <button
-          className=" h-full flex gap-1 items-center px-3 hover:bg-primary-50 w-full"
+          className={cn(
+            "h-auto flex gap-1 items-center px-3 hover:bg-primary-50 w-full",
+            className
+          )}
           onClick={handleClick}
+          aria-label={typeof children === "string" ? children : undefined}
           {...props}
         >
           <div

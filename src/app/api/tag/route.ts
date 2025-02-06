@@ -20,9 +20,21 @@ export async function PATCH(req: Request) {
   try {
     const body = tagSchema.parse(await req.json());
     const session = await getAuthSession();
+
     if (!session?.user) {
       return NextResponse.json({ message: "not login" }, { status: 401 });
     }
+
+    const existingTag = await db.tag.findUnique({
+      where: {
+        id: body.id,
+      },
+    });
+
+    if (!existingTag) {
+      return NextResponse.json({ message: "tag not found" }, { status: 404 });
+    }
+
     if (session.user.id !== body.userId) {
       return NextResponse.json(
         { message: "not have permission to edit" },

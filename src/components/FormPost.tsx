@@ -277,6 +277,7 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
     (event: BeforeUnloadEvent) => {
       if (!disabled) {
         event.preventDefault();
+        // これがないとChromeで動作しない
         event.returnValue = "";
       }
     },
@@ -307,7 +308,6 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
 
       // router.back を上書き
       router.back = () => {
-        // 特別にリファラを nextRoute に指定している
         handleRouteChange(document.referrer, true);
       };
 

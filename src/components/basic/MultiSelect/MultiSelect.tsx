@@ -171,7 +171,7 @@ export const MultiSelect = <T,>({
       <Popover>
         <PopoverTrigger
           disabled={disabled}
-          className={`text-left border-[2px] border-transparent flex justify-between items-center gap-3 bg-primary-50 p-3 rounded-md min-h-[64px] data-[state=open]:border-tertialy-oceanblue-400 hover:border-tertialy-oceanblue-400 transition-all cursor-pointer ${
+          className={`text-left border-[2px] border-transparent flex justify-between items-center gap-3 bg-primary-50 p-3 rounded-md min-h-[68px] data-[state=open]:border-tertialy-oceanblue-400 hover:border-tertialy-oceanblue-400 transition-all cursor-pointer ${
             disabled && "bg-achromatic-100"
           }`}
           asChild
@@ -248,27 +248,19 @@ export const MultiSelect = <T,>({
                 3) exactMatchExists === false (完全一致のタグは未存在)
               のときに表示 */}
             {onCreateNewOption && searchTerm && !exactMatchExists && (
-              <>
-                {filteredOptions.length > 0 && (
-                  <Separator className="border-[1px] border-primary-50 my-2" />
-                )}
-                <MenuItem
-                  menuType="option"
-                  option={searchTerm}
-                  onSelect={() => handleCreateAndSelect(searchTerm)}
-                >
-                  <div className="flex items-center justify-start">
-                    追加：
-                    <PillButton
-                      size={"sm"}
-                      className="whitespace-nowrap"
-                      asChild
-                    >
-                      <p>{searchTerm}</p>
-                    </PillButton>
-                  </div>
-                </MenuItem>
-              </>
+              <MenuItem
+                menuType="option"
+                option={searchTerm}
+                className="bg-base-bg"
+                onSelect={() => handleCreateAndSelect(searchTerm)}
+              >
+                <div className="flex items-center justify-start">
+                  <small className="block whitespace-nowrap">追加：</small>
+                  <Tag className="cursor-pointer">
+                    <p>{searchTerm}</p>
+                  </Tag>
+                </div>
+              </MenuItem>
             )}
           </div>
         </PopoverContent>
