@@ -9,7 +9,7 @@ const buttonStylesProps = cva(
   {
     variants: {
       size: {
-        lg: "h-15 text-typography-lg",
+        lg: "h-[60px] text-typography-lg",
         md: "h-12 text-typography-md",
         sm: "h-9 text-typography-sm",
       },

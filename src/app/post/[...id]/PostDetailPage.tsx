@@ -1,9 +1,10 @@
+"use client";
+
 import ButtonAction from "@/components/ButtonAction";
 import PostBottomRightPC from "@/components/assets/ornament/post-bottom-right-pc.svg";
 import PostBottomLeftPC from "@/components/assets/ornament/post-bottom-left-pc.svg";
 import PostBottomRightSP from "@/components/assets/ornament/post-bottom-right-sp.svg";
 import PostBottomLeftSP from "@/components/assets/ornament/post-bottom-left-sp.svg";
-import { getAuthSession } from "@/lib/auth";
 import CuteButton from "@/components/CuteButton";
 import { ShareButtons } from "@/components/ShareButtons";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
@@ -13,15 +14,22 @@ import UserPostCards from "@/app/post/[...id]/_components/UserPostCards";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { Avatar } from "@/components/basic/Avatar";
 import { Tag } from "@/components/basic/Tag";
+import { Session } from "next-auth";
 
 type PostDetailPageProps = {
   post: GetPostDetailOutput;
   userPosts: GetUserPostsOutput;
-  isBackButtonShow?: boolean;
+  session: Session | null;
+  // 投稿詳細モーダルから読み込まれているかどうか
+  isParentModal?: boolean;
 };
 
-export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
-  const session = await getAuthSession();
+export function PostDetailPage({
+  post,
+  userPosts,
+  session,
+  isParentModal,
+}: PostDetailPageProps) {
   const { id: postId } = post;
   const { id: userId, name: userName, image: userProfileImage } = post.user;
 
@@ -29,7 +37,7 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
 
   return (
     <div className="relative overflow-y-scroll">
-      <div className="max-w-[1064px] mx-auto mt-10 px-5">
+      <div className="max-w-[1064px] mx-auto mt-10 max-sm:px-5">
         <div className="flex flex-col gap-3">
           <h2 className="text-typography-xl font-bold leading-normal font-zenMaruGothic">
             {post?.title}
@@ -53,7 +61,13 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
             alt={post.title}
             className="w-full max-h-[633px]"
             actionButton={
-              isMyPost && <ButtonAction postId={postId} userId={userId} />
+              isMyPost && (
+                <ButtonAction
+                  postId={postId}
+                  userId={userId}
+                  isParentModal={isParentModal}
+                />
+              )
             }
             isFitContainer
           />
@@ -103,7 +117,7 @@ export async function PostDetailPage({ post, userPosts }: PostDetailPageProps) {
         <div
           className={`${
             !post?.content && post.tags.length === 0 && "w-full justify-center"
-          } flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[386px] max-sm:min-w-max border border-primary-50 bg-base-content rounded-20 p-6 max-sm:p-3 max-sm:w-full`}
+          } flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[386px] max-sm:min-w-[unset] border border-primary-50 bg-base-content rounded-20 p-6 max-sm:p-3 max-sm:w-full`}
         >
           <p className="text-typography-xs">共有</p>
           <div className="flex gap-3">

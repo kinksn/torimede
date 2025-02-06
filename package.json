@@ -9,7 +9,7 @@
     "lint": "next lint",
     "test": "dotenv -e .env.test.local jest",
     "test:watch": "dotenv -e .env.test.local jest --watch",
-    "init:migration-local": "run-s db:reset db:migrate db:seed db:generate",
+    "init:migration-local": "run-s db:reset db:dev db:migrate db:seed db:generate",
     "db:studio": "dotenv -e .env.local -- prisma studio",
     "db:dev": "dotenv -e .env.local -- prisma migrate dev",
     "db:push": "dotenv -e .env.local -- prisma db push",

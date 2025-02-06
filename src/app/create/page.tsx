@@ -1,48 +1,17 @@
-"use client";
+import CreatePostPage from "@/app/create/CreatePostPage";
+import { getAuthSession } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { orderBy } from "es-toolkit";
+import React from "react";
 
-import BackButton from "@/components/BackButton";
-import FormPost from "@/components/FormPost";
-import { postKeys } from "@/service/post/key";
-import { FormInputPost } from "@/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { SubmitHandler } from "react-hook-form";
-
-const CreatePage = () => {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const handleCreatePost: SubmitHandler<FormInputPost> = (data) => {
-    createPost(data);
-  };
-
-  const { mutate: createPost, isPending: isLoadingSubmit } = useMutation({
-    mutationFn: (newPost: FormInputPost) => {
-      return axios.post("/api/post/create", newPost);
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: postKeys.infiniteList(),
-        refetchType: "inactive",
-      });
-      router.push("/");
+const CreatePage = async () => {
+  const session = await getAuthSession();
+  const tags = await db.tag.findMany({
+    orderBy: {
+      id: "desc",
     },
   });
-
-  return (
-    <div className="bg-white rounded-lg p-4">
-      <BackButton />
-      <h1 className="text-2xl my-4 font-bold text-center">Add new post</h1>
-      <FormPost
-        isLoadingSubmit={isLoadingSubmit}
-        submit={handleCreatePost}
-        isEditing={false}
-      />
-    </div>
-  );
+  return <CreatePostPage tags={tags} session={session} />;
 };
 
 export default CreatePage;
