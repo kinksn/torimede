@@ -81,30 +81,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
-export async function DELETE(req: Request) {
-  try {
-    const body = tagSchema.parse(await req.json());
-    const session = await getAuthSession();
-    if (!session?.user) {
-      return NextResponse.json({ message: "not login" }, { status: 401 });
-    }
-    if (session.user.id !== body.userId) {
-      return NextResponse.json(
-        { message: "not have permission to edit" },
-        { status: 401 }
-      );
-    }
-    await db.tag.delete({
-      where: {
-        id: body.id,
-      },
-    });
-    return NextResponse.json({ message: "tag deleted" }, { status: 204 });
-  } catch (error) {
-    return NextResponse.json(
-      { message: "could not delete tag" },
-      { status: 500 }
-    );
-  }
-}
