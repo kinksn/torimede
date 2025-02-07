@@ -1,6 +1,5 @@
 import { db } from "@/lib/db";
 import { FC } from "react";
-import Modal from "@/components/Modal";
 import {
   getPostDetailOutputSchema,
   getUserPostsOutputSchema,
@@ -10,6 +9,8 @@ import {
 import { Cute, User } from "@prisma/client";
 import { PostDetailPage } from "@/app/post/[...id]/PostDetailPage";
 import { UserId } from "@/app/api/user/model";
+import { getAuthSession } from "@/lib/auth";
+import ModalPostDetailPage from "@/app/@modal/(.)post/[...id]/ModalPostDetailPage";
 
 type PostProps = {
   params: {
@@ -44,6 +45,7 @@ async function getPost(postId: string) {
     tags: post.tags.map((tagRelation) => ({
       name: tagRelation.tag.name,
       id: tagRelation.tag.id,
+      userId: tagRelation.tag.userId,
     })),
   };
 
@@ -79,6 +81,7 @@ async function getPostByUserId(userId: string, postId: string) {
       return {
         name: tagRelation.tag.name,
         id: tagRelation.tag.id,
+        userId: tagRelation.tag.userId,
       };
     }),
   }));
@@ -87,13 +90,12 @@ async function getPostByUserId(userId: string, postId: string) {
 }
 const PostDetail: FC<PostProps> = async ({ params }) => {
   const [postId, userId] = params.id;
+  const session = await getAuthSession();
   const post = await getPost(postId);
   const userPost = await getPostByUserId(userId, postId);
 
   return (
-    <Modal>
-      <PostDetailPage post={post} userPosts={userPost} />
-    </Modal>
+    <ModalPostDetailPage post={post} userPosts={userPost} session={session} />
   );
 };
 

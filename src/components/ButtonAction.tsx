@@ -7,7 +7,7 @@ import EditIcon from "@/components/assets/icon/edit.svg";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 import { postKeys } from "@/service/post/key";
 import { PostId } from "@/app/api/post/model";
 import { UserId } from "@/app/api/user/model";
@@ -33,9 +33,11 @@ import { RoundButton } from "@/components/basic/RoundButton";
 type ButtonActionProps = {
   postId: PostId;
   userId: UserId;
+  // 投稿詳細モーダルから読み込まれているかどうか
+  isParentModal?: boolean;
 };
 
-const ButtonAction = ({ postId, userId }: ButtonActionProps) => {
+const ButtonAction = ({ postId, userId, isParentModal }: ButtonActionProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -48,9 +50,25 @@ const ButtonAction = ({ postId, userId }: ButtonActionProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: postKeys.infiniteList() });
+      if (isParentModal) {
+        // Intercepting Routesで表示したモーダルがrouter.pushなどで閉じれず、
+        // 親モーダルのセッター変数を渡しても挙動がおかしくなるので、
+        // location.hrefを直接更新している
+        location.href = "/";
+      }
       router.push("/");
     },
   });
+
+  const handleEditPost = () => {
+    if (isParentModal) {
+      // Intercepting Routesで表示したモーダルがrouter.pushなどで閉じれず、
+      // 親モーダルのセッター変数を渡しても挙動がおかしくなるので、
+      // location.hrefを直接更新している
+      location.href = `/edit/${postId}`;
+    }
+    router.push(`/edit/${postId}`);
+  };
 
   const handleDeletePost = () => {
     deletePost(userId);
@@ -75,9 +93,8 @@ const ButtonAction = ({ postId, userId }: ButtonActionProps) => {
           <MenuItem
             menuType="button"
             isShowIcon
-            isLink
             iconSvg={EditIcon}
-            href={`/edit/${postId}`}
+            onClick={handleEditPost}
           >
             編集
           </MenuItem>

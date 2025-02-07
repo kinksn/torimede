@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const roundButtonStyles = cva(
-  "rounded-full flex items-center justify-center transition",
+  "rounded-full flex items-center justify-center transition cursor-pointer",
   {
     variants: {
       size: {
@@ -12,8 +12,10 @@ const roundButtonStyles = cva(
         xs: "w-6 h-6",
       },
       colorTheme: {
-        primary: "bg-primary-700 hover:bg-primary-800",
-        white: "bg-white hover:bg-primary-100 active:bg-primary-200",
+        primary:
+          "bg-primary-700 hover:bg-primary-800 data-[active=true]:bg-primary-900",
+        white:
+          "bg-white hover:bg-primary-100 active:bg-primary-200 data-[active=true]:bg-primary-200",
       },
     },
     defaultVariants: {
@@ -26,11 +28,13 @@ const roundButtonStyles = cva(
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof roundButtonStyles> & {
     asChild?: boolean;
+    isActive?: boolean;
     icon: React.ReactNode;
   };
 
 export const RoundButton = ({
   asChild = false,
+  isActive = false,
   className,
   icon,
   size,
@@ -41,7 +45,7 @@ export const RoundButton = ({
   const Comp = asChild ? Slot : "button";
   return (
     <Comp
-      type="button"
+      data-active={isActive}
       onClick={onClick}
       className={cn(roundButtonStyles({ size, colorTheme }), className)}
       {...props}

@@ -26,9 +26,9 @@ export default async function Home() {
           <Link href={"/about"}>トリメデとは？</Link>
         </PillButton>
       </div>
-      <main className="max-w-[1600px] mx-auto mt-10 px-5">
+      <div className="max-w-[1600px] mx-auto mt-10 px-5">
         <ClientPostCard session={session} />
-      </main>
+      </div>
     </>
   );
 }
