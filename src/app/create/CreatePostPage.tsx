@@ -40,7 +40,7 @@ const CreatePostPage = ({ tags, session }: CreatePostPageProps) => {
 
   return (
     <div className="max-w-[420px] w-[inherit] mx-auto">
-      <h1 className="text-2xl my-4 font-bold text-center font-zenMaruGothic">
+      <h1 className="text-2xl font-bold text-center mb-5 font-zenMaruGothic">
         新規投稿
       </h1>
       <FormPost

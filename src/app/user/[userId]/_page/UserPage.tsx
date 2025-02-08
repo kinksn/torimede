@@ -26,7 +26,7 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
       <InitialPagePathSetter />
       <div className="max-sm:mx-auto">
         <UserProfile userProfile={userProfile} readonly={!isMe} />
-        <Tabs defaultValue="myPost" className="mt-10 max-sm:mx-auto">
+        <Tabs defaultValue="myPost" className="max-w-[1600px] mx-auto mt-10">
           <TabsList className="grid grid-cols-2 max-w-fit h-12 p-0 bg-transparent">
             <TabsTrigger
               value="myPost"

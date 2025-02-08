@@ -131,7 +131,7 @@ const FormPost: FC<FromPostProps> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
-          className="flex flex-col items-center justify-center gap-5 mt-10 max-sm:mt-5 mx-auto max-w-lg"
+          className="flex flex-col items-center justify-center gap-5 mx-auto max-w-lg"
         >
           {/* 画像アップロード */}
           <FormField

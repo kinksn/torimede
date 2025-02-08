@@ -105,14 +105,16 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
           </PillButton>
         </CredenzaTrigger>
         <CredenzaContent className="max-sm:gap-5 max-sm:px-10 max-sm:pb-5 max-sm:mt-0 max-sm:top-[40px]">
-          <CredenzaTitle>プロフィールを編集</CredenzaTitle>
+          <CredenzaTitle className="max-sm:text-center max-sm:mb-1">
+            プロフィールを編集
+          </CredenzaTitle>
           <CredenzaBody className="max-sm:px-0">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(handleFormSubmit)}
-                className="flex flex-col items-center justify-center gap-5"
+                className="flex flex-col items-center justify-center gap-6"
               >
-                <div className="flex gap-5">
+                <div className="flex gap-6 max-sm:gap-2 max-sm:flex-col max-sm:max-w-[296px] max-sm:w-full">
                   {/* プロフィール画像選択 */}
                   <FormField
                     control={form.control}
@@ -130,7 +132,7 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
                             </PopoverTrigger>
                             <PopoverContent
                               className="p-7 pointer-events-auto"
-                              align="start"
+                              align="center"
                             >
                               <div className="grid grid-cols-3 gap-4 w-fit">
                                 <Avatar
@@ -192,7 +194,7 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
                     )}
                   />
                 </div>
-                <CredenzaFooter className="gap-2 justify-end w-full max-sm:p-0 max-sm:flex-row">
+                <CredenzaFooter className="gap-2 justify-end w-full max-sm:p-0 max-sm:flex-row max-sm:max-w-[296px] max-sm:w-full">
                   <CredenzaClose asChild>
                     <TextButton type="button">キャンセル</TextButton>
                   </CredenzaClose>

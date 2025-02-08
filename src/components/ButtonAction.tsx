@@ -7,7 +7,7 @@ import EditIcon from "@/components/assets/icon/edit.svg";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { postKeys } from "@/service/post/key";
 import { PostId } from "@/app/api/post/model";
 import { UserId } from "@/app/api/user/model";
@@ -29,15 +29,24 @@ import { MenuItem } from "@/components/basic/MenuItem";
 import { Button } from "@/components/basic/Button";
 import { TextButton } from "@/components/basic/TextButton";
 import { RoundButton } from "@/components/basic/RoundButton";
+import { cn } from "@/lib/utils";
 
 type ButtonActionProps = {
   postId: PostId;
   userId: UserId;
+  className?: string;
   // 投稿詳細モーダルから読み込まれているかどうか
   isParentModal?: boolean;
+  isDeleteOnly?: boolean;
 };
 
-const ButtonAction = ({ postId, userId, isParentModal }: ButtonActionProps) => {
+const ButtonAction = ({
+  postId,
+  userId,
+  className,
+  isParentModal,
+  isDeleteOnly,
+}: ButtonActionProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -76,7 +85,7 @@ const ButtonAction = ({ postId, userId, isParentModal }: ButtonActionProps) => {
   };
 
   return (
-    <>
+    <div className={className}>
       <Popover>
         <PopoverTrigger>
           <RoundButton
@@ -90,19 +99,23 @@ const ButtonAction = ({ postId, userId, isParentModal }: ButtonActionProps) => {
           />
         </PopoverTrigger>
         <PopoverContent align="end" className="w-auto">
-          <MenuItem
-            menuType="button"
-            isShowIcon
-            iconSvg={EditIcon}
-            onClick={handleEditPost}
-          >
-            編集
-          </MenuItem>
+          {!isDeleteOnly && (
+            <MenuItem
+              menuType="button"
+              isShowIcon
+              iconSvg={EditIcon}
+              onClick={handleEditPost}
+            >
+              編集
+            </MenuItem>
+          )}
           <MenuItem
             menuType="button"
             onClick={() => setIsDialogOpen(true)}
             isShowIcon
             iconSvg={TrashIcon}
+            iconSvgColor="text-state-delete"
+            className="text-state-delete hover:bg-tertialy-fleshTomato-50"
           >
             削除
           </MenuItem>
@@ -135,7 +148,7 @@ const ButtonAction = ({ postId, userId, isParentModal }: ButtonActionProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
