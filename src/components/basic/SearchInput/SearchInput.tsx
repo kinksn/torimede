@@ -9,8 +9,10 @@ import { RoundButton } from "@/components/basic/RoundButton";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const borderGradientStyles = `
+  transition-all
   rounded-full
   relative
+  before:transition-all
   before:content-['']
   before:block
   before:pointer-events-none
@@ -23,7 +25,6 @@ const borderGradientStyles = `
   before:[-webkit-mask-composite:xor]
   before:[mask-composite:exclude]
 
-  hover:before:p-[1px]
   hover:before:bg-[linear-gradient(90deg,rgba(230,118,66,1)_0%,rgba(205,172,0,1)_50%,rgba(77,98,150,1)_100%)]
 
   [&.focused]:before:p-[2px]
@@ -32,7 +33,7 @@ const borderGradientStyles = `
 `;
 
 const searchInputStylesProps = cva(
-  `border border-primary-50 outline-none bg-primary-50 h-12 pl-12 pr-[50px] rounded-full text-textColor-basic placeholder:text-textColor-weak hover:border-transparent`,
+  `border border-primary-50 outline-none bg-primary-50 h-12 pl-12 pr-[20px] max-sm:pr-3 rounded-full text-textColor-basic placeholder:text-textColor-weak hover:border-transparent`,
   {
     variants: {
       size: {
@@ -77,7 +78,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         </div>
         <div className={`${borderGradientStyles} ${isFocused && "focused"}`}>
           <input
-            type="text"
+            type="search"
             value={localValue}
             onChange={handleChange}
             className={cn(searchInputStylesProps({ size }), className)}

@@ -1,11 +1,18 @@
 "use client";
 
+import SearchIcon from "@/components/assets/icon/search.svg";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { SearchInput } from "@/components/basic/SearchInput";
-import { cn } from "@/lib/utils";
 import { useBreakpoints } from "@/hooks/useBreakpoints";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { RoundButton } from "@/components/basic/RoundButton";
+import { SVGIcon } from "@/components/ui/SVGIcon";
 
 type SearchFormInputs = {
   searchQuery: string;
@@ -17,9 +24,10 @@ type SearchFormProps = {
 
 export const SearchForm = ({ className }: SearchFormProps) => {
   const router = useRouter();
-  const { sm } = useBreakpoints();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
+  const { sm } = useBreakpoints();
+  const [isSearchPopoverOpen, setIsSearchPoporverOpen] = useState(false);
 
   const { register, handleSubmit, setValue, watch, reset } =
     useForm<SearchFormInputs>({
@@ -43,15 +51,56 @@ export const SearchForm = ({ className }: SearchFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <SearchInput
-        onClear={handleClear}
-        value={searchQuery}
-        size={sm ? "sm" : "md"}
-        placeholder="鳥さんを探す"
-        className={className}
-        {...register("searchQuery")}
-      />
-    </form>
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        action="/"
+        className="max-sm:hidden"
+      >
+        <SearchInput
+          onClear={handleClear}
+          value={searchQuery}
+          size={sm ? "sm" : "md"}
+          placeholder="鳥さんを探す"
+          className={className}
+          {...register("searchQuery")}
+        />
+      </form>
+      <div className="hidden max-sm:block">
+        <Popover
+          open={isSearchPopoverOpen}
+          onOpenChange={setIsSearchPoporverOpen}
+        >
+          <PopoverTrigger>
+            <RoundButton
+              colorTheme={"white"}
+              asChild
+              isActive={isSearchPopoverOpen}
+              aria-label="検索フォーム表示ボタン"
+              icon={
+                <div>
+                  <SVGIcon
+                    svg={SearchIcon}
+                    className="text-primary-700 w-6 h-6"
+                  />
+                </div>
+              }
+            />
+          </PopoverTrigger>
+          <PopoverContent className="relative -top-[2px] w-[100svw] !animate-none border-none py-3 px-2 rounded-none">
+            <form onSubmit={handleSubmit(onSubmit)} action="/">
+              <SearchInput
+                onClear={handleClear}
+                value={searchQuery}
+                size={"sm"}
+                placeholder="鳥さんを探す"
+                className={className}
+                {...register("searchQuery")}
+              />
+            </form>
+          </PopoverContent>
+        </Popover>
+      </div>
+    </>
   );
 };

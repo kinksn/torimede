@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   GetUserProfile,
   UpdateUserInput,
@@ -20,7 +20,6 @@ import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
@@ -29,9 +28,7 @@ import {
   CredenzaBody,
   CredenzaClose,
   CredenzaContent,
-  CredenzaDescription,
   CredenzaFooter,
-  CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
 } from "@/components/ui/credenza";

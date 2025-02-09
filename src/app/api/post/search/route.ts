@@ -12,10 +12,17 @@ export async function GET(req: Request) {
     const fetchPostsByQuery = async (keywords: string[]) => {
       const posts: GetPostSelectTags[] = await db.post.findMany({
         where: {
-          OR: keywords.map((keyword) => ({
+          AND: keywords.map((keyword) => ({
             OR: [
               { title: { contains: keyword, mode: "insensitive" } },
               { content: { contains: keyword, mode: "insensitive" } },
+              {
+                tags: {
+                  some: {
+                    tag: { name: { contains: keyword, mode: "insensitive" } },
+                  },
+                },
+              },
             ],
           })),
         },
