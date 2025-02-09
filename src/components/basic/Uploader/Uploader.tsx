@@ -184,6 +184,7 @@ export const Uploader = ({
                 {...props}
                 type="file"
                 onChange={handleInputChange}
+                accept="image/*"
               />
             )}
             {!preview && (

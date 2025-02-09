@@ -209,7 +209,11 @@ export const MultiSelect = <T,>({
           </div>
         </PopoverTrigger>
 
-        <PopoverContent align="start" className="pt-0">
+        <PopoverContent
+          align="start"
+          className="pt-0"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           {/* 検索用Input */}
           <div className="mb-1">
             <Input
@@ -218,6 +222,7 @@ export const MultiSelect = <T,>({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               disabled={disabled}
+              autoFocus={false}
             />
           </div>
 
