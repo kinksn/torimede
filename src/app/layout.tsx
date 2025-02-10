@@ -10,6 +10,7 @@ import { Header } from "@/components/Header";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Footer } from "@/components/Footer";
+import { Toaster } from "sonner";
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],

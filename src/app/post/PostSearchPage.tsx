@@ -6,7 +6,6 @@ import PostCard from "@/components/PostCard";
 import SyoboMedeChan from "@/components/assets/mede-chan/syobo.svg";
 import { GetPostOutput } from "@/app/api/post/model";
 import { useQuery } from "@tanstack/react-query";
-import { Session } from "next-auth";
 import { useSearchParams } from "next/navigation";
 import { FaceLoader } from "@/components/basic/FaceLoader";
 import { SVGIcon } from "@/components/ui/SVGIcon";
@@ -23,11 +22,7 @@ const searchPosts = async (
   return data;
 };
 
-type PostDetailPageProps = {
-  session: Session | null;
-};
-
-export const PostSearchPage = ({ session }: PostDetailPageProps) => {
+export const PostSearchPage = () => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
   const searchTag = searchParams.get("tag") || "";
@@ -65,7 +60,7 @@ export const PostSearchPage = ({ session }: PostDetailPageProps) => {
           ) : posts && posts.length > 0 ? (
             <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
               {posts.map((post) => (
-                <PostCard key={post.id} post={post} session={session} />
+                <PostCard key={post.id} post={post} />
               ))}
             </Masonry>
           ) : searchQuery || searchTag ? (

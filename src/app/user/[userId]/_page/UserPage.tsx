@@ -1,8 +1,8 @@
 "use client";
 
+import ButtonAction from "@/components/ButtonAction";
 import { GetUserOutput } from "@/app/api/user/model";
 import { UserProfile } from "@/app/user/[userId]/_components/UserProfile";
-import BackButton from "@/components/BackButton";
 import PostCard from "@/components/PostCard";
 import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
 import { Session } from "next-auth";
@@ -47,7 +47,19 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
             <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
               {posts.length > 0 ? (
                 posts.map((post) => (
-                  <PostCard post={post} key={post.id} session={session} />
+                  <PostCard
+                    post={post}
+                    key={post.id}
+                    menu={
+                      isMe && (
+                        <ButtonAction
+                          postId={post.id}
+                          userId={post.userId}
+                          redirectOnDelete={false}
+                        />
+                      )
+                    }
+                  />
                 ))
               ) : (
                 <div>まだ投稿がありません</div>
@@ -59,7 +71,7 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
               <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
                 {cutedPosts.length > 0 ? (
                   cutedPosts.map((post) => (
-                    <PostCard post={post} key={post.id} session={session} />
+                    <PostCard post={post} key={post.id} />
                   ))
                 ) : (
                   <div>まだ鳥さんを愛でてません</div>

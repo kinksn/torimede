@@ -16,6 +16,7 @@ import { tagUpdateInputSchema } from "@/app/api/tag/model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   Popover,
   PopoverContent,
@@ -45,9 +46,11 @@ export const TagEditMenu = ({ tag }: TagEditMenuProps) => {
       return axios.patch("/api/tag", { ...newPost, id: tag.id });
     },
     onError: (error) => {
+      toast.error("タグの更新に失敗しました");
       console.error(error);
     },
     onSuccess: async () => {
+      toast.success("タグを更新しました");
       setIsPopoverOpen(false);
       router.refresh();
     },
@@ -58,9 +61,11 @@ export const TagEditMenu = ({ tag }: TagEditMenuProps) => {
       return axios.delete(`/api/tag/${tag.id}`);
     },
     onError: (error) => {
+      toast.error("タグの削除に失敗しました");
       console.error(error);
     },
     onSuccess: async () => {
+      toast.success("タグを削除しました");
       setIsDialogOpen(false);
       setIsPopoverOpen(false);
       router.refresh();
@@ -97,7 +102,7 @@ export const TagEditMenu = ({ tag }: TagEditMenuProps) => {
           asChild
         />
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <Form {...form}>
           <form
             onSubmit={(e) => {

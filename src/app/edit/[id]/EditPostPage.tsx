@@ -11,6 +11,7 @@ import hash from "stable-hash";
 import { GetPostDetailOutput } from "@/app/api/post/model";
 import { Tag } from "@prisma/client";
 import { Session } from "next-auth";
+import { toast } from "sonner";
 
 type EditPostPageProps = {
   post: GetPostDetailOutput;
@@ -26,10 +27,13 @@ const EditPostPage: FC<EditPostPageProps> = ({ post, tags, session }) => {
       return axios.patch(`/api/post/${post.id}`, newPost);
     },
     onError: (error) => {
+      toast.error("投稿を編集できませんでした");
       console.error(error);
     },
     onSuccess: () => {
+      toast.success("投稿を編集しました");
       router.push(`/post/${post.id}`);
+      router.refresh();
     },
   });
 

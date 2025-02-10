@@ -11,10 +11,10 @@ type PostCardProps = {
     userId: UserId;
     image: string;
   };
-  session: Session | null;
+  menu?: React.ReactNode;
 };
 
-const PostCard: FC<PostCardProps> = ({ post, session }) => {
+const PostCard: FC<PostCardProps> = ({ post, menu }) => {
   const { id, userId, image } = post;
 
   return (
@@ -26,7 +26,11 @@ const PostCard: FC<PostCardProps> = ({ post, session }) => {
         scale: { type: "spring", visualDuration: 0.4, bounce: 0.2 },
       }}
     >
-      <ImageItem imageUrl={image} href={`/post/${id}/${userId}`} />
+      <ImageItem
+        imageUrl={image}
+        href={`/post/${id}/${userId}`}
+        actionButton={menu}
+      />
     </motion.div>
   );
 };

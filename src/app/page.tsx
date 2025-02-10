@@ -1,14 +1,11 @@
 import MedeChan from "@/components/assets/mede-chan/default.svg";
 import Logo from "@/components/assets/logo-color-fixed.svg";
-import { getAuthSession } from "@/lib/auth";
 import ClientPostCard from "@/app/_page/ClientPostCard";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { PillButton } from "@/components/basic/PillButton";
 import Link from "next/link";
 
 export default async function Home() {
-  const session = await getAuthSession();
-
   return (
     <>
       <div className="flex flex-col items-center justify-center mt-10 max-sm:mt-5">
@@ -27,7 +24,7 @@ export default async function Home() {
         </PillButton>
       </div>
       <div className="max-w-[1600px] mx-auto mt-10 px-5">
-        <ClientPostCard session={session} />
+        <ClientPostCard />
       </div>
     </>
   );

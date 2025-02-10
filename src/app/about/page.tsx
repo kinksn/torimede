@@ -1,11 +1,11 @@
-import BackButton from "@/components/BackButton";
-import { FaceLoader } from "@/components/basic/FaceLoader";
-import React from "react";
+"use client";
+
+import { ContentToolbar } from "@/components/ContentToolbar";
 
 export default function About() {
   return (
     <>
-      <BackButton />
+      <ContentToolbar />
       <div>About page</div>
     </>
   );

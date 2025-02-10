@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { PillButton } from "@/components/basic/PillButton";
 import { SVGIcon } from "@/components/ui/SVGIcon";
+import { toast } from "sonner";
 
 export const UrlCopyButton = () => {
   const pathname = usePathname();
@@ -19,7 +20,13 @@ export const UrlCopyButton = () => {
 
   const onCopy = useCallback(() => {
     if (typeof navigator === "undefined") return;
-    navigator.clipboard.writeText(currentUrl);
+    try {
+      navigator.clipboard.writeText(currentUrl);
+      toast.success("URLをコピーしました");
+    } catch (error) {
+      toast.error("URLのコピーに失敗しました");
+      console.error(error);
+    }
   }, [currentUrl]);
 
   return (
