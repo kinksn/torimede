@@ -127,11 +127,7 @@ export function PostDetailPage({
         </div>
       </div>
       {userPosts.length > 0 && (
-        <UserPostCards
-          userPosts={userPosts}
-          userName={userName}
-          session={session}
-        />
+        <UserPostCards userPosts={userPosts} userName={userName} />
       )}
     </div>
   );

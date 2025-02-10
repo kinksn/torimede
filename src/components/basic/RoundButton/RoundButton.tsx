@@ -13,9 +13,9 @@ const roundButtonStyles = cva(
       },
       colorTheme: {
         primary:
-          "bg-primary-700 hover:bg-primary-800 data-[active=true]:bg-primary-900 data-[active=false]:bg-primary-700",
+          "bg-primary-700 hover:bg-primary-800 data-[active=true]:bg-primary-900",
         white:
-          "bg-white hover:bg-primary-100 active:bg-primary-200 data-[active=true]:bg-primary-200 data-[active=false]:bg-white",
+          "bg-white hover:bg-primary-100 active:bg-primary-200 data-[active=true]:bg-primary-200",
       },
     },
     defaultVariants: {

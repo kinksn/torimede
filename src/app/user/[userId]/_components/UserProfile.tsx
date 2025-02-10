@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/popover";
 import { PillButton } from "@/components/basic/PillButton";
 import { TextButton } from "@/components/basic/TextButton";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 
 type UserProfile = {
   userProfile: GetUserProfile;
@@ -54,6 +55,7 @@ type FormType = z.infer<typeof formSchema>;
 export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const { sm } = useBreakpoints();
 
   const form = useForm<FormType>({
     mode: "onChange",
@@ -129,7 +131,7 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
                             </PopoverTrigger>
                             <PopoverContent
                               className="p-7 pointer-events-auto"
-                              align="center"
+                              align={sm ? "center" : "start"}
                             >
                               <div className="grid grid-cols-3 gap-4 w-fit">
                                 <Avatar

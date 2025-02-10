@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import PostCard from "@/components/PostCard";
 import { useInView } from "react-intersection-observer";
-import { Session } from "next-auth";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { postKeys } from "@/service/post/key";
@@ -13,10 +12,6 @@ import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
 // 本家だとSSR時にwindowオブジェクトがエラーになるバグがあったため直接プロジェクトに入れて読み込んでいる
 import Masonry from "@/components/react-layout-masonry";
 import { FaceLoader } from "@/components/basic/FaceLoader";
-
-type ClientSideFetchProps = {
-  session: Session | null;
-};
 
 type FetchPostParams = {
   take?: number;
@@ -30,7 +25,7 @@ const fetchPosts = async ({ take, lastCursor }: FetchPostParams) => {
   return response?.data;
 };
 
-const ClientPostCard = ({ session }: ClientSideFetchProps) => {
+const ClientPostCard = () => {
   const { ref, inView } = useInView();
 
   const {
@@ -66,7 +61,7 @@ const ClientPostCard = ({ session }: ClientSideFetchProps) => {
         {isSuccess &&
           data?.pages.map((pages) =>
             pages.posts.map((post: any) => {
-              return <PostCard post={post} key={post.id} session={session} />;
+              return <PostCard post={post} key={post.id} />;
             })
           )}
       </Masonry>

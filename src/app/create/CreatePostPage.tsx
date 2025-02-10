@@ -9,6 +9,7 @@ import axios from "axios";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import { SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
 
 type CreatePostPageProps = {
   tags: Tag[];
@@ -27,6 +28,7 @@ const CreatePostPage = ({ tags, session }: CreatePostPageProps) => {
       return axios.post("/api/post/create", newPost);
     },
     onError: (error) => {
+      toast.error("投稿できませんでした");
       console.error(error);
     },
     onSuccess: async () => {
@@ -34,6 +36,7 @@ const CreatePostPage = ({ tags, session }: CreatePostPageProps) => {
         queryKey: postKeys.infiniteList(),
         refetchType: "inactive",
       });
+      toast.success("投稿しました");
       router.push("/");
     },
   });

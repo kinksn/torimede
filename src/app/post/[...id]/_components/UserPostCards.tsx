@@ -10,10 +10,9 @@ import Masonry from "@/components/react-layout-masonry";
 type PostCardProps = {
   userName: string;
   userPosts: GetUserPostsOutput;
-  session: Session | null;
 };
 
-const UserPostCards = ({ userPosts, userName, session }: PostCardProps) => {
+const UserPostCards = ({ userPosts, userName }: PostCardProps) => {
   return (
     <div className="px-10 max-sm:px-0 mb-10 max-sm:mb-5">
       <div className="bg-base-content p-10 rounded-20 max-sm:p-5">
@@ -26,7 +25,7 @@ const UserPostCards = ({ userPosts, userName, session }: PostCardProps) => {
           className="max-w-[1600px] mx-auto mt-10 max-sm:mt-5 px-5 max-sm:px-0"
         >
           {userPosts.map((post) => (
-            <PostCard post={post} key={post.id} session={session} />
+            <PostCard post={post} key={post.id} />
           ))}
         </Masonry>
       </div>

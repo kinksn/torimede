@@ -32,7 +32,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/basic/Input";
 import { Textarea } from "@/components/basic/Textarea";
@@ -43,6 +42,7 @@ import { Session } from "next-auth";
 import { TagEditMenu } from "@/components/TagEditMenu";
 import { Button } from "@/components/basic/Button";
 import { TextButton } from "@/components/basic/TextButton";
+import { toast } from "sonner";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
@@ -83,7 +83,7 @@ const FormPost: FC<FromPostProps> = ({
       setIsSubmitting(false);
       return;
     }
-    submit({ ...data, image: imageUrl });
+    await submit({ ...data, image: imageUrl });
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -119,6 +119,7 @@ const FormPost: FC<FromPostProps> = ({
       const { data } = await axios.post("/api/tag", {
         name: tagName,
       });
+      toast.success("タグを作成しました");
       return data;
     } catch (error) {
       console.error("Failed to create new tag", error);
@@ -231,7 +232,7 @@ const FormPost: FC<FromPostProps> = ({
               ? isLoadingSubmit
                 ? "保存中"
                 : "保存"
-              : isLoadingSubmit
+              : isLoadingSubmit || isSubmitting
               ? "投稿中"
               : "投稿"}
           </Button>

@@ -9,7 +9,6 @@ import type {
 } from "@/app/api/post/model";
 import { Session } from "next-auth";
 import { PostDetailPage } from "@/app/post/[...id]/PostDetailPage";
-import { useState } from "react";
 
 type ModalPostDetailPageProps = {
   post: GetPostDetailOutput;

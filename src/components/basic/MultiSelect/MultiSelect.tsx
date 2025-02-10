@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import ChevronDown from "@/components/assets/icon/chevron-down.svg";
+import SearchIcon from "@/components/assets/icon/search.svg";
 import { isEqual } from "es-toolkit";
 import { FormLabel } from "@/components/basic/FormLabel";
 import { Separator } from "@/components/ui/separator";
@@ -223,6 +224,12 @@ export const MultiSelect = <T,>({
               onChange={(e) => setSearchTerm(e.target.value)}
               disabled={disabled}
               autoFocus={false}
+              icon={
+                <SVGIcon
+                  svg={SearchIcon}
+                  className="text-textColor-basic w-6 h-6"
+                />
+              }
             />
           </div>
 

@@ -24,6 +24,10 @@ const inputStylesProps = cva(
         true: "!bg-tertialy-bloodOrange-50 !border-state-error focus:!shadow-inputActiveError",
         false: "",
       },
+      hasIcon: {
+        true: "pl-11",
+        false: "",
+      },
     },
     defaultVariants: {
       size: "md",
@@ -40,6 +44,7 @@ type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> &
     requirement?: "optional" | "required";
     error?: boolean;
     inputClassName?: string;
+    icon?: React.ReactNode;
   };
 
 export const Input = ({
@@ -50,6 +55,7 @@ export const Input = ({
   colorTheme,
   requirement,
   disabled,
+  icon,
   error = false,
   ...props
 }: InputProps) => {
@@ -61,20 +67,28 @@ export const Input = ({
         </FormLabel>
       )}
       <FormControl>
-        <ShadcnInput
-          disabled={disabled}
-          className={cn(
-            inputStylesProps({
-              size,
-              colorTheme,
-              isDesabled: disabled ? true : false,
-              isError: error ? true : false,
-            }),
-            inputClassName
+        <div className="relative">
+          {!!icon && (
+            <div className="absolute top-0 left-0 w-12 h-full flex items-center justify-center">
+              {icon}
+            </div>
           )}
-          style={{ boxShadow: "unset", outline: "unset" }}
-          {...props}
-        />
+          <ShadcnInput
+            disabled={disabled}
+            className={cn(
+              inputStylesProps({
+                size,
+                colorTheme,
+                isDesabled: disabled ? true : false,
+                isError: error ? true : false,
+                hasIcon: !!icon ? true : false,
+              }),
+              inputClassName
+            )}
+            style={{ boxShadow: "unset", outline: "unset" }}
+            {...props}
+          />
+        </div>
       </FormControl>
       <FormMessage className="!mt-1 text-state-error letter-spacing-[0] text-xs" />
     </FormItem>

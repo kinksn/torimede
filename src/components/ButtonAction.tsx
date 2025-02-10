@@ -29,7 +29,7 @@ import { MenuItem } from "@/components/basic/MenuItem";
 import { Button } from "@/components/basic/Button";
 import { TextButton } from "@/components/basic/TextButton";
 import { RoundButton } from "@/components/basic/RoundButton";
-import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type ButtonActionProps = {
   postId: PostId;
@@ -38,6 +38,7 @@ type ButtonActionProps = {
   // 投稿詳細モーダルから読み込まれているかどうか
   isParentModal?: boolean;
   isDeleteOnly?: boolean;
+  redirectOnDelete?: boolean;
 };
 
 const ButtonAction = ({
@@ -46,6 +47,7 @@ const ButtonAction = ({
   className,
   isParentModal,
   isDeleteOnly,
+  redirectOnDelete = true,
 }: ButtonActionProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -55,17 +57,23 @@ const ButtonAction = ({
       return axios.delete(`/api/post/${postId}`, { data: { userId } });
     },
     onError: (error) => {
+      toast.error("投稿を削除できませんでした");
       console.error(error);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: postKeys.infiniteList() });
-      if (isParentModal) {
-        // Intercepting Routesで表示したモーダルがrouter.pushなどで閉じれず、
-        // 親モーダルのセッター変数を渡しても挙動がおかしくなるので、
-        // location.hrefを直接更新している
-        location.href = "/";
+      toast.success("投稿を削除しました");
+      if (redirectOnDelete) {
+        if (isParentModal) {
+          // Intercepting Routesで表示したモーダルがrouter.pushなどで閉じれず、
+          // 親モーダルのセッター変数を渡しても挙動がおかしくなるので、
+          // location.hrefを直接更新している
+          location.href = "/";
+        }
+        router.push("/");
+      } else {
+        router.refresh();
       }
-      router.push("/");
     },
   });
 
