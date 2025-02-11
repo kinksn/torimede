@@ -34,6 +34,14 @@ const config: Config = {
         zenKakuGothic: "var(--font-zen-kaku-gothic-new)",
       },
       fontSize: {
+        "typography-xxl": [
+          "28px", // フォントサイズ
+          {
+            lineHeight: "2.2", // 行の高さ (220%)
+            letterSpacing: "0.08em", // 文字間隔 (8%)
+            fontWeight: "400", // フォントの太さ
+          },
+        ],
         "typography-xl": [
           "24px", // フォントサイズ
           {

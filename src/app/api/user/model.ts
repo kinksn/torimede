@@ -77,3 +77,4 @@ export const signUpFormSchema = z
     password: z.string().min(6, "6文字以上入力してください"),
   })
   .strict();
+export type SignUpForm = z.infer<typeof signUpFormSchema>;
