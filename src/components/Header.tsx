@@ -10,7 +10,6 @@ import { SVGIcon } from "@/components/ui/SVGIcon";
 import { TextButton } from "@/components/basic/TextButton";
 import { Button } from "@/components/basic/Button";
 import { AccountMenu } from "@/components/AccountMenu";
-import { useState } from "react";
 import { Separator } from "@radix-ui/react-separator";
 
 const showIgnorePath = ["/login", "/signup"];
