@@ -21,7 +21,7 @@ export async function middleware(req: NextRequest) {
   if (!token && url.pathname.startsWith("/edit")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
-  if (!token && url.pathname === "/change-username") {
+  if (!token && url.pathname === "/change-profile") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -32,9 +32,9 @@ export async function middleware(req: NextRequest) {
    * ログイン後
    */
   if (token.isFirstLogin === true && url.pathname === "/") {
-    return NextResponse.redirect(new URL("/change-username", req.url));
+    return NextResponse.redirect(new URL("/change-profile", req.url));
   }
-  if (token.isFirstLogin === false && url.pathname === "/change-username") {
+  if (token.isFirstLogin === false && url.pathname === "/change-profile") {
     return NextResponse.redirect(new URL("/", req.url));
   }
   if (!!token && url.pathname === "/login") {
@@ -51,7 +51,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/",
-    "/change-username",
+    "/change-profile",
     "/login",
     "/signup",
     "/create/:path*",
