@@ -1,12 +1,20 @@
 "use client";
 
+import Logo from "@/components/assets/logo-color-fixed.svg";
+import GoogleIcon from "@/components/assets/icon/color-fixed/google.svg";
+// import LINEIcon from "@/components/assets/icon/color-fixed/line.svg";
+// import XIcon from "@/components/assets/icon/color-fixed/x.svg";
 import { Login } from "@/types";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { SVGIcon } from "@/components/ui/SVGIcon";
+import { Form, FormField } from "@/components/ui/form";
+import { Input } from "@/components/basic/Input";
+import { Button } from "@/components/basic/Button";
 
 const loginFormSchema = z
   .object({
@@ -18,11 +26,7 @@ const loginFormSchema = z
 const LoginPage = () => {
   const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Login>({
+  const form = useForm<Login>({
     defaultValues: { email: "", password: "" },
     resolver: zodResolver(loginFormSchema),
   });
@@ -41,52 +45,83 @@ const LoginPage = () => {
     }
   };
 
+  const handleSubmit: SubmitHandler<Login> = async (data) => {
+    login(data);
+  };
+
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(login)}
-        className="flex flex-col items-center justify-center gap-5 mt-10"
-      >
-        <div className="w-full max-w-lg flex flex-col gap-2 ">
-          <input
-            type="text"
-            {...register("email", { required: true })}
-            placeholder="user@example.com"
-            className="input input-bordered w-full max-w-lg"
-          />
-          {errors.email && (
-            <p className="text-red-500 text-left w-full max-w-lg text-xs ml-1">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
-        <div className="w-full max-w-lg flex flex-col gap-2 ">
-          <input
-            type="password"
-            {...register("password", { required: true })}
-            className="input input-bordered w-full max-w-lg"
-          />
-          {errors.password && (
-            <p className="text-red-500 text-left w-full max-w-lg text-xs ml-1">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-        <button
-          type="submit"
-          className="btn bg-yellow-400 hover:bg-yellow-500 w-full max-w-lg text-gray-900"
+    <div className="flex flex-col gap-5 w-full h-screen max-sm:h-auto items-center justify-center px-5 max-sm:py-10">
+      <div className="flex flex-col items-center gap-5">
+        <SVGIcon svg={Logo} className="w-[180px]" />
+        <p className="font-bold text-center">
+          連携するアカウントを選択してください
+        </p>
+      </div>
+      <div className="flex flex-col items-center justify-center gap-5 bg-white rounded-20 max-w-[388px] w-full p-10 max-sm:p-5">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex flex-col w-full gap-5"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field, fieldState }) => (
+                <Input
+                  label="メールアドレス"
+                  requirement="required"
+                  placeholder="user@example.com"
+                  className="w-full"
+                  error={!!fieldState.error}
+                  {...field}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field, fieldState }) => (
+                <Input
+                  label="パスワード"
+                  type="password"
+                  requirement="required"
+                  placeholder="6文字以上入力してください"
+                  className="w-full"
+                  error={!!fieldState.error}
+                  {...field}
+                />
+              )}
+            />
+            <Button size={"lg"} type="submit" className="w-full justify-center">
+              ログイン
+            </Button>
+          </form>
+        </Form>
+        <Button
+          iconLeft={<SVGIcon svg={GoogleIcon} className="w-6" />}
+          colorTheme={"outline"}
+          className="w-full justify-center"
+          onClick={() => signIn("google", { callbackUrl: "/" })}
         >
-          Login
-        </button>
-      </form>
-      <button onClick={() => signIn("google", { callbackUrl: "/" })}>
-        google
-      </button>
-      <button onClick={() => signIn("line", { callbackUrl: "/" })}>LINE</button>
-      <button onClick={() => signIn("twitter", { callbackUrl: "/" })}>
-        X(Twitter)
-      </button>
-      <button onClick={() => signOut()}>signout</button>
+          Googleアカウント
+        </Button>
+        {/* <Button
+          iconLeft={<SVGIcon svg={LINEIcon} className="w-6" />}
+          colorTheme={"outline"}
+          className="w-full justify-center"
+          onClick={() => signIn("line", { callbackUrl: "/" })}
+        >
+          LINEアカウント
+        </Button>
+        <Button
+          iconLeft={<SVGIcon svg={XIcon} className="w-6" />}
+          colorTheme={"outline"}
+          className="w-full justify-center"
+          onClick={() => signIn("twitter", { callbackUrl: "/" })}
+        >
+          X(Twitter)アカウント
+        </Button> */}
+      </div>
     </div>
   );
 };

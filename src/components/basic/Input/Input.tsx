@@ -60,7 +60,7 @@ export const Input = ({
   ...props
 }: InputProps) => {
   return (
-    <FormItem className={cn("flex flex-col", className)}>
+    <FormItem className={cn("flex flex-col space-y-0 > *", className)}>
       {label && (
         <FormLabel requirement={requirement} size={size} className="mb-2">
           {label}

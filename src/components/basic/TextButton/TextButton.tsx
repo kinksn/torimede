@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
 
 const textButtonStylesProps = cva(
-  `flex items-center gap-1 font-zenMaruGothic px-4 rounded-md font-bold text-base data-[disabled=true]:bg-transparent data-[disabled=true]:hover:bg-transparent data-[disabled=true]:cursor-not-allowed data-[disabled=true]:pointer-events-none`,
+  `flex items-center gap-1 transition-all font-zenMaruGothic px-4 rounded-md font-bold text-base data-[disabled=true]:bg-transparent data-[disabled=true]:hover:bg-transparent data-[disabled=true]:cursor-not-allowed data-[disabled=true]:pointer-events-none`,
   {
     variants: {
       size: {

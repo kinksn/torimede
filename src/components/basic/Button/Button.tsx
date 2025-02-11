@@ -46,12 +46,18 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const IconLeft = iconLeft && (
-    <span data-disabled={disabled} className="data-[disabled=true]:opacity-20">
+    <span
+      data-disabled={disabled}
+      className="data-[disabled=true]:opacity-20 pr-[6px]"
+    >
       {iconLeft}
     </span>
   );
   const IconRight = iconRight && (
-    <span data-disabled={disabled} className="data-[disabled=true]:opacity-20">
+    <span
+      data-disabled={disabled}
+      className="data-[disabled=true]:opacity-20 pl-[6px]"
+    >
       {iconRight}
     </span>
   );
