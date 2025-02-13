@@ -5,7 +5,7 @@ import PostBottomRightPC from "@/components/assets/ornament/post-bottom-right-pc
 import PostBottomLeftPC from "@/components/assets/ornament/post-bottom-left-pc.svg";
 import PostBottomRightSP from "@/components/assets/ornament/post-bottom-right-sp.svg";
 import PostBottomLeftSP from "@/components/assets/ornament/post-bottom-left-sp.svg";
-import CuteButton from "@/components/CuteButton";
+import { CuteButton } from "@/components/CuteButton";
 import { ShareButtons } from "@/components/ShareButtons";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
 import { GetPostDetailOutput, GetUserPostsOutput } from "@/app/api/post/model";
@@ -20,6 +20,7 @@ type PostDetailPageProps = {
   post: GetPostDetailOutput;
   userPosts: GetUserPostsOutput;
   session: Session | null;
+  userCuteCount: number;
   // 投稿詳細モーダルから読み込まれているかどうか
   isParentModal?: boolean;
 };
@@ -28,6 +29,7 @@ export function PostDetailPage({
   post,
   userPosts,
   session,
+  userCuteCount,
   isParentModal,
 }: PostDetailPageProps) {
   const { id: postId } = post;
@@ -79,11 +81,13 @@ export function PostDetailPage({
           <SVGIcon svg={PostBottomLeftSP} className="h-5 hidden max-sm:block" />
         </div>
         <div className="relative h-10 w-full max-sm:h-5 bg-primary-50">
-          {!isMyPost && session !== null && (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
-              <CuteButton postId={post.id} />
-            </div>
-          )}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+            <CuteButton
+              postId={post.id}
+              userCuteCount={userCuteCount}
+              session={session}
+            />
+          </div>
         </div>
         <div>
           <SVGIcon svg={PostBottomRightPC} className="h-10 max-sm:hidden" />

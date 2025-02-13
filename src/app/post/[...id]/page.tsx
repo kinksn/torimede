@@ -10,6 +10,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import { db } from "@/lib/db";
 import { UserId } from "@/app/api/user/model";
 import { getAuthSession } from "@/lib/auth";
+import { getUserCuteCountForPost } from "@/app/api/cute/[postId]/cuteDao";
 
 type PostProps = {
   params: {
@@ -99,6 +100,20 @@ async function getPost(postId: string) {
   return getPostDetailOutputSchema.parse(formattedPosts);
 }
 
+async function fetchUserCuteCount({
+  postId,
+  userId,
+}: {
+  postId: PostId;
+  userId: UserId | undefined;
+}) {
+  if (!userId) {
+    return 0;
+  }
+  const userCuteCount = await getUserCuteCountForPost({ postId, userId });
+  return userCuteCount;
+}
+
 async function getPostByUserId(userId: string, postId: string) {
   const posts = await db.post.findMany({
     where: {
@@ -141,5 +156,18 @@ export default async function PostDetail({ params }: PostProps) {
   const session = await getAuthSession();
   const post = await getPost(postId);
   const userPost = await getPostByUserId(userId, postId);
-  return <PostDetailPage post={post} userPosts={userPost} session={session} />;
+  // 現在ログインしているユーザーがpostで取得した投稿を何回メデたかの回数取得
+  const userCuteCount = await fetchUserCuteCount({
+    postId,
+    userId: session?.user?.id,
+  });
+
+  return (
+    <PostDetailPage
+      post={post}
+      userPosts={userPost}
+      userCuteCount={userCuteCount}
+      session={session}
+    />
+  );
 }

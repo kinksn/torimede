@@ -78,3 +78,11 @@ export const signUpFormSchema = z
   })
   .strict();
 export type SignUpForm = z.infer<typeof signUpFormSchema>;
+
+export const loginFormSchema = z
+  .object({
+    email: z.string().email("メールアドレスの形式で入力してください"),
+    password: z.string().min(6, "6文字以上入力してください"),
+  })
+  .strict();
+export type LoginForm = z.infer<typeof loginFormSchema>;
