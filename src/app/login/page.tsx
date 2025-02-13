@@ -4,34 +4,26 @@ import Logo from "@/components/assets/logo-color-fixed.svg";
 import GoogleIcon from "@/components/assets/icon/color-fixed/google.svg";
 // import LINEIcon from "@/components/assets/icon/color-fixed/line.svg";
 // import XIcon from "@/components/assets/icon/color-fixed/x.svg";
-import { Login } from "@/types";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { Form, FormField } from "@/components/ui/form";
 import { Input } from "@/components/basic/Input";
 import { Button } from "@/components/basic/Button";
-
-const loginFormSchema = z
-  .object({
-    email: z.string().email("メールアドレスの形式で入力してください"),
-    password: z.string().min(6, "6文字以上入力してください"),
-  })
-  .strict();
+import { LoginForm, loginFormSchema } from "@/app/api/user/model";
 
 const LoginPage = () => {
   const router = useRouter();
 
-  const form = useForm<Login>({
+  const form = useForm<LoginForm>({
     defaultValues: { email: "", password: "" },
     resolver: zodResolver(loginFormSchema),
   });
 
-  const login = async (data: Login) => {
+  const login = async (data: LoginForm) => {
     const res = await signIn("credentials", {
       redirect: false,
       email: data.email,
@@ -45,7 +37,7 @@ const LoginPage = () => {
     }
   };
 
-  const handleSubmit: SubmitHandler<Login> = async (data) => {
+  const handleSubmit: SubmitHandler<LoginForm> = async (data) => {
     login(data);
   };
 

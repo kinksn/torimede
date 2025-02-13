@@ -13,12 +13,14 @@ import { PostDetailPage } from "@/app/post/[...id]/PostDetailPage";
 type ModalPostDetailPageProps = {
   post: GetPostDetailOutput;
   userPosts: GetUserPostsOutput;
+  userCuteCount: number;
   session: Session | null;
 };
 
 const ModalPostDetailPage = ({
   post,
   userPosts,
+  userCuteCount,
   session,
 }: ModalPostDetailPageProps) => {
   const [historyIndex] = useAtom(historyIndexTrackerIndexAtom);
@@ -36,6 +38,7 @@ const ModalPostDetailPage = ({
         <PostDetailPage
           post={post}
           userPosts={userPosts}
+          userCuteCount={userCuteCount}
           session={session}
           // 投稿詳細モーダルから読み込まれているかどうか
           isParentModal
