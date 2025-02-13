@@ -8,6 +8,7 @@ import { SVGIcon } from "@/components/ui/SVGIcon";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { postKeys } from "@/service/post/key";
 import { PostId } from "@/app/api/post/model";
 import { UserId } from "@/app/api/user/model";
@@ -52,6 +53,7 @@ const ButtonAction = ({
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { sm } = useBreakpoints();
   const { mutate: deletePost } = useMutation({
     mutationFn: async (userId: UserId) => {
       return axios.delete(`/api/post/${postId}`, { data: { userId } });
@@ -97,9 +99,10 @@ const ButtonAction = ({
       <Popover>
         <PopoverTrigger>
           <RoundButton
+            size={sm ? "sm" : "md"}
             icon={
               <div>
-                <SVGIcon svg={MenuIcon} className="w-6" />
+                <SVGIcon svg={MenuIcon} className="w-6 max-sm:w-4" />
               </div>
             }
             colorTheme={"white"}

@@ -29,7 +29,7 @@ export default function About() {
           }
           subTitle="about"
         >
-          <p className="text-center mt-5">
+          <p className="mt-5 text-center max-sm:text-left">
             くわしい人から普段なんとなく鳥さんが気になっている人まで、
             <br className="max-sm:hidden" />
             すべての鳥好きが楽しめる場所です。
