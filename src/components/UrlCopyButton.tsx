@@ -1,15 +1,17 @@
 "use client";
 
 import LinkIcon from "@/components/assets/icon/link.svg";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { PillButton } from "@/components/basic/PillButton";
 import { SVGIcon } from "@/components/ui/SVGIcon";
-import { toast } from "sonner";
+import { Tooltip } from "@/components/basic/Tooltip";
 
 export const UrlCopyButton = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [tooltipLabel, setTooltipLabel] = useState("");
+  const [isOpenTooltip, setIsOpenTooltip] = useState(false);
 
   const currentUrl =
     searchParams.size === 0
@@ -22,21 +24,31 @@ export const UrlCopyButton = () => {
     if (typeof navigator === "undefined") return;
     try {
       navigator.clipboard.writeText(currentUrl);
-      toast.success("URLをコピーしました");
+      setTooltipLabel("URLをコピーしました");
+      setIsOpenTooltip(true);
+      setTimeout(() => {
+        setIsOpenTooltip(false);
+      }, 2000);
     } catch (error) {
-      toast.error("URLのコピーに失敗しました");
+      setTooltipLabel("URLのコピーに失敗しました");
+      setIsOpenTooltip(true);
+      setTimeout(() => {
+        setIsOpenTooltip(false);
+      }, 2000);
       console.error(error);
     }
   }, [currentUrl]);
 
   return (
-    <PillButton
-      size={"sm"}
-      className="bg-primary-700"
-      iconLeft={<SVGIcon svg={LinkIcon} className="w-5" />}
-      onClick={onCopy}
-    >
-      URLをコピー
-    </PillButton>
+    <Tooltip label={tooltipLabel} open={isOpenTooltip} className="bottom-3">
+      <PillButton
+        size={"sm"}
+        className="bg-primary-700"
+        iconLeft={<SVGIcon svg={LinkIcon} className="w-5" />}
+        onClick={onCopy}
+      >
+        URLをコピー
+      </PillButton>
+    </Tooltip>
   );
 };

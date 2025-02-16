@@ -64,6 +64,62 @@ html {
   } */
 }
 
+@keyframes rotateSphereYOutLeftTop {
+  0% {
+    transform: translateY(0) translateX(0) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-10px) translateX(0) rotateY(720deg);
+  }
+
+  80% {
+    transform: translateY(-15px) translateX(-5px) rotateY(750deg);
+  }
+  81% {
+    transform: translateY(-15px) translateX(-5px) rotateY(750deg);
+  }
+  90% {
+    transform: translateY(-16px) translateX(-5px) rotateY(753deg);
+  }
+  100% {
+    transform: translateY(-17px) translateX(-5px) rotateY(756deg);
+  }
+}
+
+@keyframes rotateSphereYOutRightTop {
+  0% {
+    transform: translateY(0) translateX(0) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-10px) translateX(0) rotateY(-720deg);
+  }
+
+  80% {
+    transform: translateY(-15px) translateX(5px) rotateY(-750deg);
+  }
+  81% {
+    transform: translateY(-15px) translateX(5px) rotateY(-750deg);
+  }
+  100% {
+    transform: translateY(-16px) translateX(5px) rotateY(-756deg);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  51% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
