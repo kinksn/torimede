@@ -49,8 +49,11 @@ const DialogContent = React.forwardRef<
       {children}
       <DialogPrimitive.Close className="absolute right-2 top-2">
         <RoundButton
+          asChild
           icon={
-            <SVGIcon svg={XmarkIcon} className="w-3 text-textColor-basic" />
+            <div>
+              <SVGIcon svg={XmarkIcon} className="w-3 text-textColor-basic" />
+            </div>
           }
           colorTheme={"white"}
           size="sm"
