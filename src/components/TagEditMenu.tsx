@@ -22,15 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Modal } from "@/components/basic/Modal";
 
 type TagEditMenuProps = {
   tag: Tag;
@@ -133,40 +125,28 @@ export const TagEditMenu = ({ tag }: TagEditMenuProps) => {
               >
                 削除
               </TextButton>
-              <Button type="submit" size={"sm"}>
-                保存
+              <Button
+                type="submit"
+                size={"sm"}
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? "保存中" : "保存"}
               </Button>
             </div>
           </form>
         </Form>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <div className="hidden" />
-          </DialogTrigger>
-          <DialogContent className="max-sm:w-[calc(100%-40px)]">
-            <DialogHeader className="max-sm:text-left">
-              <DialogTitle>タグを削除する</DialogTitle>
-              <DialogDescription>
-                削除してもよろしいでしょうか？
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="flex gap-3 max-sm:flex-row">
-              <Button
-                colorTheme="outline"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                キャンセル
-              </Button>
-              <TextButton
-                colorTheme="red"
-                icon={<SVGIcon svg={TrashIcon} className="w-6" />}
-                onClick={handleDeleteTag}
-              >
-                削除
-              </TextButton>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <Modal
+          title="タグを削除する"
+          description="削除してもよろしいでしょうか？"
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          close={() => setIsDialogOpen(false)}
+          submit={handleDeleteTag}
+          submitButtonLabel="削除"
+          submitButtonIcon={<SVGIcon svg={TrashIcon} className="w-6" />}
+          submitButtonType="text"
+          submitClassName="text-state-delete hover:bg-tertialy-fleshTomato-50"
+        />
       </PopoverContent>
     </Popover>
   );

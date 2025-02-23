@@ -3,7 +3,6 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import XmarkIcon from "@/components/assets/icon/x-mark.svg";
-import { X } from "lucide-react";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { RoundButton } from "@/components/basic/RoundButton";
 

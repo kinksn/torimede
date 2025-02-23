@@ -13,24 +13,14 @@ import { postKeys } from "@/service/post/key";
 import { PostId } from "@/app/api/post/model";
 import { UserId } from "@/app/api/user/model";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { MenuItem } from "@/components/basic/MenuItem";
-import { Button } from "@/components/basic/Button";
-import { TextButton } from "@/components/basic/TextButton";
 import { RoundButton } from "@/components/basic/RoundButton";
 import { toast } from "sonner";
+import { Modal } from "@/components/basic/Modal";
 
 type ButtonActionProps = {
   postId: PostId;
@@ -132,33 +122,19 @@ const ButtonAction = ({
           </MenuItem>
         </PopoverContent>
       </Popover>
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
-          <div className="hidden" />
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>削除する</DialogTitle>
-            <DialogDescription>
-              1度削除した投稿は元に戻すことはできません
-              <br className="max-sm:hidden" />
-              削除してもよろしいでしょうか？
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-1">
-            <Button colorTheme="outline" onClick={() => setIsDialogOpen(false)}>
-              キャンセル
-            </Button>
-            <TextButton
-              colorTheme="red"
-              icon={<SVGIcon svg={TrashIcon} className="w-6" />}
-              onClick={handleDeletePost}
-            >
-              削除
-            </TextButton>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <Modal
+        title="削除する"
+        description="1度削除した投稿は元に戻すことはできません<br />削除してもよろしいでしょうか？"
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        close={() => setIsDialogOpen(false)}
+        closeButtonType="outline"
+        submit={handleDeletePost}
+        submitButtonLabel="削除"
+        submitButtonIcon={<SVGIcon svg={TrashIcon} className="w-6" />}
+        submitButtonType="text"
+        submitClassName="text-state-delete hover:bg-tertialy-fleshTomato-50"
+      />
     </div>
   );
 };

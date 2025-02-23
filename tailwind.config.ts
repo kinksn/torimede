@@ -259,9 +259,9 @@ const config: Config = {
         buttonPrimaryActive:
           "0px 2px 2px rgba(0, 0, 0, 0), inset 0px -2px 2px rgba(255, 255, 255, 0.0)",
         buttonOutlineDefault:
-          "0px 2px 2px rgba(0, 0, 0, 0.16), inset 0px -2px 4px rgba(79, 86, 103, 0.4)",
+          "0px 2px 2px rgba(0, 0, 0, 0.16), inset 0px -2px 4px rgba(79, 86, 103, 0.2)",
         buttonOutlineHover:
-          "0px 2px 4px rgba(0, 0, 0, 0.36), inset 0px -2px 4px rgba(79, 86, 103, 0.8)",
+          "0px 2px 4px rgba(0, 0, 0, 0.36), inset 0px -2px 4px rgba(79, 86, 103, 0.4)",
         buttonOutlineActive:
           "0px 2px 2px rgba(0, 0, 0, 0), inset 0px -2px 4px rgba(79, 86, 103, 0)",
       },

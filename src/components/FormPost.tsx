@@ -25,14 +25,6 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/basic/Input";
 import { Textarea } from "@/components/basic/Textarea";
 import { MultiSelect } from "@/components/basic/MultiSelect";
@@ -41,8 +33,8 @@ import { Tag } from "@prisma/client";
 import { Session } from "next-auth";
 import { TagEditMenu } from "@/components/TagEditMenu";
 import { Button } from "@/components/basic/Button";
-import { TextButton } from "@/components/basic/TextButton";
 import { toast } from "sonner";
+import { Modal } from "@/components/basic/Modal";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
@@ -324,22 +316,16 @@ const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
 
   // モーダルの描画
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-sm:w-[calc(100%-40px)]">
-        <DialogHeader className="max-sm:text-left">
-          <DialogTitle>フォームを離れますか？</DialogTitle>
-          <DialogDescription>
-            入力中のデータはリセットされます。
-            <br className="max-sm:hidden" />
-            よろしいでしょうか？
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="flex gap-3 max-sm:flex-row">
-          <TextButton onClick={handleConfirm}>離れる</TextButton>
-          <Button onClick={() => setOpen(false)}>キャンセル</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <Modal
+      title="フォームを離れますか？"
+      description="入力中のデータはリセットされます。<br />よろしいでしょうか？"
+      open={open}
+      onOpenChange={setOpen}
+      submit={() => setOpen(false)}
+      submitButtonLabel="留まる"
+      close={handleConfirm}
+      closeButtonLabel="離れる"
+    />
   );
 };
 

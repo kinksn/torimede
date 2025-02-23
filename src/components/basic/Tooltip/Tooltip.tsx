@@ -8,6 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { useMemo, useState } from "react";
+import { breakText } from "@/lib/util/breakText";
 
 const baseClasses =
   "relative rounded-[12px] border-none bg-primary-900 text-white font-zenMaruGothic font-bold leading-loose overflow-visible whitespace-pre-line";
@@ -57,11 +58,6 @@ export const Tooltip = ({
 }: TooltipProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const breakLabel = useMemo(
-    () => label.replace(/<br\s*\/?>/gi, "\n"),
-    [label]
-  );
-
   if (disabled) {
     return <div>{children}</div>;
   }
@@ -100,7 +96,7 @@ export const Tooltip = ({
           side={side}
         >
           <>
-            <p>{breakLabel}</p>
+            <p>{breakText(label)}</p>
             <Arrow side={side} />
           </>
         </TooltipContent>
