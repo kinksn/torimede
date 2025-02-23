@@ -1,6 +1,5 @@
 "use client";
 
-import axiosInstance from "@/lib/axios";
 import * as motion from "motion/react-client";
 import EyeHeartSmall from "@/components/assets/mede-button/eye-heart-small.svg";
 import EyeHeartLarge from "@/components/assets/mede-button/eye-heart-large.svg";
@@ -10,28 +9,18 @@ import { SVGIcon } from "@/components/ui/SVGIcon";
 import { useState, useRef, useEffect, Dispatch, SetStateAction } from "react";
 import { emitParticles } from "./particle";
 import { debounce } from "es-toolkit";
-import { useMutation } from "@tanstack/react-query";
-import { PostId } from "@/app/api/post/model";
 import { useUIBlock } from "@/hooks/useUIBlock";
-import {
-  CreateCuteOutput,
-  MAX_CUTE_COUNT,
-} from "@/app/api/cute/[postId]/model";
+import { MAX_CUTE_COUNT } from "@/app/api/cute/[postId]/model";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginForm, loginFormSchema } from "@/app/api/user/model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/basic/Button";
 import { Form, FormField } from "@/components/ui/form";
 import { Input } from "@/components/basic/Input";
 import { cn } from "@/lib/utils";
+import { Modal } from "@/components/basic/Modal";
 
 const EYE = {
   default: {
@@ -905,65 +894,62 @@ const CofirmSinginDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>無料登録して鳥さんをメデましょう</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col items-center justify-center gap-5 bg-white rounded-20 max-w-[388px] w-full p-10 max-sm:p-5">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleSubmit)}
-              className="flex flex-col w-full gap-5"
-            >
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field, fieldState }) => (
-                  <Input
-                    label="メールアドレス"
-                    requirement="required"
-                    placeholder="user@example.com"
-                    className="w-full"
-                    error={!!fieldState.error}
-                    {...field}
-                  />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field, fieldState }) => (
-                  <Input
-                    label="パスワード"
-                    type="password"
-                    requirement="required"
-                    placeholder="6文字以上入力してください"
-                    className="w-full"
-                    error={!!fieldState.error}
-                    {...field}
-                  />
-                )}
-              />
-              <Button
-                size={"lg"}
-                type="submit"
-                className="w-full justify-center"
-              >
-                ログイン
-              </Button>
-            </form>
-          </Form>
-          <Button
-            iconLeft={<SVGIcon svg={GoogleIcon} className="w-6" />}
-            colorTheme={"outline"}
-            className="w-full justify-center"
-            onClick={() => signIn("google", { callbackUrl: "/" })}
+    <Modal
+      title="無料登録する"
+      description="無料登録してかわいい鳥さんをメデましょう"
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      isShowFooter={false}
+    >
+      <div className="flex flex-col items-center justify-center gap-5 bg-white rounded-20 w-full pb-5">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="flex flex-col w-full gap-5"
           >
-            Googleアカウントでログイン
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field, fieldState }) => (
+                <Input
+                  label="メールアドレス"
+                  requirement="required"
+                  placeholder="user@example.com"
+                  className="w-full"
+                  error={!!fieldState.error}
+                  {...field}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field, fieldState }) => (
+                <Input
+                  label="パスワード"
+                  type="password"
+                  requirement="required"
+                  placeholder="6文字以上入力してください"
+                  className="w-full"
+                  error={!!fieldState.error}
+                  {...field}
+                />
+              )}
+            />
+            <Button size={"lg"} type="submit" className="w-full justify-center">
+              ログイン
+            </Button>
+          </form>
+        </Form>
+        <Button
+          iconLeft={<SVGIcon svg={GoogleIcon} className="w-6" />}
+          colorTheme={"outline"}
+          className="w-full justify-center"
+          onClick={() => signIn("google", { callbackUrl: "/" })}
+        >
+          Googleアカウント
+        </Button>
+      </div>
+    </Modal>
   );
 };
