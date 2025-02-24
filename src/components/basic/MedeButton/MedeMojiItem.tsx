@@ -59,7 +59,7 @@ export function MedeMojiItem({ x, y, variant, onAnimationEnd }: Props) {
         left: x,
         top: y,
         pointerEvents: "none",
-        animation: "fadeOut 1.1s ease-out both",
+        animation: "fadeOutMedeMoji 1.1s ease-out both",
       }}
     >
       <span className={`${back} inline-block`}>
@@ -70,8 +70,8 @@ export function MedeMojiItem({ x, y, variant, onAnimationEnd }: Props) {
           eventRotation="30deg"
           eventDirection="default"
           fade={false}
-          perspective="160px"
-          layers={120}
+          perspective="120px"
+          layers={20}
           style={{
             animation: "rotateSphereYOutLeftTop 1.1s ease-out both",
             transformStyle: "preserve-3d",

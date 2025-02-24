@@ -1,5 +1,6 @@
 "use client";
 
+import ArrowLeft from "@/components/assets/icon/arrow-left.svg";
 import ButtonAction from "@/components/ButtonAction";
 import PostBottomRightPC from "@/components/assets/ornament/post-bottom-right-pc.svg";
 import PostBottomLeftPC from "@/components/assets/ornament/post-bottom-left-pc.svg";
@@ -35,6 +36,7 @@ import {
 } from "@/app/api/cute/[postId]/model";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { RoundButton } from "@/components/basic/RoundButton";
 
 const medeMojiColorKeys = Object.keys(
   MEDEMOJI_COLORS
@@ -141,34 +143,71 @@ export function PostDetailPage({
   };
 
   return (
-    <div className="relative overflow-y-scroll">
+    <div
+      className={`relative mt-10 max-sm:mt-4 ${
+        isParentModal && "max-sm:mt-1 max-sm:h-full"
+      }`}
+    >
       <UIBlocker zIndex={1} />
-      <div className="max-w-[1064px] mx-auto mt-10 max-sm:px-5">
-        <div className="flex flex-col gap-3">
-          <h2 className="text-typography-xl font-bold leading-normal font-zenMaruGothic">
-            {post?.title}
-          </h2>
-          <div className="flex">
+      <div className="max-w-[1064px] mx-auto">
+        {isParentModal && (
+          <div className="hidden max-sm:block w-full h-[16px]" />
+        )}
+        <div
+          className={`flex justify-between items-center gap-3 max-sm:px-5 "mt-10 max-sm:mt-0 z-[21] bg-base-bg w-full ${
+            isParentModal && "max-sm:fixed max-sm:top-5 max-sm:pb-2 "
+          }"
+          }`}
+        >
+          <div className="flex items-center gap-1">
+            {isParentModal && (
+              <RoundButton
+                size={"sm"}
+                colorTheme={"white"}
+                className="bg-transparent max-sm:w-6 max-sm:h-6 relative top-[2px] max-sm:top-[1px] max-sm:-left-1"
+                onClick={() => router.back()}
+                icon={
+                  <SVGIcon
+                    svg={ArrowLeft}
+                    className="w-5 font-bold text-textColor-basic"
+                  />
+                }
+              />
+            )}
+            <h2
+              className={`text-typography-xl max-sm:text-base font-bold leading-normal max-sm:leading-none font-zenMaruGothic`}
+            >
+              {post?.title}
+            </h2>
+          </div>
+          <div className="flex max-sm:text-xs font-bold items-center">
             {userProfileImage && (
               // 投稿詳細モーダルからユーザーページに遷移する際、
               // なぜかユーザーページで投稿詳細モーダルを開いて閉じると移前のモーダルが残ったまま表示されてしまうため、
               // aタグでページ遷移して強制リフレッシュしている。
               // 原因は定かではないがおそらくParallel RouteかIntercepting Routeのバグかと思われる。
-              <a href={`/user/${post.userId}`}>
-                <Avatar size="sm" profileImage={userProfileImage} />
+              <a
+                href={`/user/${post.userId}`}
+                className="flex items-center gap-1"
+              >
+                <Avatar
+                  size="sm"
+                  profileImage={userProfileImage}
+                  className="max-sm:w-6 h-6"
+                />
+                <p>{userName}</p>
               </a>
             )}
-            <p>{userName}</p>
           </div>
         </div>
         <div
-          className="relative flex justify-center mt-5"
+          className="relative flex justify-center mt-5 max-sm:mt-3"
           ref={medeMojiContainerRef}
         >
           <ImageItem
             imageUrl={post.image}
             alt={post.title}
-            className="w-full max-h-[633px]"
+            className="w-full max-h-[633px] max-sm:rounded-none max-sm:max-h-[72svh]"
             actionButton={
               isMyPost && (
                 <ButtonAction
@@ -191,7 +230,7 @@ export function PostDetailPage({
           ))}
         </div>
       </div>
-      <div className="flex max-w-[1064px] w-full mx-auto px-10 max-sm:px-10">
+      <div className="flex max-w-[1064px] w-full mx-auto px-5 max-sm:px-0">
         <div>
           <SVGIcon svg={PostBottomLeftPC} className="h-10 max-sm:hidden" />
           <SVGIcon svg={PostBottomLeftSP} className="h-5 hidden max-sm:block" />
@@ -241,7 +280,7 @@ export function PostDetailPage({
             </p>
           )}
           {post.tags.length > 0 && (
-            <div className="flex gap-2 max-sm:mt-8 max-sm:select-none">
+            <div className="flex gap-2 max-sm:select-none">
               {post.tags.map((tag) => (
                 <Tag href={tag.name} key={tag.id}>
                   {tag.name}
