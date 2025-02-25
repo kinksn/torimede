@@ -145,7 +145,7 @@ export function PostDetailPage({
   return (
     <div
       className={`relative mt-10 max-sm:mt-4 ${
-        isParentModal && "max-sm:mt-1 max-sm:h-full"
+        isParentModal && "max-sm:h-full"
       }`}
     >
       <UIBlocker zIndex={1} />
@@ -154,17 +154,17 @@ export function PostDetailPage({
           <div className="hidden max-sm:block w-full h-[16px]" />
         )}
         <div
-          className={`flex justify-between items-center gap-3 max-sm:px-5 "mt-10 max-sm:mt-0 z-[21] bg-base-bg w-full ${
-            isParentModal && "max-sm:fixed max-sm:top-5 max-sm:pb-2 "
+          className={`flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 z-[21] bg-base-bg w-full ${
+            isParentModal && "max-sm:fixed max-sm:top-[19px] max-sm:pb-2 "
           }"
           }`}
         >
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-4">
             {isParentModal && (
               <RoundButton
                 size={"sm"}
                 colorTheme={"white"}
-                className="bg-transparent max-sm:w-6 max-sm:h-6 relative top-[2px] max-sm:top-[1px] max-sm:-left-1"
+                className="bg-transparent w-9 min-w-9 h-9 max-sm:w-6 max-sm:min-w-6 max-sm:h-6 relative top-[2px] max-sm:top-[1px] max-sm:-left-2"
                 onClick={() => router.back()}
                 icon={
                   <SVGIcon
@@ -175,7 +175,7 @@ export function PostDetailPage({
               />
             )}
             <h2
-              className={`text-typography-xl max-sm:text-base font-bold leading-normal max-sm:leading-none font-zenMaruGothic`}
+              className={`text-typography-xl max-sm:text-base font-bold leading-normal max-sm:leading-none font-zenMaruGothic line-clamp-2 max-sm:line-clamp-1`}
             >
               {post?.title}
             </h2>
@@ -195,13 +195,17 @@ export function PostDetailPage({
                   profileImage={userProfileImage}
                   className="max-sm:w-6 h-6"
                 />
-                <p>{userName}</p>
+                <p className="overflow-hidden whitespace-nowrap text-ellipsis max-w-[20ch] max-sm:max-w-[9ch]">
+                  {userName}
+                </p>
               </a>
             )}
           </div>
         </div>
         <div
-          className="relative flex justify-center mt-5 max-sm:mt-3"
+          className={`relative flex justify-center mt-5 ${
+            isParentModal ? "max-sm:mt-0" : "max-sm:mt-4"
+          }`}
           ref={medeMojiContainerRef}
         >
           <ImageItem
@@ -264,7 +268,11 @@ export function PostDetailPage({
           />
         </div>
       </div>
-      <div className="flex justify-between max-sm:flex-col gap-10 max-sm:gap-5 items-start max-w-[1104px] w-full mx-auto mb-10 mt-14 px-10 max-sm:px-5">
+      <div
+        className={`flex justify-between max-sm:flex-col gap-10 max-sm:gap-5 items-start max-w-[1104px] w-full mx-auto mb-10 max-sm:mt-10 px-10 max-sm:px-5 ${
+          !post?.content && post.tags.length === 0 ? "mt-10" : "mt-14"
+        }`}
+      >
         <div
           className={`${!post?.content && post.tags.length === 0 && "hidden"}`}
           style={{
@@ -274,7 +282,9 @@ export function PostDetailPage({
         >
           {post?.content && (
             <p
-              className={`text-typography-md ${post.tags.length > 0 && "mb-4"}`}
+              className={`text-typography-md whitespace-pre-line max-sm:whitespace-normal ${
+                post.tags.length > 0 && "mb-4"
+              }`}
             >
               {post.content}
             </p>
@@ -290,12 +300,12 @@ export function PostDetailPage({
           )}
         </div>
         <div
-          className={`${
+          className={`flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[fit-content] max-sm:min-w-[unset] border border-primary-50 bg-base-content rounded-20 p-6 max-sm:p-4 max-sm:w-full ${
             !post?.content && post.tags.length === 0 && "w-full justify-center"
-          } flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[386px] max-sm:min-w-[unset] border border-primary-50 bg-base-content rounded-20 p-6 max-sm:p-3 max-sm:w-full`}
+          }`}
         >
           <p className="text-typography-xs">共有</p>
-          <div className="flex gap-3">
+          <div className="flex gap-3 max-sm:w-full max-sm:justify-between">
             <ShareButtons text={post.title} />
             <UrlCopyButton />
           </div>

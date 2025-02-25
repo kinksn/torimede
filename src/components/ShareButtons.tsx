@@ -21,7 +21,7 @@ export const ShareButtons = ({ text }: ShareButtonProps) => {
   const facebookUrl = `https://www.facebook.com/sharer.php?u=${currentUrl}`;
 
   return (
-    <div className="flex gap-3">
+    <>
       <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
         <SVGIcon svg={XIcon} className="w-9" />
       </a>
@@ -31,6 +31,6 @@ export const ShareButtons = ({ text }: ShareButtonProps) => {
       <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
         <SVGIcon svg={FacebookIcon} className="w-9" />
       </a>
-    </div>
+    </>
   );
 };

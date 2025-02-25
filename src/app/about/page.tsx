@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ContentToolbar } from "@/components/ContentToolbar";
 import type { Metadata } from "next";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "トリメデでとは",
@@ -27,6 +28,7 @@ export default function About() {
               画像共有サービスです
             </>
           }
+          className="pt-0"
           subTitle="about"
         >
           <p className="mt-5 text-center max-sm:text-left">
@@ -126,18 +128,23 @@ const Section = ({
   children,
   title,
   subTitle,
+  className,
   gap,
 }: {
   children: React.ReactNode;
   title: React.ReactNode | string;
   subTitle: string;
+  className?: string;
   gap?: number;
 }) => {
   return (
     <section
-      className={`flex flex-col items-center justify-center py-10 ${
-        gap && "gap-" + gap
-      }`}
+      className={cn(
+        `flex flex-col items-center justify-center py-10 ${
+          gap && "gap-" + gap
+        }`,
+        className
+      )}
     >
       <header className="flex flex-col items-center justify-center">
         <span className="font-comfortaa text-secondary-400">{subTitle}</span>

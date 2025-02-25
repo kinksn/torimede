@@ -103,7 +103,7 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
             プロフィールを編集
           </PillButton>
         </CredenzaTrigger>
-        <CredenzaContent className="max-sm:gap-5 max-sm:px-10 max-sm:pb-5 max-sm:mt-0 max-sm:top-[40px]">
+        <CredenzaContent className="max-sm:gap-5 max-sm:px-10 max-sm:pb-5 max-sm:mt-0 max-sm:top-3">
           <CredenzaTitle className="max-sm:text-center max-sm:mb-1">
             プロフィールを編集
           </CredenzaTitle>
