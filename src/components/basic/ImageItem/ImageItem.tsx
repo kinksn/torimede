@@ -52,7 +52,7 @@ export const ImageItem = ({
         </Link>
       ) : (
         <div
-          className={`rounded-[20px] w-full block overflow-hidden relative group ${
+          className={`w-full block overflow-hidden relative group ${
             isFitContainer && "h-full"
           }`}
         >

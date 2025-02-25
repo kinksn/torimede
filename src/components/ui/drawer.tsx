@@ -10,6 +10,7 @@ const Drawer = ({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root
+    repositionInputs={false}
     shouldScaleBackground={shouldScaleBackground}
     {...props}
   />
@@ -28,7 +29,7 @@ const DrawerOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn("fixed inset-0 z-50 bg-black/80", className)}
+    className={cn("fixed inset-0 z-50 bg-overlay-modal", className)}
     {...props}
   />
 ));
@@ -48,7 +49,7 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="mx-auto mt-3 h-1 w-[60px] rounded-full bg-primary-100" />
+      <div className="hinge mx-auto mt-3 h-1 w-[60px] rounded-full bg-primary-100" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
