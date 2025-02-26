@@ -1,9 +1,9 @@
-import { getPostDetailOutputSchema, PostId } from "@/app/api/post/model";
 import EditPostPage from "@/app/edit/[id]/EditPostPage";
 import ButtonAction from "@/components/ButtonAction";
+import { getPostDetailOutputSchema, PostId } from "@/app/api/post/model";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import React from "react";
+import { redirect } from "next/navigation";
 
 async function getPostByUserId(postId: string) {
   const post = await db.post.findFirst({
@@ -49,11 +49,17 @@ type EditPostPageProps = {
 const Edit = async ({ params }: EditPostPageProps) => {
   const post = await getPostByUserId(params.id);
   const session = await getAuthSession();
+
+  if (session?.user?.id !== post.userId) {
+    redirect("/");
+  }
+
   const tags = await db.tag.findMany({
     orderBy: {
       id: "desc",
     },
   });
+
   return (
     <>
       <ButtonAction
