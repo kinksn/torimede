@@ -1,6 +1,5 @@
 "use client";
 
-import { Session } from "next-auth";
 import { GetUserPostsOutput } from "@/app/api/post/model";
 import PostCard from "@/components/PostCard";
 // メインソンリーーレイアウト実現ライブラリ：https://github.com/sibiraj-s/react-layout-masonry#readme
