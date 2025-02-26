@@ -1728,10 +1728,10 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.9.tgz#50dea3616bc8191fb8e112283b49eaff03e78429"
   integrity sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==
 
-"@hookform/resolvers@^3.9.1":
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.10.0.tgz#7bfd18113daca4e57e27e1205b7d5a2d371aa59a"
-  integrity sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==
+"@hookform/resolvers@3.9.1":
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.9.1.tgz#a23883c40bfd449cb6c6ab5a0fa0729184c950ff"
+  integrity sha512-ud2HqmGBM0P0IABqoskKWI6PEf6ZDDBZkFqe2Vnl+mTHCEHzr3ISjjZyCwTjC/qpL25JC9aIDkloQejvMeq0ug==
 
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
@@ -2325,7 +2325,7 @@
   resolved "https://registry.yarnpkg.com/@radix-ui/react-context/-/react-context-1.1.1.tgz#82074aa83a472353bb22e86f11bcbd1c61c4c71a"
   integrity sha512-UASk9zi+crv9WteK/NU4PLvOoL3OuE6BWVKNF6hPRBtYBDXQ2u5iu3O59zUlJiTVvkyuycnqrztsHVJwcK9K+Q==
 
-"@radix-ui/react-dialog@^1.1.1", "@radix-ui/react-dialog@^1.1.5":
+"@radix-ui/react-dialog@1.1.5", "@radix-ui/react-dialog@^1.1.1":
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-dialog/-/react-dialog-1.1.5.tgz#1bb2880e6b0ef9d9d0d9f440e1414c94bbacb55b"
   integrity sha512-LaO3e5h/NOEL4OfXjxD43k9Dx+vn+8n+PCFt6uhX/BADFflllyv3WJG6rgvvSVBxpTch938Qq/LGc2MMxipXPw==
@@ -2409,7 +2409,7 @@
   dependencies:
     "@radix-ui/react-use-layout-effect" "1.1.0"
 
-"@radix-ui/react-label@^2.1.1":
+"@radix-ui/react-label@2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-label/-/react-label-2.1.1.tgz#f30bd577b26873c638006e4f65761d4c6b80566d"
   integrity sha512-UUw5E4e/2+4kFMH7+YxORXGWggtY6sM8WIwh5RZchhLuUg2H1hc98Py+pr8HMz6rdaYrK2t296ZEjYLOCO5uUw==
@@ -2529,7 +2529,7 @@
   dependencies:
     "@radix-ui/react-primitive" "2.0.1"
 
-"@radix-ui/react-slot@1.1.1", "@radix-ui/react-slot@^1.1.1":
+"@radix-ui/react-slot@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-slot/-/react-slot-1.1.1.tgz#ab9a0ffae4027db7dc2af503c223c978706affc3"
   integrity sha512-RApLLOcINYJA+dMVbOju7MYv1Mb2EBp2nH4HdDzXTSyaR5optlm6Otrz1euW3HbdOR8UmmFK06TD+A9frYWv+g==
@@ -2543,7 +2543,7 @@
   dependencies:
     "@radix-ui/react-compose-refs" "1.1.1"
 
-"@radix-ui/react-tabs@^1.1.2":
+"@radix-ui/react-tabs@1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-tabs/-/react-tabs-1.1.2.tgz#a72da059593cba30fccb30a226d63af686b32854"
   integrity sha512-9u/tQJMcC2aGq7KXpGivMm1mgq7oRJKXphDwdypPd/j21j/2znamPU8WkXgnhUaTrSFNIt8XhOyCAupg8/GbwQ==
@@ -2557,7 +2557,7 @@
     "@radix-ui/react-roving-focus" "1.1.1"
     "@radix-ui/react-use-controllable-state" "1.1.0"
 
-"@radix-ui/react-tooltip@^1.1.8":
+"@radix-ui/react-tooltip@1.1.8":
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-tooltip/-/react-tooltip-1.1.8.tgz#1aa2a575630fca2b2845b62f85056bb826bec456"
   integrity sha512-YAA2cu48EkJZdAMHC0dqo9kialOcRStbtiY4nJPaht7Ptrhcvpo+eDChaM6BIs8kL6a8Z5l5poiqLnXcNduOkA==
@@ -3279,11 +3279,6 @@
   dependencies:
     "@swc/counter" "^0.1.3"
     tslib "^2.4.0"
-
-"@tailwindcss/line-clamp@^0.4.4":
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/@tailwindcss/line-clamp/-/line-clamp-0.4.4.tgz#767cf8e5d528a5d90c9740ca66eb079f5e87d423"
-  integrity sha512-5U6SY5z8N42VtrCrKlsTAA35gy2VSyYtHWCsg1H87NU1SXnEfekTVlrga9fzUDrrHcGi2Lb5KenUWb4lRQT5/g==
 
 "@tanstack/query-core@5.36.1":
   version "5.36.1"
@@ -4218,7 +4213,7 @@ cjs-module-lexer@^1.0.0:
   resolved "https://registry.yarnpkg.com/cjs-module-lexer/-/cjs-module-lexer-1.4.3.tgz#0f79731eb8cfe1ec72acd4066efac9d61991b00d"
   integrity sha512-9z8TZaGM1pfswYeXrUpzPrkx8UnWYdhJclsiYMm6x/w5+nN+8Tf/LnAgfLGQCm59qAOxU8WwHEq2vNwF6i4j+Q==
 
-class-variance-authority@^0.7.1:
+class-variance-authority@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/class-variance-authority/-/class-variance-authority-0.7.1.tgz#4008a798a0e4553a781a57ac5177c9fb5d043787"
   integrity sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==
@@ -4239,7 +4234,7 @@ cliui@^8.0.1:
     strip-ansi "^6.0.1"
     wrap-ansi "^7.0.0"
 
-clsx@^2.1.1:
+clsx@2.1.1, clsx@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-2.1.1.tgz#eed397c9fd8bd882bfb18deab7102049a2f32999"
   integrity sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==
@@ -6640,7 +6635,7 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lucide-react@^0.462.0:
+lucide-react@0.462.0:
   version "0.462.0"
   resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.462.0.tgz#cb95b1dde558be51b7ae247290f7bb5f197880bf"
   integrity sha512-NTL7EbAao9IFtuSivSZgrAh4fZd09Lr+6MTkqIxuHaH2nnYiYIzXPo06cOxHg9wKLdj6LL8TByG4qpePqwgx/g==
@@ -6851,7 +6846,7 @@ next-auth@4.24.7:
     preact-render-to-string "^5.1.19"
     uuid "^8.3.2"
 
-next-themes@^0.4.4:
+next-themes@0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/next-themes/-/next-themes-0.4.4.tgz#ce6f68a4af543821bbc4755b59c0d3ced55c2d13"
   integrity sha512-LDQ2qIOJF0VnuVrrMSMLrWGjRMkq+0mpgl6e0juCLqdJ+oo8Q84JRWT6Wh11VDQKkMMe+dVzDKLWs5n87T+PkQ==
@@ -7498,7 +7493,7 @@ react-dom@18:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-hook-form@^7.54.2:
+react-hook-form@7.54.2:
   version "7.54.2"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.54.2.tgz#8c26ed54c71628dff57ccd3c074b1dd377cfb211"
   integrity sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==
@@ -7550,7 +7545,7 @@ react-style-singleton@^2.2.2, react-style-singleton@^2.2.3:
     get-nonce "^1.0.0"
     tslib "^2.0.0"
 
-react-ztext@^1.0.3:
+react-ztext@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-ztext/-/react-ztext-1.0.3.tgz#b2ff0e1312315306429bfb6c28ee49cc41f5b11b"
   integrity sha512-mDJLTd7zALEq9XeT40td1o+KjIiLp9/oxHPsSkH9GPmX+x2D5O8Q/xqbKxkmxFMmqyxjJx9XvwY2NOFsyfUsDA==
@@ -7994,7 +7989,7 @@ snake-case@^3.0.4:
     dot-case "^3.0.4"
     tslib "^2.0.3"
 
-sonner@^1.7.4:
+sonner@1.7.4:
   version "1.7.4"
   resolved "https://registry.yarnpkg.com/sonner/-/sonner-1.7.4.tgz#4c39820db86623800a17115c8970796aa862133a"
   integrity sha512-DIS8z4PfJRbIyfVFDVnK9rO3eYDtse4Omcm6bt0oEr5/jtLgysmjuBl1frJ9E/EQZrFmKx2A8m/s5s9CRXIzhw==
@@ -8307,12 +8302,12 @@ symbol-tree@^3.2.4:
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
 
-tailwind-merge@^2.5.5:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-2.6.0.tgz#ac5fb7e227910c038d458f396b7400d93a3142d5"
-  integrity sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==
+tailwind-merge@2.5.5:
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/tailwind-merge/-/tailwind-merge-2.5.5.tgz#98167859b856a2a6b8d2baf038ee171b9d814e39"
+  integrity sha512-0LXunzzAZzo0tEPxV3I297ffKZPlKDrjj7NXphC8V5ak9yHC5zRmxnOe2m/Rd/7ivsOMJe3JZ2JVocoDdQTRBA==
 
-tailwindcss-animate@^1.0.7:
+tailwindcss-animate@1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/tailwindcss-animate/-/tailwindcss-animate-1.0.7.tgz#318b692c4c42676cc9e67b19b78775742388bef4"
   integrity sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==
@@ -8668,7 +8663,7 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vaul@^1.1.2:
+vaul@1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vaul/-/vaul-1.1.2.tgz#c959f8b9dc2ed4f7d99366caee433fbef91f5ba9"
   integrity sha512-ZFkClGpWyI2WUQjdLJ/BaGuV6AVQiJ3uELGk3OYtP+B6yCO7Cmn9vPFXVJkRaGkOJu3m8bQMgtyzNHixULceQA==
@@ -8905,7 +8900,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zod@^3.24.1:
+zod@3.24.1:
   version "3.24.1"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.24.1.tgz#27445c912738c8ad1e9de1bea0359fa44d9d35ee"
   integrity sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==
