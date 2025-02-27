@@ -32,7 +32,7 @@ const EditPostPage: FC<EditPostPageProps> = ({ post, tags, session }) => {
     },
     onSuccess: () => {
       toast.success("投稿を編集しました");
-      router.push(`/post/${post.id}`);
+      router.push(`/post/${post.id}/${post.userId}`);
       router.refresh();
     },
   });
@@ -56,12 +56,12 @@ const EditPostPage: FC<EditPostPageProps> = ({ post, tags, session }) => {
           https://zenn.dev/kena/articles/ba26b3245c599a
         */
         key={hash(post)}
-        isLoadingSubmit={isLoadingSubmit}
+        isSubmitPending={isLoadingSubmit}
         submit={handleEditPost}
         initialValue={post}
         session={session}
         tags={tags}
-        isEditing
+        type="edit"
       />
     </div>
   );

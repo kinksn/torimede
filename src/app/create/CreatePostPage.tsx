@@ -47,7 +47,7 @@ const CreatePostPage = ({ tags, session }: CreatePostPageProps) => {
         新規投稿
       </h1>
       <FormPost
-        isLoadingSubmit={isLoadingSubmit}
+        isSubmitPending={isLoadingSubmit}
         submit={handleCreatePost}
         session={session}
         tags={tags}

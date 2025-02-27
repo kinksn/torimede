@@ -38,44 +38,51 @@ import { Modal } from "@/components/basic/Modal";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
-  isEditing?: boolean;
+  type?: "post" | "edit";
   initialValue?: EditPost;
   tags?: Tag[];
   session: Session | null;
-  isLoadingSubmit: boolean;
+  isSubmitPending: boolean;
 }
 
 const FormPost: FC<FromPostProps> = ({
   submit,
-  isEditing,
+  type = "post",
   initialValue,
   tags,
   session,
-  isLoadingSubmit,
+  isSubmitPending,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
   const form = useForm<EditPost>({
     mode: "onChange",
-    resolver: zodResolver(isEditing ? updatePostBodySchema : createPostSchema),
+    resolver: zodResolver(
+      type === "edit" ? updatePostBodySchema : createPostSchema
+    ),
     defaultValues: initialValue
       ? initialValue
       : { title: "", content: "", tags: [], image: "" },
   });
 
   const handleFormSubmit: SubmitHandler<FormInputPost> = async (data) => {
-    setIsSubmitting(true);
-
-    const imageUrl = isEditing
-      ? initialValue?.image
-      : await uploadImage(imageFile, data.image || "");
-
-    if (!imageUrl) {
+    try {
+      setIsSubmitting(true);
+      const imageUrl =
+        type === "edit"
+          ? initialValue?.image
+          : await uploadImage(imageFile, data.image || "");
+      if (!imageUrl) {
+        setIsSubmitting(false);
+        return;
+      }
+      await submit({ ...data, image: imageUrl });
+    } catch (error) {
+      console.error("submit failed :", error);
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-    await submit({ ...data, image: imageUrl });
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -119,6 +126,17 @@ const FormPost: FC<FromPostProps> = ({
     }
   };
 
+  const submitButtonLabel = (
+    type: FromPostProps["type"],
+    isSubmitting: boolean
+  ) => {
+    if (type === "edit") {
+      return isSubmitting ? "保存中" : "保存";
+    } else {
+      return isSubmitting ? "投稿中" : "投稿";
+    }
+  };
+
   return (
     <>
       <Form {...form}>
@@ -136,8 +154,8 @@ const FormPost: FC<FromPostProps> = ({
                 requirement="required"
                 className="w-full"
                 error={!!fieldState.error}
-                disabled={isEditing}
-                {...(isEditing && { image: initialValue?.image })}
+                disabled={type === "edit"}
+                {...(type === "edit" && { image: initialValue?.image })}
                 onChange={(e) => {
                   handleFileChange(e);
                   field.onChange(e.target.files);
@@ -215,23 +233,16 @@ const FormPost: FC<FromPostProps> = ({
             type="submit"
             size={"lg"}
             className="w-full justify-center mt-5"
-            disabled={isSubmitting || isLoadingSubmit}
+            disabled={isSubmitting}
           >
-            {isLoadingSubmit && (
-              <span className="loading loading-spinner"></span>
-            )}
-            {isEditing
-              ? isLoadingSubmit
-                ? "保存中"
-                : "保存"
-              : isLoadingSubmit || isSubmitting
-              ? "投稿中"
-              : "投稿"}
+            {submitButtonLabel(type, isSubmitting)}
           </Button>
         </form>
       </Form>
 
-      {!isSubmitting && <ConfirmDialog disabled={!form.formState.isDirty} />}
+      {!isSubmitting && !isSubmitPending && form.formState.isDirty && (
+        <ConfirmDialog disabled={!form.formState.isDirty} />
+      )}
     </>
   );
 };
