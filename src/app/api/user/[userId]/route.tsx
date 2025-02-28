@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuthSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import {
   UserId,
   getUserOutputSchema,
@@ -51,7 +51,7 @@ export async function GET(_req: Request, context: ContextProps) {
 export async function PATCH(req: Request, context: ContextProps) {
   try {
     const userId = context.params.userId;
-    const session = await getAuthSession();
+    const session = await auth();
     const input = updateUserInputSchema.parse(await req.json());
     const { name, image, isFirstLogin } = input;
 
@@ -64,7 +64,7 @@ export async function PATCH(req: Request, context: ContextProps) {
 
     if (name) await updateUserName({ name, userId });
     if (image) await updateUserImage({ image, userId });
-    if (!isFirstLogin) await updateUserIsFirstLogin({ isFirstLogin, userId });
+    await updateUserIsFirstLogin({ isFirstLogin, userId });
 
     return NextResponse.json({ message: "update success" }, { status: 200 });
   } catch (error) {

@@ -7,8 +7,7 @@ import {
 import "./globals.css";
 import Providers from "@/components/Providers";
 import { Header } from "@/components/Header";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { Footer } from "@/components/Footer";
 
 const comfortaa = Comfortaa({
@@ -40,7 +39,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   modal: React.ReactNode;
 }>) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const profileImage = session?.user?.image;
 
   return (
@@ -50,7 +49,7 @@ export default async function RootLayout({
     >
       <body>
         <Providers>
-          <div className="grid grid-rows-[auto_1fr_auto] min-h-[100vh]">
+          <div className="grid grid-rows-[auto_1fr_auto] min-h-[100svh]">
             <Header initialSession={session} profileImage={profileImage} />
             <main>
               {children}

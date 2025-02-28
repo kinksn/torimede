@@ -1,11 +1,11 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { getAuthSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { createPostBodySchema } from "@/app/api/post/model";
 
 export async function POST(req: Request) {
   try {
-    const session = await getAuthSession();
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ message: "not login" }, { status: 401 });
     }

@@ -1,6 +1,3 @@
-"use client";
-
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -8,22 +5,21 @@ import { HistoryIndexTracker } from "@/components/HistoryIndexTracker/HistoryInd
 import { Analytics } from "@vercel/analytics/next";
 import { PATH } from "@/lib/constants/path";
 import { ToastProvider } from "@/components/basic/Toast";
+import { TanstackProvider } from "@/components/TanstackProvider";
+import { auth } from "@/lib/auth";
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 5, retryDelay: 1000 } },
-});
-
-const Providers = ({ children }: { children: React.ReactNode }) => {
+const Providers = async ({ children }: { children: React.ReactNode }) => {
+  const session = await auth();
   return (
     <>
       <div>
-        <SessionProvider>
-          <QueryClientProvider client={queryClient}>
+        <SessionProvider session={session}>
+          <TanstackProvider>
             <HistoryIndexTracker pathname={PATH.post}>
               {children}
             </HistoryIndexTracker>
             <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
+          </TanstackProvider>
         </SessionProvider>
         <Analytics />
       </div>

@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { Tag } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { getAuthSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { tagCreateInputSchema, tagSchema } from "@/app/api/tag/model";
 
 export async function GET() {
@@ -19,7 +19,7 @@ export async function GET() {
 export async function PATCH(req: Request) {
   try {
     const body = tagSchema.parse(await req.json());
-    const session = await getAuthSession();
+    const session = await auth();
 
     if (!session?.user) {
       return NextResponse.json({ message: "not login" }, { status: 401 });
@@ -60,7 +60,7 @@ export async function PATCH(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const session = await getAuthSession();
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ message: "not login" }, { status: 401 });
     }

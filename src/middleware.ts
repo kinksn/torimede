@@ -1,9 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
+import { authConfig } from "@/lib/auth.config";
+import NextAuth from "next-auth";
 
-export async function middleware(req: NextRequest) {
+export const { auth } = NextAuth(authConfig);
+
+export default auth(async (req) => {
   const url = req.nextUrl;
-  const token = await getToken({ req });
+  const session = await auth();
 
   // Cache-Controlヘッダーを追加してキャッシュを無効化
   const response = NextResponse.next({
@@ -12,40 +15,35 @@ export async function middleware(req: NextRequest) {
     },
   });
 
-  /**
-   * ログイン前
-   */
-  if (!token && url.pathname.startsWith("/create")) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-  if (!token && url.pathname.startsWith("/edit")) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-  if (!token && url.pathname === "/change-profile") {
-    return NextResponse.redirect(new URL("/", req.url));
+  // ログイン前のアクセス制限
+  if (!session?.user) {
+    if (
+      url.pathname.startsWith("/create") ||
+      url.pathname.startsWith("/edit") ||
+      url.pathname === "/change-profile"
+    ) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    return response;
   }
 
-  // トークンが存在しない場合はそのまま処理を続行
-  if (!token) return NextResponse.next();
+  // ログイン後のリダイレクト処理
+  const isFirstLogin = session.user.isFirstLogin;
 
-  /**
-   * ログイン後
-   */
-  if (token.isFirstLogin === true && url.pathname === "/") {
+  if (isFirstLogin === true && url.pathname === "/") {
     return NextResponse.redirect(new URL("/change-profile", req.url));
   }
-  if (token.isFirstLogin === false && url.pathname === "/change-profile") {
+
+  if (isFirstLogin === false && url.pathname === "/change-profile") {
     return NextResponse.redirect(new URL("/", req.url));
   }
-  if (!!token && url.pathname === "/login") {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-  if (!!token && url.pathname === "/signup") {
+
+  if (url.pathname === "/login" || url.pathname === "/signup") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   return response;
-}
+});
 
 // matcher で適用するパスを指定
 export const config = {

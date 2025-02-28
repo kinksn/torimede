@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { getAuthSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 
 type ContextProps = {
   params: {
@@ -10,7 +10,7 @@ type ContextProps = {
 
 export async function DELETE(_req: Request, context: ContextProps) {
   try {
-    const session = await getAuthSession();
+    const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ message: "not login" }, { status: 401 });
     }

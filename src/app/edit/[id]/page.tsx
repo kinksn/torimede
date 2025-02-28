@@ -1,7 +1,7 @@
 import EditPostPage from "@/app/edit/[id]/EditPostPage";
 import ButtonAction from "@/components/ButtonAction";
 import { getPostDetailOutputSchema, PostId } from "@/app/api/post/model";
-import { getAuthSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
@@ -48,7 +48,7 @@ type EditPostPageProps = {
 
 const Edit = async ({ params }: EditPostPageProps) => {
   const post = await getPostByUserId(params.id);
-  const session = await getAuthSession();
+  const session = await auth();
 
   if (session?.user?.id !== post.userId) {
     redirect("/");

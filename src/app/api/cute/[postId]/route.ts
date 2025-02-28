@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAuthSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import {
   createCuteBodySchema,
   createCuteOutputSchema,
@@ -20,7 +20,7 @@ type ContextPropds = {
 
 export async function POST(req: Request, context: ContextPropds) {
   try {
-    const session = await getAuthSession();
+    const session = await auth();
     const { postId } = context.params;
     const { cuteCount } = createCuteBodySchema.parse(await req.json());
 

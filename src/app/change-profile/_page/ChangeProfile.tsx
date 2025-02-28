@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/basic/Input";
 import { TextButton } from "@/components/basic/TextButton";
 import { Button } from "@/components/basic/Button";
+import { useSession } from "next-auth/react";
 
 type ChangeProfileProps = {
   session: Session | null;
@@ -37,6 +38,7 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export const ChangeProfile = ({ session }: ChangeProfileProps) => {
+  const { data, update } = useSession();
   const userId = session?.user?.id;
   const userName = session?.user?.name || "";
   const defaultUserImage =
@@ -49,11 +51,12 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
 
   const checkFirstLogin = async () => {
     try {
-      const token = await axios.get("/api/auth/session"); // セッションの再取得
-      if (token.data.user.isFirstLogin === false) {
+      const updatedSession = await update({ forceRefresh: Date.now() });
+      if (updatedSession?.user?.isFirstLogin === false) {
         // TODO: 本番環境でrouter.push()でもいけるか調べる
         location.href = "/";
       } else {
+        await update();
         // 状態が更新されるまでポーリング
         setTimeout(checkFirstLogin, 500); // 0.5秒後に再確認
       }
@@ -67,7 +70,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
       return axios.patch(`/api/user/${userId}`, {
         name,
         image,
-        isFirstLogin: isFirstLogin ? isFirstLogin : false,
+        isFirstLogin,
       });
     },
     onError: (error) => {

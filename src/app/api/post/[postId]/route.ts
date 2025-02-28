@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
-import { getAuthSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import {
   GetPostSelectTags,
   PostId,
@@ -19,7 +19,7 @@ export async function DELETE(req: Request, context: ContextProps) {
   try {
     const { params } = context;
     const { postId } = params;
-    const session = await getAuthSession();
+    const session = await auth();
     const input = await req.json();
 
     if (session?.user?.id !== input.userId) {
@@ -42,7 +42,7 @@ export async function DELETE(req: Request, context: ContextProps) {
 
 export async function PATCH(req: Request, context: ContextProps) {
   try {
-    const session = await getAuthSession();
+    const session = await auth();
     const { params } = context;
     const body = updatePostBodySchema.parse(await req.json());
 

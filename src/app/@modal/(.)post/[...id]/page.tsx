@@ -8,7 +8,7 @@ import {
 } from "@/app/api/post/model";
 import { Cute, User } from "@prisma/client";
 import { UserId } from "@/app/api/user/model";
-import { getAuthSession } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import ModalPostDetailPage from "@/app/@modal/(.)post/[...id]/ModalPostDetailPage";
 import { getUserCuteCountForPost } from "@/app/api/cute/[postId]/cuteDao";
 
@@ -105,7 +105,7 @@ async function fetchUserCuteCount({
 
 const PostDetail: FC<PostProps> = async ({ params }) => {
   const [postId, userId] = params.id;
-  const session = await getAuthSession();
+  const session = await auth();
   const post = await getPost(postId);
   const userPost = await getPostByUserId(userId, postId);
   // 現在ログインしているユーザーがpostで取得した投稿を何回メデたかの回数取得

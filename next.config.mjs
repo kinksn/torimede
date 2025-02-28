@@ -7,6 +7,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "pp-web-strage.s3.ap-southeast-2.amazonaws.com",
       },
+      // LINE
+      {
+        protocol: "https",
+        hostname: "profile.line-scdn.net",
+      },
       // X
       {
         protocol: "https",

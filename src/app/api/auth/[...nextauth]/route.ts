@@ -1,7 +1,4 @@
-import { authOptions } from "@/lib/auth";
-import NextAuth from "next-auth/next";
+import { handlers } from "@/lib/auth";
 
-// /api/auth/*で始まるすべてのAPIリクエストは、[...nextauth]ファイルに書かれたコードで処理される
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
+// v5 からはhandlers.GET, handlers.POSTをエクスポートすればOK
+export const { GET, POST } = handlers;

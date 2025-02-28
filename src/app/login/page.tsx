@@ -2,8 +2,8 @@
 
 import Logo from "@/components/assets/logo-color-fixed.svg";
 import GoogleIcon from "@/components/assets/icon/color-fixed/google.svg";
-// import LINEIcon from "@/components/assets/icon/color-fixed/line.svg";
-// import XIcon from "@/components/assets/icon/color-fixed/x.svg";
+import LINEIcon from "@/components/assets/icon/color-fixed/line.svg";
+import XIcon from "@/components/assets/icon/color-fixed/x.svg";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -93,11 +93,13 @@ const LoginPage = () => {
           iconLeft={<SVGIcon svg={GoogleIcon} className="w-6" />}
           colorTheme={"outline"}
           className="w-full justify-center"
-          onClick={() => signIn("google", { callbackUrl: "/" })}
+          onClick={() => {
+            signIn("google", { callbackUrl: "/" });
+          }}
         >
           Googleアカウント
         </Button>
-        {/* <Button
+        <Button
           iconLeft={<SVGIcon svg={LINEIcon} className="w-6" />}
           colorTheme={"outline"}
           className="w-full justify-center"
@@ -112,7 +114,7 @@ const LoginPage = () => {
           onClick={() => signIn("twitter", { callbackUrl: "/" })}
         >
           X(Twitter)アカウント
-        </Button> */}
+        </Button>
       </div>
     </div>
   );
