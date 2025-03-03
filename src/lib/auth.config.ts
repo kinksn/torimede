@@ -12,8 +12,6 @@ export const authConfig = {
       // 1. 初回サインイン時 (user がある場合)
       if (user) {
         // user.id が PrismaAdapter で作成された User レコードの id
-        // NextAuthが自動的に token.sub = user.id をセットしますが
-        // 念のため明示的に上書きしておくと安心。
         token.sub = user.id;
         token.isAdmin = user.isAdmin || false;
         token.isFirstLogin = user.isFirstLogin || false;
