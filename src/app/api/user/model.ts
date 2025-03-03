@@ -13,7 +13,7 @@ export const userNameSchema = z
 export const userSchema = z.object({
   id: userIdSchema,
   name: z.string(),
-  email: z.string().email(),
+  email: z.string().email().nullable(),
   image: z.string(),
   isAdmin: z.boolean(),
 });
