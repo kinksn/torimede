@@ -1,7 +1,6 @@
 "use client";
 
 import FormPost from "@/components/FormPost";
-import { FormInputPost } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { FC } from "react";
@@ -12,6 +11,7 @@ import { GetPostDetailOutput } from "@/app/api/post/model";
 import { Tag } from "@prisma/client";
 import { Session } from "next-auth";
 import { toast } from "sonner";
+import { FormInputPost } from "@/app/api/_common/model/form";
 
 type EditPostPageProps = {
   post: GetPostDetailOutput;

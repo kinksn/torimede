@@ -1,21 +1,20 @@
 import { FC } from "react";
-import { Session } from "next-auth";
-import { PostId } from "@/app/api/post/model";
-import { UserId } from "@/app/api/user/model";
+import { PostId, PostImage } from "@/app/api/post/model";
 import { ImageItem } from "@/components/basic/ImageItem";
 import * as motion from "motion/react-client";
+import { UserId } from "@/app/api/user/model";
 
 type PostCardProps = {
   post: {
     id: PostId;
     userId: UserId;
-    image: string;
+    images: PostImage[];
   };
   menu?: React.ReactNode;
 };
 
 const PostCard: FC<PostCardProps> = ({ post, menu }) => {
-  const { id, userId, image } = post;
+  const { id, userId, images } = post;
 
   return (
     <motion.div
@@ -27,8 +26,9 @@ const PostCard: FC<PostCardProps> = ({ post, menu }) => {
       }}
     >
       <ImageItem
-        imageUrl={image}
+        imageUrl={images[0].url}
         href={`/post/${id}/${userId}`}
+        alt={images[0].alt ?? "投稿画像"}
         actionButton={menu}
       />
     </motion.div>

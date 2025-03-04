@@ -27,9 +27,13 @@ export const getPostByPostId = async ({ postId }: { postId: PostId }) =>
         where: {
           id: parsedPostId,
         },
+        include: {
+          images: true,
+        },
       };
       const data = await db.post.findFirst(query);
-      return getPostByPostIdOutputSchema.parse(data);
+      const parsedData = getPostByPostIdOutputSchema.parse(data);
+      return parsedData;
     }
   );
 
@@ -55,9 +59,11 @@ export const deletePostByPostId = async ({ postId }: { postId: PostId }) =>
     },
     async () => {
       const post = await getPostByPostId({ postId });
-      const { image } = post;
+      const { images } = post;
 
-      if (image) await deleteImageFromS3(image);
+      if (images.length > 0) {
+        await Promise.all(images.map((image) => deleteImageFromS3(image.url)));
+      }
 
       const parsedPostId = postIdSchema.parse(postId);
       const query = {

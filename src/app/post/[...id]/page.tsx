@@ -8,9 +8,9 @@ import { PostDetailPage } from "@/app/post/[...id]/PostDetailPage";
 import { Cute, User } from "@prisma/client";
 import { Metadata, ResolvingMetadata } from "next";
 import { db } from "@/lib/db";
-import { UserId } from "@/app/api/user/model";
 import { auth } from "@/lib/auth";
 import { getUserCuteCountForPost } from "@/app/api/cute/[postId]/cuteDao";
+import { UserId } from "@/app/api/user/model";
 
 type PostProps = {
   params: {
@@ -47,7 +47,7 @@ export async function generateMetadata(
 
   const ogParams: OgParams[] = [
     { param: "title", value: post.title },
-    { param: "image", value: post.image },
+    { param: "image", value: post.images[0].url },
     { param: "userName", value: post.user.name },
   ];
 
@@ -76,7 +76,7 @@ async function getPost(postId: string) {
         id: true,
         title: true,
         content: true,
-        image: true,
+        images: true,
         tags: {
           select: {
             tag: true,
@@ -126,7 +126,7 @@ async function getPostByUserId(userId: string, postId: string) {
       id: true,
       title: true,
       content: true,
-      image: true,
+      images: true,
       tags: {
         select: {
           tag: true,

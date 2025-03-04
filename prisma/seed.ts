@@ -36,48 +36,90 @@ async function main() {
         title: "スズメ",
         content: "チュンです",
         // ToDo：ビルド時には`/seed/`配下の画像はコンパイルに含めないようにしたい
-        image: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/suzume.jpg`,
         userId: user1.id,
+        images: {
+          create: [
+            {
+              url: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/suzume.jpg`,
+              alt: "スズメ",
+            },
+          ],
+        },
       },
     }),
     prisma.post.create({
       data: {
         title: "アキクサインコ",
         content: "色が桃みたいで可愛い",
-        image: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/akikusa.jpg`,
         userId: user1.id,
+        images: {
+          create: [
+            {
+              url: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/akikusa.jpg`,
+              alt: "アキクサインコ",
+            },
+          ],
+        },
       },
     }),
     prisma.post.create({
       data: {
         title: "コアジサシ",
         content: "親子かわいい",
-        image: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/koajisashi.jpg`,
         userId: user1.id,
+        images: {
+          create: [
+            {
+              url: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/koajisashi.jpg`,
+              alt: "コアジサシ",
+            },
+          ],
+        },
       },
     }),
     prisma.post.create({
       data: {
         title: "ピグミーファルコン",
         content: "猛禽類なのにかわいい",
-        image: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/pygmy.jpg`,
         userId: user2.id,
+        images: {
+          create: [
+            {
+              url: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/pygmy.jpg`,
+              alt: "ピグミーファルコン",
+            },
+          ],
+        },
       },
     }),
     prisma.post.create({
       data: {
         title: "ワライカワセミ",
         content: "もふもふふわふわ",
-        image: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/waraikawaemi.jpg`,
         userId: user2.id,
+        images: {
+          create: [
+            {
+              url: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/waraikawaemi.jpg`,
+              alt: "ワライカワセミ",
+            },
+          ],
+        },
       },
     }),
     prisma.post.create({
       data: {
         title: "コザクラインコ",
         content: "見た目が超キュート",
-        image: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/kozakura.jpg`,
         userId: user2.id,
+        images: {
+          create: [
+            {
+              url: `${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/seed/image/post/kozakura.jpg`,
+              alt: "コザクラインコ",
+            },
+          ],
+        },
       },
     }),
     // 他のポストも同様に作成

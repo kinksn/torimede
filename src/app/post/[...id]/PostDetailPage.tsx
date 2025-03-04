@@ -208,21 +208,24 @@ export function PostDetailPage({
           }`}
           ref={medeMojiContainerRef}
         >
-          <ImageItem
-            imageUrl={post.image}
-            alt={post.title}
-            className="w-full max-h-[633px] max-sm:rounded-none max-sm:max-h-[72svh]"
-            actionButton={
-              isMyPost && (
-                <ButtonAction
-                  postId={postId}
-                  userId={userId}
-                  isParentModal={isParentModal}
-                />
-              )
-            }
-            isFitContainer
-          />
+          {post.images.map((image) => (
+            <ImageItem
+              key={image.id}
+              imageUrl={image.url}
+              alt={image?.alt}
+              className="w-full max-h-[633px] max-sm:rounded-none max-sm:max-h-[72svh]"
+              actionButton={
+                isMyPost && (
+                  <ButtonAction
+                    postId={postId}
+                    userId={userId}
+                    isParentModal={isParentModal}
+                  />
+                )
+              }
+              isFitContainer
+            />
+          ))}
           {medeMoji.map(({ id, x, y, variant }) => (
             <MedeMojiItem
               key={id}

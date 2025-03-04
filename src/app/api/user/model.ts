@@ -1,4 +1,5 @@
 // import { postIdSchema } from "@/app/api/post/model";
+import { postImageIdSchema } from "@/app/api/_common/model/id";
 import { idWithBrandSchema } from "@/lib/util/entity";
 import { z } from "zod";
 
@@ -32,7 +33,14 @@ export const getUserPostsSchema = z.array(
   z.object({
     id: postIdSchema,
     userId: userIdSchema,
-    image: z.string(),
+    images: z.array(
+      z.object({
+        id: postImageIdSchema,
+        postId: postIdSchema,
+        url: z.string(),
+        alt: z.string().optional(),
+      })
+    ),
   })
 );
 

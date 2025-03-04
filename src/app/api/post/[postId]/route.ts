@@ -67,6 +67,14 @@ export async function PATCH(req: Request, context: ContextProps) {
       data: {
         title: body.title,
         content: body.content,
+        images: {
+          updateMany: {
+            where: {}, // 条件を省略すると、その投稿に紐づく全PostImageが対象になる
+            data: {
+              alt: body.title,
+            },
+          },
+        },
         tags: {
           deleteMany: {}, // 既存のタグを一度削除
           create: tagIds.map((tagId) => ({

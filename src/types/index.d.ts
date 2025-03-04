@@ -6,7 +6,7 @@ import { UserId } from "@/app/api/user/model";
 export type FormInputPost = {
   title: string;
   content?: string;
-  image?: string;
+  images?: string;
   tags: Tag[];
   userId?: string;
 };
