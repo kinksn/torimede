@@ -15,7 +15,12 @@ export async function POST(req: Request) {
         title: body.title,
         content: body.content,
         userId: session.user.id,
-        image: body.image,
+        images: {
+          create: body.images.map((image) => ({
+            url: image.url,
+            alt: image.alt,
+          })),
+        },
         tags: {
           create: body.tags.map((tagId) => ({
             tag: {

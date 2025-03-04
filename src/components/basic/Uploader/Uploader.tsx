@@ -25,11 +25,11 @@ const uploaderStylesProps = cva(
         primary: "hover:border-primary-700",
       },
       isPreview: {
-        true: "bg-primary-700 border-solid h-[228px]",
+        true: "bg-base-content border-solid h-[228px]",
         false: "",
       },
       isError: {
-        true: "bg-tertialy-bloodOrange-50 border-state-error",
+        true: "bg-tertialy-bloodOrange-50 border-state-error hover:border-state-error",
         false: "",
       },
       isDesabled: {
@@ -57,6 +57,7 @@ type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> &
     error?: boolean;
     previewClassName?: string;
     image?: string;
+    onResetFile?: () => void;
   };
 
 export const Uploader = ({
@@ -69,6 +70,7 @@ export const Uploader = ({
   error = false,
   previewClassName,
   image,
+  onResetFile,
   ...props
 }: InputProps) => {
   const [preview, setPreview] = useState<string | null>(image ?? null);
@@ -81,6 +83,7 @@ export const Uploader = ({
       // エラーがある場合はプレビューとファイル名をクリア
       setPreview(null);
       setFilename(null);
+      onResetFile?.();
       if (uploadInputRef.current) {
         uploadInputRef.current.value = "";
       }
@@ -94,6 +97,7 @@ export const Uploader = ({
     if (!files || files.length === 0) {
       setPreview(null);
       setFilename(null);
+      onResetFile?.();
       return;
     }
 
@@ -104,7 +108,7 @@ export const Uploader = ({
       // onChangeを手動でトリガーするためのEventのmock
       // フォームライブラリのバリデーション等を想定している場合に必要
       target: { files },
-    } as unknown as React.ChangeEvent<HTMLInputElement>);
+    } as React.ChangeEvent<HTMLInputElement>);
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -153,6 +157,8 @@ export const Uploader = ({
     if (uploadInputRef.current) {
       uploadInputRef.current.value = "";
     }
+
+    onResetFile?.();
   };
 
   return (

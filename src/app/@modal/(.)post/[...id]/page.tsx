@@ -28,7 +28,7 @@ async function getPost(postId: string) {
         id: true,
         title: true,
         content: true,
-        image: true,
+        images: true,
         tags: {
           select: {
             tag: true,
@@ -64,7 +64,7 @@ async function getPostByUserId(userId: string, postId: string) {
       id: true,
       title: true,
       content: true,
-      image: true,
+      images: true,
       tags: {
         select: {
           tag: true,

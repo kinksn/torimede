@@ -50,6 +50,9 @@ export const getUserPostsByUserId = async ({ userId }: InputUserId) =>
         where: {
           userId,
         },
+        include: {
+          images: true,
+        },
         orderBy: {
           createdAt: "desc",
         },
@@ -76,7 +79,11 @@ export const getUserCutedPostsByUserId = async ({ userId }: InputUserId) =>
           },
         },
         include: {
-          post: true, // 投稿の情報を取得
+          post: {
+            include: {
+              images: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",

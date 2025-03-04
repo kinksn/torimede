@@ -11,6 +11,7 @@ export const handleDaoError = async <T>(
     return await callback();
   } catch (error) {
     if (error instanceof Error) {
+      console.error(`${errorMessage}: ${error.message}`);
       throw new Error(`${errorMessage}: ${error.message}`); // 元のエラーメッセージも含めてスロー
     } else {
       throw new Error(errorMessage);

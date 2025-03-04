@@ -14,7 +14,7 @@ async function getPostByUserId(postId: string) {
       id: true,
       title: true,
       content: true,
-      image: true,
+      images: true,
       tags: {
         select: {
           tag: true,

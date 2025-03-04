@@ -17,7 +17,6 @@ import {
   updatePostBodySchema,
   EditPost,
 } from "@/app/api/post/model";
-import { FormInputPost } from "@/types";
 import {
   Form,
   FormField,
@@ -35,6 +34,7 @@ import { TagEditMenu } from "@/components/TagEditMenu";
 import { Button } from "@/components/basic/Button";
 import { toast } from "sonner";
 import { Modal } from "@/components/basic/Modal";
+import { FormInputPost } from "@/app/api/_common/model/form";
 
 interface FromPostProps {
   submit: SubmitHandler<FormInputPost>;
@@ -54,7 +54,7 @@ const FormPost: FC<FromPostProps> = ({
   isSubmitPending,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File[]>([]);
 
   const form = useForm<EditPost>({
     mode: "onChange",
@@ -63,7 +63,7 @@ const FormPost: FC<FromPostProps> = ({
     ),
     defaultValues: initialValue
       ? initialValue
-      : { title: "", content: "", tags: [], image: "" },
+      : { title: "", content: "", tags: [], images: [] },
   });
 
   const handleFormSubmit: SubmitHandler<FormInputPost> = async (data) => {
@@ -71,13 +71,17 @@ const FormPost: FC<FromPostProps> = ({
       setIsSubmitting(true);
       const imageUrl =
         type === "edit"
-          ? initialValue?.image
-          : await uploadImage(imageFile, data.image || "");
+          ? initialValue?.images[0].url
+          : await uploadImage(imageFile[0]);
+
       if (!imageUrl) {
         setIsSubmitting(false);
         return;
       }
-      await submit({ ...data, image: imageUrl });
+
+      const images = [{ url: imageUrl, alt: data.title }];
+
+      await submit({ ...data, images });
     } catch (error) {
       console.error("submit failed :", error);
     } finally {
@@ -87,15 +91,21 @@ const FormPost: FC<FromPostProps> = ({
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files?.[0]) {
-      setImageFile(files[0]);
+    if (files) {
+      // 既存の画像と新しい画像を結合
+      setImageFile((prevFiles) =>
+        Array.from(files).reduce((acc, file) => {
+          // 重複チェック（必要に応じて）
+          if (!acc.some((f) => f.name === file.name && f.size === file.size)) {
+            return [...acc, file];
+          }
+          return acc;
+        }, prevFiles)
+      );
     }
   };
 
-  const uploadImage = async (file: File | null, currentImage: string) => {
-    if (!file) {
-      return currentImage || "";
-    }
+  const uploadImage = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
     try {
@@ -147,7 +157,7 @@ const FormPost: FC<FromPostProps> = ({
           {/* 画像アップロード */}
           <FormField
             control={form.control}
-            name="image"
+            name="images"
             render={({ field, fieldState }) => (
               <Uploader
                 label="画像"
@@ -155,10 +165,21 @@ const FormPost: FC<FromPostProps> = ({
                 className="w-full"
                 error={!!fieldState.error}
                 disabled={type === "edit"}
-                {...(type === "edit" && { image: initialValue?.image })}
+                onResetFile={() => {
+                  field.onChange([]);
+                  setImageFile([]);
+                }}
+                {...(type === "edit" && { image: initialValue?.images[0].url })}
                 onChange={(e) => {
                   handleFileChange(e);
-                  field.onChange(e.target.files);
+                  const files = e.target.files;
+                  if (!files?.length) return;
+                  // 「複数ファイルを選択 or ドラッグ」しても、最後の1枚だけ使う
+                  // 1投稿に対して複数投稿できるようにする際には処理を変える必要あり
+                  const lastFile = files[files.length - 1];
+                  setImageFile([lastFile]);
+                  // RHF側も常に最後の1つだけをセット
+                  field.onChange([lastFile]);
                 }}
               />
             )}
