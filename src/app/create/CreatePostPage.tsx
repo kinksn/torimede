@@ -1,8 +1,8 @@
 "use client";
 
+import { FormInputPost } from "@/app/api/_common/model/form";
 import FormPost from "@/components/FormPost";
 import { postKeys } from "@/service/post/key";
-import { FormInputPost } from "@/types";
 import { Tag } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";

@@ -3,14 +3,6 @@ import NextAuth from "next-auth";
 import { Post } from "@prisma/client";
 import { UserId } from "@/app/api/user/model";
 
-export type FormInputPost = {
-  title: string;
-  content?: string;
-  image?: string;
-  tags: Tag[];
-  userId?: string;
-};
-
 export type Tag = {
   id: string;
   name: string;
