@@ -1,5 +1,6 @@
+import { postImageIdSchema } from "@/app/api/_common/model/id";
 import { cuteSchema } from "@/app/api/cute/[postId]/model";
-import { uploadPostImageSchema } from "@/app/api/post/upload/model";
+import { ACCEPT_IMAGE_TYPES } from "@/app/api/post/upload/model";
 import { tagIdSchema, tagSchema } from "@/app/api/tag/model";
 import { userIdSchema, userSchema } from "@/app/api/user/model";
 import { idWithBrandSchema } from "@/lib/util/entity";
@@ -11,11 +12,19 @@ export type PostId = z.infer<typeof postIdSchema>;
 export const getPostByPostIdInputSchema = postIdSchema;
 export type GetPostByPostIdInput = z.infer<typeof getPostByPostIdInputSchema>;
 
+export const postImagesSchema = z.object({
+  id: postImageIdSchema,
+  postId: postIdSchema,
+  url: z.string(),
+  alt: z.string().optional(),
+});
+export type PostImage = z.infer<typeof postImagesSchema>;
+
 export const getPostByPostIdOutputSchema = z.object({
   id: postIdSchema,
   title: z.string(),
   content: z.string().optional(),
-  image: z.string(),
+  images: postImagesSchema.array(),
   userId: userIdSchema,
 });
 export type GetPostByPostIdOutput = z.infer<typeof getPostByPostIdOutputSchema>;
@@ -30,14 +39,27 @@ export const updatePostBodySchema = z.object({
 export const createPostSchema = z.object({
   title: z.string().min(2, "タイトルは2文字以上入力してください"),
   content: z.string().optional(),
-  image: uploadPostImageSchema,
+  images: z
+    .array(z.instanceof(File))
+    .nonempty("画像を設定してください")
+    .refine(
+      (files) => files.every((file) => ACCEPT_IMAGE_TYPES.includes(file.type)),
+      {
+        message: "拡張子（png,jpg,jpeg,gif）のファイルを設定してください",
+      }
+    ),
   tags: z.array(tagIdSchema),
 });
 
 export const editPostSchema = z.object({
   title: z.string().min(2, "タイトルは2文字以上入力してください"),
   content: z.string().optional(),
-  image: z.string().url(),
+  images: z.array(
+    z.object({
+      url: z.string(),
+      alt: z.string().optional(),
+    })
+  ),
   tags: z.array(tagSchema),
   userId: userIdSchema,
 });
@@ -46,7 +68,12 @@ export type EditPost = z.infer<typeof editPostSchema>;
 export const createPostBodySchema = z.object({
   title: z.string().min(2, "タイトルは2文字以上入力してください"),
   content: z.string().optional(),
-  image: z.string().url(),
+  images: z.array(
+    z.object({
+      url: z.string(),
+      alt: z.string().optional(),
+    })
+  ),
   tags: z.array(tagIdSchema),
 });
 
@@ -54,7 +81,7 @@ export const getPostSelectTagsSchema = z.object({
   id: postIdSchema,
   title: z.string(),
   content: z.string().optional(),
-  image: z.string(),
+  images: postImagesSchema.array(),
   userId: userIdSchema,
   tags: z.array(
     z.object({
@@ -68,7 +95,7 @@ export const getPostSelectTagsOutputSchema = z.object({
   id: postIdSchema,
   title: z.string(),
   content: z.string().optional(),
-  image: z.string(),
+  images: postImagesSchema.array(),
   userId: userIdSchema,
   tags: z.array(
     z.object({
@@ -86,7 +113,7 @@ export const getPostOutputSchema = z.object({
       id: postIdSchema,
       title: z.string(),
       content: z.string().optional(),
-      image: z.string(),
+      images: postImagesSchema.array(),
       userId: userIdSchema,
       tags: z.array(tagSchema),
     })
@@ -102,7 +129,7 @@ export const getPostDetailOutputSchema = z.object({
   id: postIdSchema,
   title: z.string(),
   content: z.string().optional(),
-  image: z.string(),
+  images: postImagesSchema.array(),
   userId: userIdSchema,
   tags: z.array(tagSchema),
   user: userSchema,
@@ -115,7 +142,7 @@ export const getUserPostsOutputSchema = z.array(
     id: postIdSchema,
     title: z.string(),
     content: z.string().optional(),
-    image: z.string(),
+    images: postImagesSchema.array(),
     userId: userIdSchema,
     tags: z.array(tagSchema),
     cutes: z.array(cuteSchema),
