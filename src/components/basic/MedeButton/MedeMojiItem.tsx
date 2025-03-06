@@ -40,7 +40,7 @@ export function MedeMojiItem({ x, y, variant, onAnimationEnd }: Props) {
     // CSSアニメーション完了をフック
     const handleAnimationEnd = (e: AnimationEvent) => {
       // 複数アニメーションがあるが、fadeOut終了時のみ削除する
-      if (e.animationName === "fadeOut") {
+      if (e.animationName === "fadeOutMedeMoji") {
         onAnimationEnd();
       }
     };
@@ -59,21 +59,21 @@ export function MedeMojiItem({ x, y, variant, onAnimationEnd }: Props) {
         left: x,
         top: y,
         pointerEvents: "none",
-        animation: "fadeOutMedeMoji 1.1s ease-out both",
+        animation: "fadeOutMedeMoji 1s ease-out both",
       }}
     >
       <span className={`${back} inline-block`}>
         <Ztext
-          depth="20px"
+          depth="12px"
           direction="both"
           event="none"
           eventRotation="30deg"
           eventDirection="default"
           fade={false}
-          perspective="120px"
-          layers={20}
+          perspective="140px"
+          layers={10}
           style={{
-            animation: "rotateSphereYOutLeftTop 1.1s ease-out both",
+            animation: "rotateSphereYOutLeftTop 1s ease-out both",
             transformStyle: "preserve-3d",
             position: "relative",
           }}

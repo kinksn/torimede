@@ -26,7 +26,7 @@ import {
   MedeMojiColorsVariant,
   MedeMojiItem,
 } from "@/components/basic/MedeButton/MedeMojiItem";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UIBlocker } from "@/components/UIBlocker";
 import { useUIBlock } from "@/hooks/useUIBlock";
 import { Tooltip } from "@/components/basic/Tooltip";
@@ -38,16 +38,27 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { RoundButton } from "@/components/basic/RoundButton";
 
+// メデ文字のカラーバリエーション
 const medeMojiColorKeys = Object.keys(
   MEDEMOJI_COLORS
 ) as MedeMojiColorsVariant[];
+
+// メデ文字のプール値の型
+type MedeMojiPoolItem = {
+  /** アニメーション開始時に一意になるID */
+  uniqueId: number;
+  /** 表示(使用)中か否か */
+  inUse: boolean;
+  x: number;
+  y: number;
+  variant: MedeMojiColorsVariant;
+};
 
 type PostDetailPageProps = {
   post: GetPostDetailOutput;
   userPosts: GetUserPostsOutput;
   session: Session | null;
   userCuteCount: number;
-  // 投稿詳細モーダルから読み込まれているかどうか
   isParentModal?: boolean;
 };
 
@@ -60,18 +71,41 @@ export function PostDetailPage({
 }: PostDetailPageProps) {
   const { id: postId } = post;
   const { id: userId, name: userName, image: userProfileImage } = post.user;
+  // 「メデ」回数関連
   const [tempMedeCount, setTempMedeCount] = useState(0);
   const [userMedeCount, setUserMedeCount] = useState(userCuteCount);
-  const [medeMoji, setMedeMoji] = useState<
-    { id: number; x: number; y: number; variant: MedeMojiColorsVariant }[]
-  >([]);
+  // 使い回し用のプール配列。初期は空配列。
+  const [medeMojiPool, setMedeMojiPool] = useState<MedeMojiPoolItem[]>([]);
+  // カラーを順繰りに切り替えるためのインデックス
   const [medeMojiColorIndex, setMedeMojiColorIndex] = useState(0);
-  const { uiBlock } = useUIBlock();
+  const { isUIBlock } = useUIBlock();
   const router = useRouter();
+  const medeMojiContainerRef = useRef<HTMLDivElement>(null);
+  const [containerRect, setContainerRect] = useState<DOMRect | null>(null);
 
   const isMyPost = post.userId === session?.user?.id;
 
-  const medeMojiContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const containerEl = medeMojiContainerRef.current;
+    if (!containerEl) return;
+
+    // ResizeObserverで要素のサイズ変更を監視
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) {
+        // 要素の幅や高さを取得してステートに反映
+        // getBoundingClientRect() でもOK
+        // ここでは contentRect も使えますが、余白や座標など必要なら boundingClientRectの方が確実です
+        setContainerRect(containerEl.getBoundingClientRect());
+      }
+    });
+    observer.observe(containerEl);
+
+    // クリーンアップ
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const postMede = async ({
     postId,
@@ -93,7 +127,9 @@ export function PostDetailPage({
   const { mutate: submitMede } = useMutation({
     mutationFn: () => postMede({ postId: post.id, cuteCount: tempMedeCount }),
     onSuccess: (data) => {
-      data && setUserMedeCount(data.totalCuteCount);
+      if (data) {
+        setUserMedeCount(data.totalCuteCount);
+      }
       setTempMedeCount(0);
       router.refresh();
     },
@@ -102,44 +138,54 @@ export function PostDetailPage({
     },
   });
 
-  /**
-   * クリックごとに1つのMedeMojiを追加
-   * - containerRefの実際の幅高さを計測してランダム配置
-   */
   const onShowMedemoji = () => {
-    const container = medeMojiContainerRef.current;
-    if (!container) return;
+    if (!containerRect) return;
 
-    // 表示領域を計測
-    const rect = container.getBoundingClientRect();
+    const padding = 80;
+    const x = padding + Math.random() * (containerRect.width - padding * 2);
+    const y = padding + Math.random() * (containerRect.height - padding * 2);
 
-    // アイコンサイズ想定で 100x100 を余白とみなす
-    const padding = 100;
-    const x = padding + Math.random() * (rect.width - padding * 2);
-    const y = padding + Math.random() * (rect.height - padding * 2);
-
+    // メデ文字の色を順番に切り替える
     const currentVariant = medeMojiColorKeys[medeMojiColorIndex];
-
-    setMedeMoji((prev) => [
-      ...prev,
-      {
-        id: Date.now() + Math.random(),
-        x,
-        y,
-        variant: currentVariant,
-      },
-    ]);
-
     setMedeMojiColorIndex(
       (prevIndex) => (prevIndex + 1) % medeMojiColorKeys.length
     );
+
+    // メデ文字プールから未使用要素を探す
+    setMedeMojiPool((prev) => {
+      const next = [...prev];
+      const freeIndex = next.findIndex((item) => !item.inUse);
+
+      if (freeIndex >= 0) {
+        // 未使用アイテムが見つかったら再利用
+        next[freeIndex] = {
+          uniqueId: Date.now() + Math.random(),
+          inUse: true,
+          x,
+          y,
+          variant: currentVariant,
+        };
+      } else {
+        // 未使用が無ければ新規にプールへ追加する
+        next.push({
+          uniqueId: Date.now() + Math.random(),
+          inUse: true,
+          x,
+          y,
+          variant: currentVariant,
+        });
+      }
+      return next;
+    });
   };
 
-  /**
-   * アニメ終了時にステートから削除 → DOMから消す
-   */
-  const removeMoji = (id: number) => {
-    setMedeMoji((prev) => prev.filter((m) => m.id !== id));
+  // アニメーション終了時に inUse を false に戻し、再利用可能にする
+  const removeMoji = (uniqueId: number) => {
+    setMedeMojiPool((prev) =>
+      prev.map((item) =>
+        item.uniqueId === uniqueId ? { ...item, inUse: false } : item
+      )
+    );
   };
 
   return (
@@ -156,7 +202,6 @@ export function PostDetailPage({
         <div
           className={`flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 z-[21] bg-base-bg w-full ${
             isParentModal && "max-sm:fixed max-sm:top-[19px] max-sm:pb-2 "
-          }"
           }`}
         >
           <div className="flex items-center gap-4">
@@ -182,10 +227,6 @@ export function PostDetailPage({
           </div>
           <div className="flex max-sm:text-xs font-bold items-center">
             {userProfileImage && (
-              // 投稿詳細モーダルからユーザーページに遷移する際、
-              // なぜかユーザーページで投稿詳細モーダルを開いて閉じると移前のモーダルが残ったまま表示されてしまうため、
-              // aタグでページ遷移して強制リフレッシュしている。
-              // 原因は定かではないがおそらくParallel RouteかIntercepting Routeのバグかと思われる。
               <a
                 href={`/user/${post.userId}`}
                 className="flex items-center gap-1"
@@ -226,15 +267,21 @@ export function PostDetailPage({
               isFitContainer
             />
           ))}
-          {medeMoji.map(({ id, x, y, variant }) => (
-            <MedeMojiItem
-              key={id}
-              x={x}
-              y={y}
-              variant={variant}
-              onAnimationEnd={() => removeMoji(id)}
-            />
-          ))}
+
+          {/* プール内のMedeMojiItemをすべて描画。
+              inUse=true なら表示 / false ならnull */}
+          {medeMojiPool.map((item, index) => {
+            if (!item.inUse) return null;
+            return (
+              <MedeMojiItem
+                key={index} // 配列の順番が変わらないならindexでもOK。あるいは uniqueIdを使ってもOK
+                x={item.x}
+                y={item.y}
+                variant={item.variant}
+                onAnimationEnd={() => removeMoji(item.uniqueId)}
+              />
+            );
+          })}
         </div>
       </div>
       <div className="flex max-w-[1064px] w-full mx-auto px-5 max-sm:px-0">
@@ -275,13 +322,13 @@ export function PostDetailPage({
         className={`flex justify-between max-sm:flex-col gap-10 max-sm:gap-5 items-start max-w-[1104px] w-full mx-auto mb-10 max-sm:mt-10 px-10 max-sm:px-5 ${
           !post?.content && post.tags.length === 0 ? "mt-10" : "mt-14"
         }`}
+        style={{
+          userSelect: isUIBlock ? "none" : "auto",
+          WebkitUserSelect: isUIBlock ? "none" : "auto",
+        }}
       >
         <div
           className={`${!post?.content && post.tags.length === 0 && "hidden"}`}
-          style={{
-            userSelect: uiBlock ? "none" : "auto",
-            WebkitUserSelect: uiBlock ? "none" : "auto",
-          }}
         >
           {post?.content && (
             <p

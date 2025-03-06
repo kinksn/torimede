@@ -4,12 +4,12 @@ import { useUIBlock } from "@/hooks/useUIBlock";
 import { useCallback, useEffect } from "react";
 
 export const UIBlocker = ({ zIndex = 9999 }: { zIndex?: number }) => {
-  const { uiBlock } = useUIBlock();
+  const { isUIBlock } = useUIBlock();
 
   const updateViewport = useCallback(() => {
     const viewport = document.querySelector('meta[name="viewport"]');
     if (viewport) {
-      if (uiBlock) {
+      if (isUIBlock) {
         viewport.setAttribute(
           "content",
           "width=device-width, initial-scale=1, maximum-scale=1"
@@ -18,13 +18,13 @@ export const UIBlocker = ({ zIndex = 9999 }: { zIndex?: number }) => {
         viewport.setAttribute("content", "width=device-width, initial-scale=1");
       }
     }
-  }, [uiBlock]);
+  }, [isUIBlock]);
 
   useEffect(() => {
     updateViewport();
   });
 
-  if (!uiBlock) return null;
+  if (!isUIBlock) return null;
 
   return (
     <div
