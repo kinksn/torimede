@@ -22,7 +22,7 @@ async function getPostByUserId(postId: string) {
       },
       user: true,
       userId: true,
-      cutes: true,
+      medes: true,
     },
   });
 

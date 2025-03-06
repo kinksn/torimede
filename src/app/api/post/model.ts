@@ -1,5 +1,5 @@
 import { postImageIdSchema } from "@/app/api/_common/model/id";
-import { cuteSchema } from "@/app/api/cute/[postId]/model";
+import { medeSchema } from "@/app/api/mede/[postId]/model";
 import { ACCEPT_IMAGE_TYPES } from "@/app/api/post/upload/model";
 import { tagIdSchema, tagSchema } from "@/app/api/tag/model";
 import { userIdSchema, userSchema } from "@/app/api/user/model";
@@ -30,15 +30,27 @@ export const getPostByPostIdOutputSchema = z.object({
 export type GetPostByPostIdOutput = z.infer<typeof getPostByPostIdOutputSchema>;
 
 export const updatePostBodySchema = z.object({
-  title: z.string().min(2, "タイトルは2文字以上入力してください"),
-  content: z.string().optional(),
+  title: z
+    .string()
+    .min(2, "タイトルは2文字以上入力してください")
+    .max(50, "タイトルは50文字以内で入力してください"),
+  content: z
+    .string()
+    .max(400, "投稿内容は400文字以内で入力してください")
+    .optional(),
   userId: userIdSchema,
   tags: z.array(z.union([tagIdSchema, tagSchema])),
 });
 
 export const createPostSchema = z.object({
-  title: z.string().min(2, "タイトルは2文字以上入力してください"),
-  content: z.string().optional(),
+  title: z
+    .string()
+    .min(2, "タイトルは2文字以上入力してください")
+    .max(50, "タイトルは50文字以内で入力してください"),
+  content: z
+    .string()
+    .max(400, "投稿内容は400文字以内で入力してください")
+    .optional(),
   images: z
     .array(z.instanceof(File))
     .nonempty("画像を設定してください")
@@ -133,7 +145,7 @@ export const getPostDetailOutputSchema = z.object({
   userId: userIdSchema,
   tags: z.array(tagSchema),
   user: userSchema,
-  cutes: z.array(cuteSchema),
+  medes: z.array(medeSchema),
 });
 export type GetPostDetailOutput = z.infer<typeof getPostDetailOutputSchema>;
 
@@ -145,7 +157,7 @@ export const getUserPostsOutputSchema = z.array(
     images: postImagesSchema.array(),
     userId: userIdSchema,
     tags: z.array(tagSchema),
-    cutes: z.array(cuteSchema),
+    medes: z.array(medeSchema),
   })
 );
 export type GetUserPostsOutput = z.infer<typeof getUserPostsOutputSchema>;

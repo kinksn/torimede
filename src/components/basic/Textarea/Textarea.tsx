@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { FormLabel } from "@/components/basic/FormLabel";
@@ -35,10 +35,7 @@ const textareaStylesProps = cva(
   }
 );
 
-type TextareaProps = Omit<
-  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-  "size"
-> &
+type TextareaProps = React.ComponentProps<"textarea"> &
   VariantProps<typeof textareaStylesProps> & {
     label?: string;
     requirement?: "optional" | "required";
@@ -55,6 +52,16 @@ export const Textarea = ({
   error = false,
   ...props
 }: TextareaProps) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleInput = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  };
+
   return (
     <FormItem className={cn("flex flex-col h-full", className)}>
       {label && (
@@ -64,7 +71,10 @@ export const Textarea = ({
       )}
       <FormControl>
         <ShadcnTextarea
+          ref={textareaRef}
           disabled={disabled}
+          onChange={handleInput}
+          onInput={handleInput}
           className={cn(
             textareaStylesProps({
               size,

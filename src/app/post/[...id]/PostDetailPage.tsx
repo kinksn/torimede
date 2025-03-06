@@ -31,9 +31,9 @@ import { UIBlocker } from "@/components/UIBlocker";
 import { useUIBlock } from "@/hooks/useUIBlock";
 import { Tooltip } from "@/components/basic/Tooltip";
 import {
-  CreateCuteOutput,
-  MAX_CUTE_COUNT,
-} from "@/app/api/cute/[postId]/model";
+  CreateMedeOutput,
+  MAX_MEDE_COUNT,
+} from "@/app/api/mede/[postId]/model";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { RoundButton } from "@/components/basic/RoundButton";
@@ -58,7 +58,7 @@ type PostDetailPageProps = {
   post: GetPostDetailOutput;
   userPosts: GetUserPostsOutput;
   session: Session | null;
-  userCuteCount: number;
+  userMedeCount: number;
   isParentModal?: boolean;
 };
 
@@ -66,14 +66,15 @@ export function PostDetailPage({
   post,
   userPosts,
   session,
-  userCuteCount,
+  userMedeCount,
   isParentModal,
 }: PostDetailPageProps) {
   const { id: postId } = post;
   const { id: userId, name: userName, image: userProfileImage } = post.user;
   // 「メデ」回数関連
   const [tempMedeCount, setTempMedeCount] = useState(0);
-  const [userMedeCount, setUserMedeCount] = useState(userCuteCount);
+  const [internalUserMedeCount, setInternalUserMedeCount] =
+    useState(userMedeCount);
   // 使い回し用のプール配列。初期は空配列。
   const [medeMojiPool, setMedeMojiPool] = useState<MedeMojiPoolItem[]>([]);
   // カラーを順繰りに切り替えるためのインデックス
@@ -109,32 +110,32 @@ export function PostDetailPage({
 
   const postMede = async ({
     postId,
-    cuteCount,
+    medeCount,
   }: {
     postId: PostId;
-    cuteCount: number;
+    medeCount: number;
   }) => {
     if (isMyPost) return;
-    const response = await axiosInstance.post<CreateCuteOutput>(
-      `/cute/${postId}`,
+    const response = await axiosInstance.post<CreateMedeOutput>(
+      `/mede/${postId}`,
       {
-        cuteCount,
+        medeCount,
       }
     );
     return response.data;
   };
 
   const { mutate: submitMede } = useMutation({
-    mutationFn: () => postMede({ postId: post.id, cuteCount: tempMedeCount }),
+    mutationFn: () => postMede({ postId: post.id, medeCount: tempMedeCount }),
     onSuccess: (data) => {
       if (data) {
-        setUserMedeCount(data.totalCuteCount);
+        setInternalUserMedeCount(data.totalMedeCount);
       }
       setTempMedeCount(0);
       router.refresh();
     },
     onError: (error) => {
-      console.error("Error adding cute:", error);
+      console.error("Error adding mede:", error);
     },
   });
 
@@ -295,7 +296,7 @@ export function PostDetailPage({
               label="たくさんメデてくれてありがとメデ！<br />よければ他の鳥さんもメデてみてね🙏"
               aria-label="たくさんメデてくれてありがとメデ！よければ他の鳥さんもメデてみてね🙏"
               className="bottom-11"
-              disabled={userCuteCount < MAX_CUTE_COUNT}
+              disabled={internalUserMedeCount < MAX_MEDE_COUNT}
             >
               <MedeButton
                 userMedeCount={userMedeCount}
@@ -304,7 +305,7 @@ export function PostDetailPage({
                 setTempMedeCount={setTempMedeCount}
                 submitMede={submitMede}
                 submitCallback={onShowMedemoji}
-                disabled={userCuteCount === MAX_CUTE_COUNT}
+                disabled={internalUserMedeCount === MAX_MEDE_COUNT}
                 aria-live="polite"
               />
             </Tooltip>

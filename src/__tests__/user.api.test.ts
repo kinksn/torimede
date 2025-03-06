@@ -78,14 +78,14 @@ describe("正常系", () => {
       { id: "post-2", userId, image: "http://example.com/post2.jpg" },
     ];
 
-    const mockCutedPosts = [
+    const mockMededPosts = [
       { id: "post-3", userId, image: "http://example.com/post3.jpg" },
     ];
 
     db.user.findUnique.mockResolvedValue(mockUserProfile);
     db.post.findMany.mockResolvedValue(mockUserPosts);
-    db.cute.findMany.mockResolvedValue(
-      mockCutedPosts.map((post) => ({
+    db.mede.findMany.mockResolvedValue(
+      mockMededPosts.map((post) => ({
         post,
       }))
     );
@@ -98,7 +98,7 @@ describe("正常系", () => {
     const expectedResponse = getUserOutputSchema.parse({
       profile: mockUserProfile,
       posts: mockUserPosts,
-      cutedPosts: mockCutedPosts,
+      mededPosts: mockMededPosts,
     });
 
     expect(res.status).toBe(200);
