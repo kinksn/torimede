@@ -4,13 +4,13 @@ import { useAtom } from "jotai";
 import { uiBlockAtom } from "@/lib/atom/uiBlock";
 
 export const useUIBlock = () => {
-  const [uiBlock, setUiBlock] = useAtom(uiBlockAtom);
+  const [isUIBlock, setIsUIBlock] = useAtom(uiBlockAtom);
 
-  const block = () => setUiBlock(true);
-  const unblock = () => setUiBlock(false);
+  const block = () => setIsUIBlock(true);
+  const unblock = () => setIsUIBlock(false);
 
   return {
-    uiBlock,
+    isUIBlock,
     block,
     unblock,
   };

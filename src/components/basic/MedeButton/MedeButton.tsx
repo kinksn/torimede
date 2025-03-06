@@ -21,6 +21,7 @@ import { Form, FormField } from "@/components/ui/form";
 import { Input } from "@/components/basic/Input";
 import { cn } from "@/lib/utils";
 import { Modal } from "@/components/basic/Modal";
+import { useBreakpoints } from "@/hooks/useBreakpoints";
 
 const EYE = {
   default: {
@@ -112,6 +113,7 @@ export const MedeButton = ({
   const [isHover, setIsHover] = useState(false);
   const [isBlocking, setIsBlocking] = useState(false);
   const { block, unblock } = useUIBlock();
+  const { sm } = useBreakpoints();
 
   // パーティクル放射用の要素
   const medebuttonRef = useRef<HTMLButtonElement>(null);
@@ -143,7 +145,7 @@ export const MedeButton = ({
   };
 
   const handlePressStart = () => {
-    if (disabled) return;
+    if (disabled || !session) return;
     // すでにブロック中なら、タイマーをクリアしてブロック継続
     if (unblockTimerRef.current) {
       clearTimeout(unblockTimerRef.current);
@@ -153,15 +155,12 @@ export const MedeButton = ({
       block();
       setIsBlocking(true);
     }
-    if (medebuttonRef.current && !disabled) {
-      emitParticles(medebuttonRef);
-    }
   };
 
   const handlePressEnd = () => {
     if (disabled) return;
     // 連打が止まったかどうかを判定するための猶予時間
-    const UNBLOCK_DELAY = 1500;
+    const UNBLOCK_DELAY = 500;
 
     // もしすでにタイマーがセットされていれば解除
     if (unblockTimerRef.current) {
@@ -182,17 +181,17 @@ export const MedeButton = ({
     if (medebuttonRef.current) {
       submitCallback();
       jadgeButtonBarrage();
-      emitParticles(medebuttonRef);
+      emitParticles(medebuttonRef, sm);
     }
   };
 
   const debouncedHandleClick = debounce(() => {
-    if (disabled) return;
+    if (disabled || !session) return;
     if (medebuttonRef.current) {
-      emitParticles(medebuttonRef);
+      emitParticles(medebuttonRef, sm);
       setIsPress(true);
     }
-  }, 40);
+  }, 16);
 
   return (
     <>

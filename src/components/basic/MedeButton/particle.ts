@@ -45,9 +45,12 @@ const createElementsWithClass = (
   count: number,
   tagName = "div",
   className = "",
-  element: string
+  element: string,
+  isSP: boolean
 ) => {
-  return Array(count)
+  // SPの時はparticleの数を強制的に1つにすることで負荷を下げている
+  const particleCount = isSP ? 1 : count;
+  return Array(particleCount)
     .fill(0)
     .map(() => {
       const elem = document.createElement(tagName);
@@ -57,7 +60,10 @@ const createElementsWithClass = (
     });
 };
 
-export const emitParticles = async (centerRef: RefObject<Element>) => {
+export const emitParticles = async (
+  centerRef: RefObject<Element>,
+  isSP: boolean
+) => {
   // div.dotをCOUNT個作成
 
   // Line SVGの要素を作成
@@ -65,7 +71,8 @@ export const emitParticles = async (centerRef: RefObject<Element>) => {
     4,
     "div",
     "absolute w-[17px] h-[11px] -left-[8.2px] -top-[5.2px]",
-    LineSvg
+    LineSvg,
+    isSP
   );
 
   // Heart SVGの要素を作成
@@ -73,7 +80,8 @@ export const emitParticles = async (centerRef: RefObject<Element>) => {
     3,
     "div",
     "absolute w-[19px] h-[17px] -left-[9.5px] -top-[8.5px]",
-    HeartSvg
+    HeartSvg,
+    isSP
   );
 
   // Dot SVGの要素を作成
@@ -81,7 +89,8 @@ export const emitParticles = async (centerRef: RefObject<Element>) => {
     5,
     "div",
     "absolute w-[15px] h-[15px] -left-[7.5px] -top-[7.5px]",
-    dotSvg
+    dotSvg,
+    isSP
   );
 
   appendAll(centerRef, [...lines, ...hearts, ...dots]); // 画面に表示
