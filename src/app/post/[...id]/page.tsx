@@ -5,11 +5,11 @@ import {
   PostId,
 } from "@/app/api/post/model";
 import { PostDetailPage } from "@/app/post/[...id]/PostDetailPage";
-import { Cute, User } from "@prisma/client";
+import { Mede, User } from "@prisma/client";
 import { Metadata, ResolvingMetadata } from "next";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import { getUserCuteCountForPost } from "@/app/api/cute/[postId]/cuteDao";
+import { getUserMedeCountForPost } from "@/app/api/mede/[postId]/medeDao";
 import { UserId } from "@/app/api/user/model";
 
 type PostProps = {
@@ -67,7 +67,7 @@ export async function generateMetadata(
 }
 
 async function getPost(postId: string) {
-  const post: GetPostSelectTags & { user: User; cutes: Cute[] } =
+  const post: GetPostSelectTags & { user: User; medes: Mede[] } =
     await db.post.findFirst({
       where: {
         id: postId,
@@ -83,7 +83,7 @@ async function getPost(postId: string) {
           },
         },
         userId: true,
-        cutes: true,
+        medes: true,
         user: true,
       },
     });
@@ -100,7 +100,7 @@ async function getPost(postId: string) {
   return getPostDetailOutputSchema.parse(formattedPosts);
 }
 
-async function fetchUserCuteCount({
+async function fetchUserMedeCount({
   postId,
   userId,
 }: {
@@ -110,8 +110,8 @@ async function fetchUserCuteCount({
   if (!userId) {
     return 0;
   }
-  const userCuteCount = await getUserCuteCountForPost({ postId, userId });
-  return userCuteCount;
+  const userMedeCount = await getUserMedeCountForPost({ postId, userId });
+  return userMedeCount;
 }
 
 async function getPostByUserId(userId: string, postId: string) {
@@ -133,7 +133,7 @@ async function getPostByUserId(userId: string, postId: string) {
         },
       },
       userId: true,
-      cutes: true,
+      medes: true,
     },
   });
 
@@ -157,7 +157,7 @@ export default async function PostDetail({ params }: PostProps) {
   const post = await getPost(postId);
   const userPost = await getPostByUserId(userId, postId);
   // 現在ログインしているユーザーがpostで取得した投稿を何回メデたかの回数取得
-  const userCuteCount = await fetchUserCuteCount({
+  const userMedeCount = await fetchUserMedeCount({
     postId,
     userId: session?.user?.id,
   });
@@ -166,7 +166,7 @@ export default async function PostDetail({ params }: PostProps) {
     <PostDetailPage
       post={post}
       userPosts={userPost}
-      userCuteCount={userCuteCount}
+      userMedeCount={userMedeCount}
       session={session}
     />
   );

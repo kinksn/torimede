@@ -33,7 +33,7 @@ model PostTag {
   @@id([postId, tagId])
 }
 
-model Cute {
+model Mede {
   id        String   @id @default(cuid())
   postId    String
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -44,14 +44,14 @@ model Cute {
 
 model Post {
   id        String      @id @default(cuid())
-  title     String      @db.VarChar(225)
-  content   String?
+  title     String      @db.VarChar(50)
+  content   String?     @db.VarChar(400)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   tags      PostTag[]
   userId    String
   user      User        @relation(fields: [userId], references: [id])
-  cutes     Cute[]
+  medes     Mede[]
   images    PostImage[]
 }
 
@@ -82,7 +82,7 @@ model User {
   isAdmin           Boolean   @default(false)
   isFirstLogin      Boolean   @default(true)
   Post              Post[]
-  Cute              Cute[]
+  Mede              Mede[]
   Tag               Tag[]
 
   @@map("users")

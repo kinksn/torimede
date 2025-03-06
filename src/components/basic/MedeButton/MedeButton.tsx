@@ -10,7 +10,7 @@ import { useState, useRef, useEffect, Dispatch, SetStateAction } from "react";
 import { emitParticles } from "./particle";
 import { debounce } from "es-toolkit";
 import { useUIBlock } from "@/hooks/useUIBlock";
-import { MAX_CUTE_COUNT } from "@/app/api/cute/[postId]/model";
+import { MAX_MEDE_COUNT } from "@/app/api/mede/[postId]/model";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginForm, loginFormSchema } from "@/app/api/user/model";
@@ -137,7 +137,7 @@ export const MedeButton = ({
   }, [isButtonBarrage, tempMedeCount, submitMede]);
 
   const jadgeButtonBarrage = () => {
-    if (userMedeCount + tempMedeCount < MAX_CUTE_COUNT) {
+    if (userMedeCount + tempMedeCount < MAX_MEDE_COUNT) {
       setTempMedeCount((medeCount: number) => medeCount + 1);
       setIsButtonBarrage(true);
       setTimeout(() => setIsButtonBarrage(false), 300);

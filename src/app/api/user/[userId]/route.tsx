@@ -7,7 +7,7 @@ import {
 } from "@/app/api/user/model";
 import {
   USER_NOTFOUND_MESSAGE,
-  getUserCutedPostsByUserId,
+  getUserMededPostsByUserId,
   getUserPostsByUserId,
   getUserProfileByUserId,
   updateUserImage,
@@ -26,12 +26,12 @@ export async function GET(_req: Request, context: ContextProps) {
     const userId = context.params.userId;
     const profile = await getUserProfileByUserId({ userId });
     const posts = await getUserPostsByUserId({ userId });
-    const cutedPosts = await getUserCutedPostsByUserId({ userId });
+    const mededPosts = await getUserMededPostsByUserId({ userId });
 
     const response = {
       profile,
       posts,
-      cutedPosts,
+      mededPosts,
     };
 
     return NextResponse.json(getUserOutputSchema.parse(response), {

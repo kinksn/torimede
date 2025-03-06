@@ -11,7 +11,7 @@ import { unique } from "@/lib/util/unique";
 import { Post } from "@prisma/client";
 import { handleDaoError } from "@/lib/api/daoUtil";
 
-type ParsedCutedPost = {
+type ParsedMededPost = {
   id: string;
   postId: string;
   createdAt: Date;
@@ -66,11 +66,11 @@ export const getUserPostsByUserId = async ({ userId }: InputUserId) =>
     }
   );
 
-export const getUserCutedPostsByUserId = async ({ userId }: InputUserId) =>
+export const getUserMededPostsByUserId = async ({ userId }: InputUserId) =>
   handleDaoError(
-    { errorMessage: "database error by getUserCutedPostsByUserId" },
+    { errorMessage: "database error by getUserMededPostsByUserId" },
     async () => {
-      const data = await db.cute.findMany({
+      const data = await db.mede.findMany({
         where: {
           post: {
             NOT: {
@@ -95,7 +95,7 @@ export const getUserCutedPostsByUserId = async ({ userId }: InputUserId) =>
       }
 
       return unique(
-        getUserPostsSchema.parse(data.map((post: ParsedCutedPost) => post.post))
+        getUserPostsSchema.parse(data.map((post: ParsedMededPost) => post.post))
       );
     }
   );

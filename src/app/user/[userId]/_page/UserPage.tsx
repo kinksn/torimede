@@ -17,7 +17,7 @@ type UserPageProps = {
 };
 
 export const UserPage = ({ profile, session }: UserPageProps) => {
-  const { profile: userProfile, posts, cutedPosts } = profile;
+  const { profile: userProfile, posts, mededPosts } = profile;
 
   const isMe = session?.user?.id === userProfile.id;
 
@@ -69,8 +69,8 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
           {isMe && (
             <TabsContent value="medeHistory">
               <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
-                {cutedPosts.length > 0 ? (
-                  cutedPosts.map((post) => (
+                {mededPosts.length > 0 ? (
+                  mededPosts.map((post) => (
                     <PostCard post={post} key={post.id} />
                   ))
                 ) : (

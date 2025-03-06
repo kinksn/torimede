@@ -47,7 +47,7 @@ export const getUserPostsSchema = z.array(
 export const getUserOutputSchema = z.object({
   profile: getUserProfileSchema,
   posts: getUserPostsSchema,
-  cutedPosts: getUserPostsSchema,
+  mededPosts: getUserPostsSchema,
 });
 export type GetUserOutput = z.infer<typeof getUserOutputSchema>;
 

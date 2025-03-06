@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { POST } from "@/app/api/cute/[postId]/route";
+import { POST } from "@/app/api/mede/[postId]/route";
 import { createPOSTRequest } from "@/lib/test/testUtil";
 import { Prisma } from "@prisma/client";
 import { PostId } from "@/app/api/post/model";
@@ -29,44 +29,44 @@ const mockPost = {
 
 describe("正常系", () => {
   it("かわいいを新規作成できること（POST）", async () => {
-    const body = { userId: mockPost.userId, cuteCount: 10 };
+    const body = { userId: mockPost.userId, medeCount: 10 };
 
-    const req = createPOSTRequest(body, `/cute/${mockPost.id}`);
+    const req = createPOSTRequest(body, `/mede/${mockPost.id}`);
     const context = { params: { postId: mockPost.userId as PostId } };
 
-    db.cute.create.mockImplementation((args: Prisma.CuteCreateArgs) => {
+    db.mede.create.mockImplementation((args: Prisma.MedeCreateArgs) => {
       return Promise.resolve({
         ...args.data,
       });
     });
 
     const res = await POST(req, context);
-    const cute = await res.json();
+    const mede = await res.json();
 
     expect(res.status).toBe(200);
-    expect(cute).toEqual(expect.objectContaining({ postId: mockPost.id }));
+    expect(mede).toEqual(expect.objectContaining({ postId: mockPost.id }));
   });
 });
 
 describe("異常系", () => {
   it("ログインユーザーと投稿の作成者が同じ場合、かわいいを新規作成できないこと（POST）", async () => {
-    const body = { userId: "2", cuteCount: 10 };
+    const body = { userId: "2", medeCount: 10 };
 
-    const req = createPOSTRequest(body, `/cute/${mockPost.id}`);
+    const req = createPOSTRequest(body, `/mede/${mockPost.id}`);
     const context = { params: { postId: mockPost.userId as PostId } };
 
-    db.cute.create.mockImplementation((args: Prisma.CuteCreateArgs) => {
+    db.mede.create.mockImplementation((args: Prisma.MedeCreateArgs) => {
       return Promise.resolve({
         ...args.data,
       });
     });
 
     const res = await POST(req, context);
-    const cute = await res.json();
+    const mede = await res.json();
 
     expect(res.status).toBe(403);
-    expect(cute).toEqual(
-      expect.objectContaining({ message: "not arrow add cute" })
+    expect(mede).toEqual(
+      expect.objectContaining({ message: "not allowed to add mede" })
     );
   });
   it("ログインしていない場合、かわいいを新規作成できないこと（POST）", async () => {
@@ -75,23 +75,23 @@ describe("異常系", () => {
       .mocked(require("../lib/auth").getAuthSession)
       .mockResolvedValueOnce(null);
 
-    const body = { userId: mockPost.userId, cuteCount: 10 };
+    const body = { userId: mockPost.userId, medeCount: 10 };
 
-    const req = createPOSTRequest(body, `/cute/${mockPost.id}`);
+    const req = createPOSTRequest(body, `/mede/${mockPost.id}`);
     const context = { params: { postId: mockPost.userId as PostId } };
 
-    db.cute.create.mockImplementation((args: Prisma.CuteCreateArgs) => {
+    db.mede.create.mockImplementation((args: Prisma.MedeCreateArgs) => {
       return Promise.resolve({
         ...args.data,
       });
     });
 
     const res = await POST(req, context);
-    const cute = await res.json();
+    const mede = await res.json();
 
     expect(res.status).toBe(403);
-    expect(cute).toEqual(
-      expect.objectContaining({ message: "not arrow add cute" })
+    expect(mede).toEqual(
+      expect.objectContaining({ message: "not allowed to add mede" })
     );
   });
 });

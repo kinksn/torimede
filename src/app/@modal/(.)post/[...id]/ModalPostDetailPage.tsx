@@ -20,14 +20,14 @@ import { useState } from "react";
 type ModalPostDetailPageProps = {
   post: GetPostDetailOutput;
   userPosts: GetUserPostsOutput;
-  userCuteCount: number;
+  userMedeCount: number;
   session: Session | null;
 };
 
 const ModalPostDetailPage = ({
   post,
   userPosts,
-  userCuteCount,
+  userMedeCount,
   session,
 }: ModalPostDetailPageProps) => {
   const [historyIndex] = useAtom(historyIndexTrackerIndexAtom);
@@ -52,7 +52,7 @@ const ModalPostDetailPage = ({
           <PostDetailPage
             post={post}
             userPosts={userPosts}
-            userCuteCount={userCuteCount}
+            userMedeCount={userMedeCount}
             session={session}
             // 投稿詳細モーダルから読み込まれているかどうか
             isParentModal
