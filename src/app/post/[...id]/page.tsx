@@ -11,6 +11,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { getUserMedeCountForPost } from "@/app/api/mede/[postId]/medeDao";
 import { UserId } from "@/app/api/user/model";
+import { DESCRIPTION } from "@/app/shared-metadata";
 
 type PostProps = {
   params: {
@@ -37,10 +38,9 @@ const ogParamsGenerate = (params: OgParams[]) => {
   return result.join("");
 };
 
-export async function generateMetadata(
-  { params }: PostProps,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PostProps): Promise<Metadata> {
   // read route params
   const [postId] = params.id;
   const post = await getPost(postId);
@@ -55,13 +55,11 @@ export async function generateMetadata(
     `${process.env.NEXT_PUBLIC_API_URL}/og${ogParamsGenerate(ogParams)}`
   );
 
-  // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || [];
-
   return {
     title: post.title,
+    description: post.content || DESCRIPTION.common,
     openGraph: {
-      images: [ogImage, ...previousImages],
+      images: [ogImage],
     },
   };
 }

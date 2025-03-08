@@ -38,7 +38,7 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export const ChangeProfile = ({ session }: ChangeProfileProps) => {
-  const { data, update } = useSession();
+  const { update } = useSession();
   const userId = session?.user?.id;
   const userName = session?.user?.name || "";
   const defaultUserImage =

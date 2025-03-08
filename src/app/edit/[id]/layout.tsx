@@ -1,9 +1,17 @@
+import {
+  COMMON_OG_IMAGE,
+  DESCRIPTION,
+  METADATA_TITLE,
+} from "@/app/shared-metadata";
 import { ContentToolbar } from "@/components/ContentToolbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "投稿編集",
-  description: "投稿編集ページ",
+  title: METADATA_TITLE.edit,
+  description: DESCRIPTION.common,
+  openGraph: {
+    ...COMMON_OG_IMAGE,
+  },
 };
 
 export default async function EditLayout({
