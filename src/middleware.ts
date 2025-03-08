@@ -30,7 +30,7 @@ export default auth(async (req) => {
   // ログイン後のリダイレクト処理
   const isFirstLogin = session.user.isFirstLogin;
 
-  if (isFirstLogin === true && url.pathname === "/") {
+  if (isFirstLogin === true && url.pathname !== "/change-profile") {
     return NextResponse.redirect(new URL("/change-profile", req.url));
   }
 
@@ -54,5 +54,7 @@ export const config = {
     "/signup",
     "/create/:path*",
     "/edit/:path*",
+    "/user/:path*",
+    "/post/:path*",
   ],
 };

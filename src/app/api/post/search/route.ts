@@ -27,6 +27,7 @@ export async function GET(req: Request) {
           })),
         },
         include: {
+          images: true,
           tags: {
             select: {
               tag: true,

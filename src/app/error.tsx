@@ -4,7 +4,6 @@ import MedeChan from "@/components/assets/mede-chan/default-pale.svg";
 import { PillButton } from "@/components/basic/PillButton";
 import { ContentToolbar } from "@/components/ContentToolbar";
 import { SVGIcon } from "@/components/ui/SVGIcon";
-import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Error({

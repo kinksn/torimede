@@ -2,10 +2,18 @@ import Image from "next/image";
 import { ContentToolbar } from "@/components/ContentToolbar";
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
+import {
+  COMMON_OG_IMAGE,
+  DESCRIPTION,
+  METADATA_TITLE,
+} from "@/app/shared-metadata";
 
 export const metadata: Metadata = {
-  title: "トリメデでとは",
-  description: "トリメデのサービス説明",
+  title: METADATA_TITLE.about,
+  description: DESCRIPTION.common,
+  openGraph: {
+    ...COMMON_OG_IMAGE,
+  },
 };
 
 const medeTextGradientStyle =
