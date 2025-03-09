@@ -1,6 +1,9 @@
 import { postImageIdSchema } from "@/app/api/_common/model/id";
 import { medeSchema } from "@/app/api/mede/[postId]/model";
-import { ACCEPT_IMAGE_TYPES } from "@/app/api/post/upload/model";
+import {
+  ACCEPT_IMAGE_TYPES,
+  uploadPostImageSchema,
+} from "@/app/api/post/upload/model";
 import { tagIdSchema, tagSchema } from "@/app/api/tag/model";
 import { userIdSchema, userSchema } from "@/app/api/user/model";
 import { idWithBrandSchema } from "@/lib/util/entity";
@@ -51,15 +54,7 @@ export const createPostSchema = z.object({
     .string()
     .max(400, "投稿内容は400文字以内で入力してください")
     .optional(),
-  images: z
-    .array(z.instanceof(File))
-    .nonempty("画像を設定してください")
-    .refine(
-      (files) => files.every((file) => ACCEPT_IMAGE_TYPES.includes(file.type)),
-      {
-        message: "拡張子（png,jpg,jpeg,gif）のファイルを設定してください",
-      }
-    ),
+  images: uploadPostImageSchema,
   tags: z.array(tagIdSchema),
 });
 

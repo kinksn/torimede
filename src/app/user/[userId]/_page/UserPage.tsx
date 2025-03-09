@@ -44,9 +44,9 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
             )}
           </TabsList>
           <TabsContent value="myPost">
-            <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
-              {posts.length > 0 ? (
-                posts.map((post) => (
+            {posts.length > 0 ? (
+              <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
+                {posts.map((post) => (
                   <PostCard
                     post={post}
                     key={post.id}
@@ -60,23 +60,23 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
                       )
                     }
                   />
-                ))
-              ) : (
-                <div>まだ投稿がありません</div>
-              )}
-            </Masonry>
+                ))}
+              </Masonry>
+            ) : (
+              <div>まだ投稿がありません</div>
+            )}
           </TabsContent>
           {isMe && (
             <TabsContent value="medeHistory">
-              <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
-                {mededPosts.length > 0 ? (
-                  mededPosts.map((post) => (
+              {mededPosts.length > 0 ? (
+                <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
+                  {mededPosts.map((post) => (
                     <PostCard post={post} key={post.id} />
-                  ))
-                ) : (
-                  <div>まだ鳥さんを愛でてません</div>
-                )}
-              </Masonry>
+                  ))}
+                </Masonry>
+              ) : (
+                <div>まだ鳥さんを愛でてません</div>
+              )}
             </TabsContent>
           )}
         </Tabs>

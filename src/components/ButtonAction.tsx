@@ -5,7 +5,7 @@ import MenuIcon from "@/components/assets/icon/menu.svg";
 import TrashIcon from "@/components/assets/icon/trash.svg";
 import EditIcon from "@/components/assets/icon/edit.svg";
 import { SVGIcon } from "@/components/ui/SVGIcon";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useBreakpoints } from "@/hooks/useBreakpoints";
@@ -43,6 +43,45 @@ const ButtonAction = ({
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // iOSの Chrome/Safariのみ、Drawer（Vaul）の中でPopoverを使うとpopoverのtriggerが効かなくなるバグがあるため、
+  // useEffectとrefで自前で領域外クリックでpopover contentを閉じる処理を実装している
+  // Vaul側のバグなので、アップデートで修正されてたら関連処理は削除する
+  // @see（ https://github.com/emilkowalski/vaul/issues/559 ）
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // ---- 外部クリック or ESCキー押下を検知して閉じる ----
+  useEffect(() => {
+    if (!isPopoverOpen) return;
+
+    function handleClickOutside(event: MouseEvent) {
+      // Popover または Trigger の外をクリックした場合に閉じる
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
+        setIsPopoverOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsPopoverOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPopoverOpen]);
+
   const { sm } = useBreakpoints();
   const { mutate: deletePost } = useMutation({
     mutationFn: async (userId: UserId) => {
@@ -86,8 +125,11 @@ const ButtonAction = ({
 
   return (
     <div className={className}>
-      <Popover>
-        <PopoverTrigger>
+      <Popover open={isPopoverOpen}>
+        <PopoverTrigger
+          ref={triggerRef}
+          onClick={() => setIsPopoverOpen((prev) => !prev)}
+        >
           <RoundButton
             size={sm ? "sm" : "md"}
             icon={
@@ -99,7 +141,7 @@ const ButtonAction = ({
             asChild
           />
         </PopoverTrigger>
-        <PopoverContent align="end" className="w-auto">
+        <PopoverContent align="end" className="w-auto" ref={popoverRef}>
           {!isDeleteOnly && (
             <MenuItem
               menuType="button"
