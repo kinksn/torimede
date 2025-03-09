@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   GetUserProfile,
@@ -56,6 +56,44 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { sm } = useBreakpoints();
+  // iOSの Chrome/Safariのみ、Drawer（Vaul）の中でPopoverを使うとpopoverのtriggerが効かなくなるバグがあるため、
+  // useEffectとrefで自前で領域外クリックでpopover contentを閉じる処理を実装している
+  // Vaul側のバグなので、アップデートで修正されてたら関連処理は削除する
+  // @see（ https://github.com/emilkowalski/vaul/issues/559 ）
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // ---- 外部クリック or ESCキー押下を検知して閉じる ----
+  useEffect(() => {
+    if (!isPopoverOpen) return;
+
+    function handleClickOutside(event: MouseEvent) {
+      // Popover または Trigger の外をクリックした場合に閉じる
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
+        setIsPopoverOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsPopoverOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPopoverOpen]);
 
   const form = useForm<FormType>({
     mode: "onChange",
@@ -121,8 +159,11 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
                     render={({ field }) => (
                       <FormItem className="flex flex-col items-center">
                         <FormControl>
-                          <Popover>
-                            <PopoverTrigger>
+                          <Popover open={isPopoverOpen}>
+                            <PopoverTrigger
+                              ref={triggerRef}
+                              onClick={() => setIsPopoverOpen((prev) => !prev)}
+                            >
                               <Avatar
                                 profileImage={field.value}
                                 size="lg"
@@ -132,6 +173,7 @@ export const UserProfile = ({ userProfile, readonly }: UserProfile) => {
                             <PopoverContent
                               className="p-7 pointer-events-auto"
                               align={sm ? "center" : "start"}
+                              ref={popoverRef}
                             >
                               <div className="grid grid-cols-3 gap-4 w-fit">
                                 <Avatar

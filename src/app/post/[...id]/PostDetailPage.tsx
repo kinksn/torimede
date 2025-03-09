@@ -352,7 +352,9 @@ export function PostDetailPage({
         </div>
         <div
           className={`flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[fit-content] max-sm:min-w-[unset] border border-primary-50 bg-base-content rounded-20 p-6 max-sm:p-4 max-sm:w-full ${
-            !post?.content && post.tags.length === 0 && "w-full justify-center"
+            !post?.content &&
+            post.tags.length === 0 &&
+            "w-full justify-center max-sm:mb-5"
           }`}
         >
           <p className="text-typography-xs">共有</p>
@@ -363,7 +365,11 @@ export function PostDetailPage({
         </div>
       </div>
       {userPosts.length > 0 && (
-        <UserPostCards userPosts={userPosts} userName={userName} />
+        <UserPostCards
+          userPosts={userPosts}
+          userName={userName}
+          className={isParentModal ? "max-sm:pb-5" : ""}
+        />
       )}
     </div>
   );

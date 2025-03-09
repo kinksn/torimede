@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import crypto from "crypto";
+import {
+  ACCEPT_IMAGE_TYPES,
+  MAX_IMAGE_SIZE,
+} from "@/app/api/post/upload/model";
+import { processImage } from "@/app/api/post/upload/imageProcessor";
 
 const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION!,
@@ -22,8 +27,6 @@ const generateUniqueFileName = (buffer: Buffer, fileType: string) => {
   const extension = fileType.split("/")[1];
   return `${hash}-${timestamp}-${extension}`;
 };
-
-const allowedFileTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif"];
 
 async function uploadFileToS3(fileBuffer: Buffer, fileType: string) {
   const uniqueFileName = generateUniqueFileName(fileBuffer, fileType);
@@ -54,14 +57,25 @@ export async function POST(request: Request) {
     const fileBuffer = Buffer.from(await file.arrayBuffer());
     const fileType = file.type;
 
-    if (!allowedFileTypes.includes(fileType)) {
+    if (!ACCEPT_IMAGE_TYPES.includes(fileType)) {
       return NextResponse.json(
         { error: "File type not allowed." },
         { status: 400 }
       );
     }
 
-    const fileUrl = await uploadFileToS3(fileBuffer, fileType);
+    if (fileBuffer.length > MAX_IMAGE_SIZE) {
+      return NextResponse.json(
+        { error: "File size limit exceeded." },
+        { status: 400 }
+      );
+    }
+
+    // 画像圧縮処理
+    const { buffer: processedBuffer, mimeType: processedType } =
+      await processImage(fileBuffer, fileType);
+
+    const fileUrl = await uploadFileToS3(processedBuffer, processedType);
 
     return NextResponse.json({ success: true, fileUrl });
   } catch (error) {

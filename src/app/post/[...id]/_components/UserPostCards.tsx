@@ -5,15 +5,17 @@ import PostCard from "@/components/PostCard";
 // メインソンリーーレイアウト実現ライブラリ：https://github.com/sibiraj-s/react-layout-masonry#readme
 // 本家だとSSR時にwindowオブジェクトがエラーになるバグがあったため直接プロジェクトに入れて読み込んでいる
 import Masonry from "@/components/react-layout-masonry";
+import { cn } from "@/lib/utils";
 
 type PostCardProps = {
   userName: string;
   userPosts: GetUserPostsOutput;
+  className?: string;
 };
 
-const UserPostCards = ({ userPosts, userName }: PostCardProps) => {
+const UserPostCards = ({ userPosts, userName, className }: PostCardProps) => {
   return (
-    <div className="px-10 max-sm:px-0 mb-10 max-sm:mb-5 max-sm:[&:after]:content-[''] [&:after]:block [&:after]:w-full [&:after]:h-8">
+    <div className={cn("px-10 max-sm:px-0 mb-10 max-sm:mb-5", className)}>
       <div className="bg-base-content p-10 rounded-20 max-sm:p-5">
         <h2 className="font-bold text-typography-lg leading-normal text-center font-zenMaruGothic">
           {userName}の投稿

@@ -83,7 +83,9 @@ export const Uploader = ({
       // エラーがある場合はプレビューとファイル名をクリア
       setPreview(null);
       setFilename(null);
-      onResetFile?.();
+      // onResetFileを実行してファイルのセット状態を空にしてしまうと常にエラーメッセージが「画像を設定してください」になってしまうため、
+      // ここでは一旦実行しないようにする
+      // onResetFile?.();
       if (uploadInputRef.current) {
         uploadInputRef.current.value = "";
       }

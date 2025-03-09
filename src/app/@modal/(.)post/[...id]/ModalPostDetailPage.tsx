@@ -48,7 +48,7 @@ const ModalPostDetailPage = ({
         <CredenzaDescription className="sr-only">
           {post?.content}
         </CredenzaDescription>
-        <CredenzaBody className="overflow-y-scroll max-sm:h-full p-0">
+        <CredenzaBody className="overflow-y-scroll max-sm:h-[calc(100%-32px)] p-0">
           <PostDetailPage
             post={post}
             userPosts={userPosts}
