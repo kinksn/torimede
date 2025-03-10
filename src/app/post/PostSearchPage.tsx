@@ -36,6 +36,7 @@ export const PostSearchPage = () => {
     queryFn: () => searchPosts(searchQuery, searchTag),
     enabled: !!searchQuery || !!searchTag,
   });
+
   return (
     <div className="px-5 max-sm:px-0 h-full max-sm:h-auto">
       <div className="w-full bg-white rounded-20 px-10 py-10 max-sm:px-5">
