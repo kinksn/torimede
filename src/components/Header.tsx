@@ -12,7 +12,7 @@ import { Button } from "@/components/basic/Button";
 import { AccountMenu } from "@/components/AccountMenu";
 import { Separator } from "@radix-ui/react-separator";
 
-const showIgnorePath = ["/login", "/signup"];
+const showIgnorePath = ["/login", "/signup", "/change-profile"];
 
 type HeaderProps = {
   initialSession: Session | null;
@@ -49,7 +49,7 @@ export const Header = ({ initialSession, profileImage }: HeaderProps) => {
               className={`w-[620px] max-md:w-[420px] max-sm:w-full`}
             />
           </div>
-          <div className="flex items-center gap-5 max-sm:gap-2">
+          <div className="flex items-center gap-5 max-sm:gap-2 whitespace-nowrap">
             {isAuthenticated ? (
               <>
                 <Button

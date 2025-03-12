@@ -358,7 +358,7 @@ export function PostDetailPage({
           }`}
         >
           <p className="text-typography-xs">共有</p>
-          <div className="flex gap-3 max-sm:w-full max-sm:justify-between">
+          <div className="flex gap-3 max-sm:w-full max-sm:justify-between whitespace-nowrap">
             <ShareButtons text={post.title} />
             <UrlCopyButton />
           </div>

@@ -19,10 +19,13 @@ import { breakText } from "@/lib/util/breakText";
 type ModalProps = React.ButtonHTMLAttributes<HTMLDivElement> &
   React.ComponentProps<typeof DialogPrimitive.Root> & {
     title: string;
+    titleClassName?: string;
     description?: string;
     headerClassName?: string;
     children?: React.ReactNode;
+    childrenClassName?: string;
     triggerContent?: React.ReactNode;
+    triggerContentClassName?: string;
     isShowFooter?: boolean;
     footerClassName?: string;
     submit?: () => void;
@@ -38,11 +41,14 @@ type ModalProps = React.ButtonHTMLAttributes<HTMLDivElement> &
 
 export const Modal = ({
   title,
+  titleClassName,
   description,
   headerClassName,
   className,
   children,
+  childrenClassName,
   triggerContent,
+  triggerContentClassName,
   isShowFooter = true,
   footerClassName,
   open,
@@ -70,7 +76,12 @@ export const Modal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {!!triggerContent && (
-        <DialogTrigger role="button" tabIndex={0} asChild>
+        <DialogTrigger
+          role="button"
+          tabIndex={0}
+          className={triggerContentClassName}
+          asChild
+        >
           <div>{triggerContent}</div>
         </DialogTrigger>
       )}
@@ -85,14 +96,16 @@ export const Modal = ({
             headerClassName
           )}
         >
-          <DialogTitle id="dialog-title">{breakText(title)}</DialogTitle>
+          <DialogTitle id="dialog-title" className={titleClassName}>
+            {breakText(title)}
+          </DialogTitle>
           {description && (
             <DialogDescription id="dialog-description">
               {breakText(description)}
             </DialogDescription>
           )}
         </DialogHeader>
-        <div>{children}</div>
+        <div className={childrenClassName}>{children}</div>
         {isShowFooter && (
           <DialogFooter className={cn("gap-2 flex-row", footerClassName)}>
             <DialogClose asChild>
