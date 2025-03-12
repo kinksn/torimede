@@ -23,9 +23,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/basic/Input";
-import { TextButton } from "@/components/basic/TextButton";
 import { Button } from "@/components/basic/Button";
 import { useSession } from "next-auth/react";
+import { Modal } from "@/components/basic/Modal";
+import { TermsText } from "@/app/terms/TermsPage";
+import { PrivacyText } from "@/app/privacy/PrivacyPage";
 
 type ChangeProfileProps = {
   session: Session | null;
@@ -87,20 +89,16 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
     updateProfile({ name, image, isFirstLogin: false });
   };
 
-  const handleSkip = () => {
-    updateProfile({ isFirstLogin: false });
-  };
-
   return (
-    <div className="flex flex-col justify-center items-center max-w-[460px] mx-auto h-full max-sm:h-auto px-5 pt-20 max-sm:pt-10 pb-10 max-sm:pb-5">
+    <div className="flex flex-col justify-center items-center max-w-[460px] mx-auto h-screen max-sm:h-auto px-5 pt-20 max-sm:pt-10 pb-10 max-sm:pb-5">
       <div>
         <h1 className="text-typography-xxxl max-sm:text-typography-xxl max-sm:font-bold text-center text-primary-700 font-zenMaruGothic font-bold">
           トリメデにようこそ！
         </h1>
-        <p className="text-center max-sm:text-left">
-          トリメデの中で表示する
-          <br className="max-sm:hidden" />
-          アイコンと表示名を変更することができます
+        <p className="text-center">
+          アイコンと表示名を
+          <br className="hidden max-sm:block" />
+          変更することができます
         </p>
         <small className="block text-center font-bold mt-1">
           （<span className="text-primary-700">*</span>
@@ -189,12 +187,47 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
             />
           </div>
           <footer className="flex gap-2 justify-end w-full max-sm:p-0 max-sm:flex-row max-sm:max-w-[296px] max-sm:w-full">
-            <TextButton type="button" className="btn" onClick={handleSkip}>
-              スキップ
-            </TextButton>
-            <Button type="submit" className="btn">
-              保存
-            </Button>
+            <div className="flex flex-col gap-2 w-full">
+              <div className="text-typography-xs leading-loose text-center">
+                <Modal
+                  title="利用規約"
+                  triggerContent={
+                    <p className="font-bold text-textColor-link underline">
+                      利用規約
+                    </p>
+                  }
+                  childrenClassName="h-[40svh] overflow-y-scroll"
+                  triggerContentClassName="inline"
+                  isShowFooter={false}
+                >
+                  <TermsText />
+                </Modal>
+                と
+                <Modal
+                  title="プライバシーポリシー"
+                  triggerContent={
+                    <p className="font-bold text-textColor-link underline">
+                      プライバシーポリシー
+                    </p>
+                  }
+                  childrenClassName="h-[40svh] overflow-y-scroll"
+                  triggerContentClassName="inline"
+                  isShowFooter={false}
+                >
+                  <PrivacyText />
+                </Modal>
+                をご確認の上、
+                <br />
+                以下のボタンを押すとサービスをご利用いただけます。
+              </div>
+              <Button
+                size={"lg"}
+                type="submit"
+                className="w-full justify-center whitespace-nowrap"
+              >
+                規約に同意してはじめる
+              </Button>
+            </div>
           </footer>
         </form>
       </Form>

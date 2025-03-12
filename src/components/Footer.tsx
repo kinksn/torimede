@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export const Footer = () => {
   const pathname = usePathname();
-  const ignorePath = ["/login", "/signup"];
+  const ignorePath = ["/login", "/signup", "/change-profile"];
   const isIgnoredPath = ignorePath.includes(pathname);
 
   if (isIgnoredPath) return null;
@@ -34,10 +34,10 @@ export const Footer = () => {
         <div className="self-end justify-self-end whitespace-nowrap max-sm:justify-self-start">
           <ul className="flex items-center gap-5 text-typography-xs font-bold max-sm:flex-col max-sm:justify-start max-sm:items-start">
             <li>
-              <Link href="/">利用規約</Link>
+              <Link href="/terms">利用規約</Link>
             </li>
             <li>
-              <Link href="/">プライバシーポリシー</Link>
+              <Link href="/privacy">プライバシーポリシー</Link>
             </li>
             <li>
               <a href="/" target="_blank">
