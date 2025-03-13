@@ -5,13 +5,18 @@ export const COMMON_OG_IMAGE = {
 export const METADATA_TITLE = {
   top: "トリメデ",
   about: "トリメデとは",
-  create: "新規投稿",
-  edit: "投稿編集",
   login: "ログイン",
   signup: "新規登録",
   search: "検索結果",
   term: "利用規約",
   policy: "プライバシーポリシー",
+  post: {
+    create: "新規投稿",
+    edit: "投稿編集",
+  },
+  user: {
+    edit: "プロフィール編集",
+  },
 };
 
 export const DESCRIPTION = {

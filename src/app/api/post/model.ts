@@ -1,9 +1,6 @@
 import { postImageIdSchema } from "@/app/api/_common/model/id";
 import { medeSchema } from "@/app/api/mede/[postId]/model";
-import {
-  ACCEPT_IMAGE_TYPES,
-  uploadPostImageSchema,
-} from "@/app/api/post/upload/model";
+import { uploadImageSchema } from "@/app/api/upload/image/model";
 import { tagIdSchema, tagSchema } from "@/app/api/tag/model";
 import { userIdSchema, userSchema } from "@/app/api/user/model";
 import { idWithBrandSchema } from "@/lib/util/entity";
@@ -54,7 +51,7 @@ export const createPostSchema = z.object({
     .string()
     .max(400, "投稿内容は400文字以内で入力してください")
     .optional(),
-  images: uploadPostImageSchema,
+  images: uploadImageSchema,
   tags: z.array(tagIdSchema),
 });
 

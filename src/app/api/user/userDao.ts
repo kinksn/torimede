@@ -5,6 +5,7 @@ import {
   UpdateUserImage,
   UpdateUserIsFirstLogin,
   UpdateUserName,
+  UpdateUserUploadProfileImage,
   UserId,
 } from "@/app/api/user/model";
 import { unique } from "@/lib/util/unique";
@@ -115,6 +116,30 @@ export const updateUserName = async ({ name, userId }: UpdateUserName) =>
 
       if (!data) {
         throw new Error("failed to update user name in the database");
+      }
+    }
+  );
+
+export const updateUserUploadProfileImage = async ({
+  uploadProfileImage,
+  userId,
+}: UpdateUserUploadProfileImage) =>
+  handleDaoError(
+    { errorMessage: "database error by updateUserUploadProfileImage" },
+    async () => {
+      const data = await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          uploadProfileImage,
+        },
+      });
+
+      if (!data) {
+        throw new Error(
+          "failed to update user upload profile image in the database"
+        );
       }
     }
   );

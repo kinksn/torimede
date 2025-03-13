@@ -73,8 +73,16 @@ export const Modal = ({
     onOpenChange?.(false);
   };
 
+  // 領域外クリックや右上の閉じるアイコンクリックでも handleClose() が実行されるように
+  const handleOpenChange = (isOpen: boolean) => {
+    onOpenChange?.(isOpen);
+    if (!isOpen) {
+      handleClose();
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       {!!triggerContent && (
         <DialogTrigger
           role="button"

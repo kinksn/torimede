@@ -24,6 +24,7 @@ export const getUserProfileSchema = z.object({
   name: z.string(),
   image: z.string(),
   oAuthProfileImage: z.string().nullish(),
+  uploadProfileImage: z.string().nullish(),
 });
 export type GetUserProfile = z.infer<typeof getUserProfileSchema>;
 
@@ -46,14 +47,15 @@ export const getUserPostsSchema = z.array(
 
 export const getUserOutputSchema = z.object({
   profile: getUserProfileSchema,
-  posts: getUserPostsSchema,
-  mededPosts: getUserPostsSchema,
+  posts: getUserPostsSchema.optional(),
+  mededPosts: getUserPostsSchema.optional(),
 });
 export type GetUserOutput = z.infer<typeof getUserOutputSchema>;
 
 export const updateUserInputSchema = z.object({
   name: userNameSchema.optional(),
   image: z.string().optional(),
+  uploadProfileImage: z.string().optional(),
   isFirstLogin: z.boolean().optional(),
 });
 export type UpdateUserInput = z.infer<typeof updateUserInputSchema>;
@@ -69,6 +71,14 @@ export const updateUserImageSchema = z.object({
   image: z.string(),
 });
 export type UpdateUserImage = z.infer<typeof updateUserImageSchema>;
+
+export const updateUserUploadProfileImageSchema = z.object({
+  userId: userIdSchema,
+  uploadProfileImage: z.string(),
+});
+export type UpdateUserUploadProfileImage = z.infer<
+  typeof updateUserUploadProfileImageSchema
+>;
 
 export const updateUserIsFirstLoginSchema = z.object({
   isFirstLogin: updateUserInputSchema.shape.isFirstLogin,

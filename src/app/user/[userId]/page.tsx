@@ -1,9 +1,11 @@
+import React from "react";
+import { notFound } from "next/navigation";
 import { GetUserOutput, UserId } from "@/app/api/user/model";
 import { UserPage } from "@/app/user/[userId]/_page/UserPage";
 import { Metadata } from "next";
 import { auth } from "@/lib/auth";
-import React from "react";
 import { COMMON_OG_IMAGE, DESCRIPTION } from "@/app/shared-metadata";
+import { getUser } from "@/lib/fetcher/user";
 
 type UserProps = {
   params: {
@@ -11,21 +13,12 @@ type UserProps = {
   };
 };
 
-const getProfile = async (userId: UserId) => {
-  const profile: GetUserOutput =
-    await // 本番環境だと名前を変更してもすぐに反映しなかったので `{chache: "no-store"}` を設定したら変更が反映されるようになった
-    (
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`, {
-        cache: "no-store",
-      })
-    ).json();
-  return profile;
-};
-
 export async function generateMetadata({
   params,
-}: UserProps): Promise<Metadata> {
-  const profile: GetUserOutput = await getProfile(params.userId);
+}: UserProps): Promise<Metadata | undefined> {
+  const profile: GetUserOutput = await getUser(params.userId);
+
+  if (profile.profile === undefined) return;
 
   return {
     title: `${profile.profile.name}のプロフィール`,
@@ -38,7 +31,14 @@ export async function generateMetadata({
 
 export default async function User({ params }: UserProps) {
   const session = await auth();
-  const profile: GetUserOutput = await getProfile(params.userId);
+  const profile: GetUserOutput = await getUser(params.userId, {
+    posts: true,
+    mededPosts: true,
+  });
+
+  if (profile.profile === undefined) {
+    notFound();
+  }
 
   return <UserPage profile={profile} session={session} />;
 }
