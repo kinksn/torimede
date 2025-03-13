@@ -64,7 +64,8 @@ export async function PATCH(req: Request, context: ContextProps) {
 
     if (name) await updateUserName({ name, userId });
     if (image) await updateUserImage({ image, userId });
-    await updateUserIsFirstLogin({ isFirstLogin, userId });
+    if (isFirstLogin !== undefined)
+      await updateUserIsFirstLogin({ isFirstLogin, userId });
 
     return NextResponse.json({ message: "update success" }, { status: 200 });
   } catch (error) {

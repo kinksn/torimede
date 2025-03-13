@@ -1,7 +1,7 @@
 import { ACCEPT_IMAGE_TYPES, MAX_IMAGE_SIZE } from "@/lib/constants/image";
 import { z } from "zod";
 
-export const uploadPostImageSchema = z
+export const uploadImageSchema = z
   .array(z.instanceof(File))
   .refine((files) => files.length > 0, { message: "画像を設定してください" })
   .refine(
