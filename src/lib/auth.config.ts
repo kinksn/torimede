@@ -37,7 +37,8 @@ export const authConfig = {
             if (userFromDb) {
               // OAuth プロフィール画像の更新が必要かチェック
               // (token.picture はNextAuthがOAuth情報として持ってる)
-              if (userFromDb.oAuthProfileImage !== token.picture) {
+              if (!userFromDb.oAuthProfileImage) {
+                console.log("token.picture = ", token.picture);
                 try {
                   await db.user.update({
                     where: { id: userFromDb.id },
