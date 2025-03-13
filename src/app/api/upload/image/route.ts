@@ -1,11 +1,8 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import crypto from "crypto";
-import {
-  ACCEPT_IMAGE_TYPES,
-  MAX_IMAGE_SIZE,
-} from "@/app/api/post/upload/model";
-import { processImage } from "@/app/api/post/upload/imageProcessor";
+import { processImage } from "@/app/api/upload/image/imageProcessor";
+import { ACCEPT_IMAGE_TYPES, MAX_IMAGE_SIZE } from "@/lib/constants/image";
 
 const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION!,

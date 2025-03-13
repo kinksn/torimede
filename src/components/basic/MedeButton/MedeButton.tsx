@@ -4,6 +4,8 @@ import * as motion from "motion/react-client";
 import EyeHeartSmall from "@/components/assets/mede-button/eye-heart-small.svg";
 import EyeHeartLarge from "@/components/assets/mede-button/eye-heart-large.svg";
 import GoogleIcon from "@/components/assets/icon/color-fixed/google.svg";
+import LINEIcon from "@/components/assets/icon/color-fixed/line.svg";
+import XIcon from "@/components/assets/icon/color-fixed/x.svg";
 import { Session } from "next-auth";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { useState, useRef, useEffect, Dispatch, SetStateAction } from "react";
@@ -901,52 +903,31 @@ const CofirmSinginDialog = ({
       isShowFooter={false}
     >
       <div className="flex flex-col items-center justify-center gap-5 bg-white rounded-20 w-full pb-5">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="flex flex-col w-full gap-5"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field, fieldState }) => (
-                <Input
-                  label="メールアドレス"
-                  requirement="required"
-                  placeholder="user@example.com"
-                  className="w-full"
-                  error={!!fieldState.error}
-                  {...field}
-                />
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field, fieldState }) => (
-                <Input
-                  label="パスワード"
-                  type="password"
-                  requirement="required"
-                  placeholder="6文字以上入力してください"
-                  className="w-full"
-                  error={!!fieldState.error}
-                  {...field}
-                />
-              )}
-            />
-            <Button size={"lg"} type="submit" className="w-full justify-center">
-              ログイン
-            </Button>
-          </form>
-        </Form>
         <Button
           iconLeft={<SVGIcon svg={GoogleIcon} className="w-6" />}
           colorTheme={"outline"}
           className="w-full justify-center"
-          onClick={() => signIn("google", { callbackUrl: "/" })}
+          onClick={() => {
+            signIn("google", { callbackUrl: "/" });
+          }}
         >
           Googleアカウント
+        </Button>
+        <Button
+          iconLeft={<SVGIcon svg={LINEIcon} className="w-6" />}
+          colorTheme={"outline"}
+          className="w-full justify-center"
+          onClick={() => signIn("line", { callbackUrl: "/" })}
+        >
+          LINEアカウント
+        </Button>
+        <Button
+          iconLeft={<SVGIcon svg={XIcon} className="w-6" />}
+          colorTheme={"outline"}
+          className="w-full justify-center"
+          onClick={() => signIn("twitter", { callbackUrl: "/" })}
+        >
+          X(Twitter)アカウント
         </Button>
       </div>
     </Modal>
