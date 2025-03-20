@@ -109,7 +109,7 @@ const FormPost: FC<FromPostProps> = ({
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const res = await axios.post("/api/post/upload", formData, {
+      const res = await axios.post("/api/upload/image", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (res.status !== 200) {

@@ -264,6 +264,7 @@ const config: Config = {
           "0px 2px 4px rgba(0, 0, 0, 0.36), inset 0px -2px 4px rgba(79, 86, 103, 0.4)",
         buttonOutlineActive:
           "0px 2px 2px rgba(0, 0, 0, 0), inset 0px -2px 4px rgba(79, 86, 103, 0)",
+        sliderThumb: "0px 1px 2px rgba(0, 0, 0, 0.2)",
       },
     },
     container: {

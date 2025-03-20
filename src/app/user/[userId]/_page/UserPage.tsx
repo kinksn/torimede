@@ -44,7 +44,7 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
             )}
           </TabsList>
           <TabsContent value="myPost">
-            {posts.length > 0 ? (
+            {posts?.length ? (
               <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
                 {posts.map((post) => (
                   <PostCard
@@ -68,7 +68,7 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
           </TabsContent>
           {isMe && (
             <TabsContent value="medeHistory">
-              {mededPosts.length > 0 ? (
+              {mededPosts?.length ? (
                 <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
                   {mededPosts.map((post) => (
                     <PostCard post={post} key={post.id} />

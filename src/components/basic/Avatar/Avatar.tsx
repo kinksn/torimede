@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import MedeFace from "@/components/assets/icon/mede-face.svg";
-import EditIcon from "@/components/assets/icon/edit.svg";
+import CameraIcon from "@/components/assets/icon/camera.svg";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -27,11 +27,13 @@ const avatarStyles = cva(
 );
 
 type AvatarProps = VariantProps<typeof avatarStyles> & {
-  profileImage: string | null | undefined;
+  profileImage?: string | null;
   isContentActive?: boolean;
   isHoverActive?: boolean;
   className?: string;
   isEditable?: boolean;
+  children?: React.ReactNode;
+  avatarTrigger?: React.ReactNode;
   onClick?: () => void;
 };
 
@@ -42,6 +44,7 @@ export const Avatar = ({
   isHoverActive,
   className,
   isEditable,
+  children,
   onClick,
 }: AvatarProps) => {
   const handleClick = () => {
@@ -52,7 +55,7 @@ export const Avatar = ({
     <div
       className={cn(
         `${avatarStyles({ size })} ${isContentActive && "before:opacity-100"} ${
-          isHoverActive && "hover:before:opacity-100"
+          isHoverActive && "hover:before:opacity-100 cursor-pointer"
         }`,
         className
       )}
@@ -62,7 +65,7 @@ export const Avatar = ({
       {!!profileImage ? (
         <Image
           src={profileImage}
-          className="cursor-pointer rounded-full"
+          className={`${isEditable && "cursor-pointer"} rounded-full`}
           alt="ユーザープロフィール画像"
           width="96"
           height="96"
@@ -70,6 +73,7 @@ export const Avatar = ({
       ) : (
         <SVGIcon svg={MedeFace} className="w-6 text-primary-300" />
       )}
+      {children}
     </div>
   );
 };
@@ -101,7 +105,7 @@ const EditBadge = ({ size }: VariantProps<typeof avatarStyles>) => {
 
   return (
     <div className={EdigBadgeStyles({ size })}>
-      <SVGIcon svg={EditIcon} className={IconSizeStyles} />
+      <SVGIcon svg={CameraIcon} className={IconSizeStyles} />
     </div>
   );
 };

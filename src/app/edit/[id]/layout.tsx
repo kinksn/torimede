@@ -7,7 +7,7 @@ import { ContentToolbar } from "@/components/ContentToolbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: METADATA_TITLE.edit,
+  title: METADATA_TITLE.post.edit,
   description: DESCRIPTION.common,
   openGraph: {
     ...COMMON_OG_IMAGE,

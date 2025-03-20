@@ -2,15 +2,11 @@
 
 import axios from "axios";
 import Cropper, { Area } from "react-easy-crop";
-import { UpdateUserInput, userNameSchema } from "@/app/api/user/model";
-import { useMutation } from "@tanstack/react-query";
-import { Session } from "next-auth";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { staticProfileIconList } from "@/lib/util/staticProfileIconList";
-import { useBreakpoints } from "@/hooks/useBreakpoints";
-import { Avatar } from "@/components/basic/Avatar";
+import {
+  GetUserProfile,
+  UpdateUserInput,
+  userNameSchema,
+} from "@/app/api/user/model";
 import {
   Form,
   FormField,
@@ -18,40 +14,40 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/basic/Input";
 import { Button } from "@/components/basic/Button";
-import { useSession } from "next-auth/react";
-import { Modal } from "@/components/basic/Modal";
-import { TermsText } from "@/app/terms/TermsPage";
-import { PrivacyText } from "@/app/privacy/PrivacyPage";
+import { Input } from "@/components/basic/Input";
+import { Avatar } from "@/components/basic/Avatar";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { staticProfileIconList } from "@/lib/util/staticProfileIconList";
+import { z } from "zod";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Modal } from "@/components/basic/Modal";
 import { getCroppedImg } from "@/app/edit/[id]/getCroppedImg";
 import { AvatarSelector } from "@/components/basic/AvatarSelector";
 import { Slider } from "@/components/basic/Slider";
 
-type ChangeProfileProps = {
-  session: Session | null;
+type ProfileEditPageProps = {
+  userProfile: GetUserProfile;
 };
 
 const formSchema = z.object({
   name: userNameSchema,
   image: z.string(),
 });
-type Form = z.infer<typeof formSchema>;
+type FormType = z.infer<typeof formSchema>;
 
-export const ChangeProfile = ({ session }: ChangeProfileProps) => {
+export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
   const [isShowModal, setIsShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // トリミング後の画像データ
   // このデータのfileプロパティが最終的に api/upload/image のbodyに渡されてアップロードされる
   const [uploadProfileImagePreview, setUploadProfileImagePreview] = useState<
-    string | null
-  >(null);
-  //
-  const [uploadedProfileImage, setUploadedProfileImage] = useState<
     string | null
   >(null);
   // 元ファイルのファイル名(拡張子除く)
@@ -70,45 +66,21 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area>();
 
   const router = useRouter();
-
-  const { update } = useSession();
-  const userId = session?.user?.id;
-  const userName = session?.user?.name || "";
-  const defaultUserImage =
-    session?.user?.image || staticProfileIconList[0].imageURL;
-  const { sm } = useBreakpoints();
-  const form = useForm<Form>({
-    defaultValues: { name: userName, image: defaultUserImage },
+  const form = useForm<FormType>({
+    mode: "onChange",
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: userProfile.name,
+      image: userProfile.image,
+    },
   });
 
-  const checkFirstLogin = async () => {
-    try {
-      const updatedSession = await update({ forceRefresh: Date.now() });
-      if (updatedSession?.user?.isFirstLogin === false) {
-        // TODO: 本番環境でrouter.push()でもいけるか調べる
-        location.href = "/";
-      } else {
-        await update();
-        // 状態が更新されるまでポーリング
-        setTimeout(checkFirstLogin, 500); // 0.5秒後に再確認
-      }
-    } catch {
-      console.error("failt to get session");
-    }
-  };
-
+  // プロフィール更新用のMutation
   const { mutate: updateProfile } = useMutation({
-    mutationFn: ({
-      name,
-      image,
-      uploadProfileImage,
-      isFirstLogin,
-    }: UpdateUserInput) => {
-      return axios.patch(`/api/user/${userId}`, {
+    mutationFn: ({ name, image, uploadProfileImage }: UpdateUserInput) => {
+      return axios.patch(`/api/user/${userProfile.id}`, {
         name,
         image,
-        isFirstLogin,
         uploadProfileImage,
       });
     },
@@ -117,12 +89,12 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
       toast.error("プロフィールの更新に失敗しました");
       console.error(error);
     },
-    onSuccess: async (result) => {
-      checkFirstLogin();
+    onSuccess: (result) => {
       setIsSubmitting(false);
       const updateImageUrl = result.data.updateResult.image;
-      setUploadedProfileImage(updateImageUrl);
       form.setValue("image", updateImageUrl);
+      setUploadProfileImagePreview(null);
+      toast.success("プロフィールを更新しました");
       router.refresh();
     },
   });
@@ -202,7 +174,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
     if (!file) {
       // トリミングに失敗
       console.error("Cropping failed or no file returned");
-      return null;
+      return;
     }
 
     // アップロード
@@ -227,6 +199,16 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
     return null;
   };
 
+  const handleFormSubmit = async (values: UpdateUserInput) => {
+    setIsSubmitting(true);
+    const uploadProfileImage = await handleUploadCroppedImage();
+    const patchData = {
+      ...values,
+      ...(uploadProfileImage && { uploadProfileImage }),
+    };
+    updateProfile(patchData);
+  };
+
   const onModalClose = () => {
     if (imgSrc) {
       URL.revokeObjectURL(imgSrc);
@@ -237,42 +219,14 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
     setZoom(1);
   };
 
-  const handleFormSubmit: SubmitHandler<
-    Omit<UpdateUserInput, "isFirstLogin">
-  > = async ({ name, image }) => {
-    setIsSubmitting(true);
-    const uploadProfileImage = await handleUploadCroppedImage();
-    updateProfile({
-      name,
-      image,
-      isFirstLogin: false,
-      ...(uploadProfileImage && { uploadProfileImage }),
-    });
-  };
-
   return (
-    <div className="flex flex-col justify-center items-center max-w-[460px] mx-auto h-screen max-sm:h-auto px-5 pt-20 max-sm:pt-10 pb-10 max-sm:pb-5">
-      <div>
-        <h1 className="text-typography-xxxl max-sm:text-typography-xxl max-sm:font-bold text-center text-primary-700 font-zenMaruGothic font-bold">
-          トリメデにようこそ！
-        </h1>
-        <p className="text-center">
-          アイコンと表示名を
-          <br className="hidden max-sm:block" />
-          変更することができます
-        </p>
-        <small className="block text-center font-bold mt-1">
-          （<span className="text-primary-700">*</span>
-          マイページからいつでも変更できます）
-        </small>
-      </div>
+    <div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
-          className="flex flex-col gap-5 items-center justify-center bg-white rounded-20 mt-5 w-full pt-10 px-10 pb-5"
+          className="flex flex-col max-w-[420px] mx-auto items-center justify-center gap-10 pt-5"
         >
           <div className="flex flex-col w-full max-sm:gap-2 max-sm:w-full">
-            {/* プロフィール画像選択 */}
             <FormField
               control={form.control}
               name="image"
@@ -291,34 +245,31 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
                       }
                       popoverContent={
                         <div className="grid grid-cols-3 gap-4 w-fit">
-                          {uploadedProfileImage && (
+                          {userProfile.uploadProfileImage && (
                             <Avatar
-                              profileImage={uploadedProfileImage}
+                              profileImage={userProfile.uploadProfileImage}
                               onClick={() =>
-                                field.onChange(uploadedProfileImage)
+                                field.onChange(userProfile.uploadProfileImage)
                               }
                               size="lg"
                               isHoverActive
                             />
                           )}
-                          {session?.user?.oAuthProfileImage && (
-                            <Avatar
-                              profileImage={session.user.oAuthProfileImage}
-                              onClick={() =>
-                                field.onChange(
-                                  session?.user?.oAuthProfileImage ||
-                                    staticProfileIconList[0].imageURL
-                                )
-                              }
-                              size="lg"
-                              isHoverActive
-                            />
-                          )}
+                          <Avatar
+                            profileImage={userProfile.oAuthProfileImage}
+                            onClick={() =>
+                              field.onChange(
+                                userProfile.oAuthProfileImage ||
+                                  staticProfileIconList[0].imageURL
+                              )
+                            }
+                            size="lg"
+                            isHoverActive
+                          />
                           {staticProfileIconList
                             .filter(
                               (icon) =>
-                                icon.imageURL !==
-                                session?.user?.oAuthProfileImage
+                                icon.imageURL !== userProfile.oAuthProfileImage
                             )
                             .map((icon) => (
                               <Avatar
@@ -341,7 +292,6 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
                 </FormItem>
               )}
             />
-            {/* 表示名入力 */}
             <FormField
               control={form.control}
               name="name"
@@ -351,56 +301,22 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
                   label="表示名"
                   placeholder="表示名を入力してください"
                   error={!!fieldState.error}
-                  className="w-[inherit]"
+                  className="w-full"
                   {...field}
                 />
               )}
             />
           </div>
-          <footer className="flex gap-2 justify-end w-full max-sm:p-0 max-sm:flex-row max-sm:max-w-[296px] max-sm:w-full">
-            <div className="flex flex-col gap-2 w-full">
-              <div className="text-typography-xs leading-loose text-center">
-                <Modal
-                  title="利用規約"
-                  triggerContent={
-                    <p className="font-bold text-textColor-link underline">
-                      利用規約
-                    </p>
-                  }
-                  childrenClassName="h-[40svh] overflow-y-scroll"
-                  triggerContentClassName="inline"
-                  isShowFooter={false}
-                >
-                  <TermsText />
-                </Modal>
-                と
-                <Modal
-                  title="プライバシーポリシー"
-                  triggerContent={
-                    <p className="font-bold text-textColor-link underline">
-                      プライバシーポリシー
-                    </p>
-                  }
-                  childrenClassName="h-[40svh] overflow-y-scroll"
-                  triggerContentClassName="inline"
-                  isShowFooter={false}
-                >
-                  <PrivacyText />
-                </Modal>
-                をご確認の上、
-                <br />
-                以下のボタンを押すとサービスをご利用いただけます。
-              </div>
-              <Button
-                size={"lg"}
-                type="submit"
-                className="w-full justify-center whitespace-nowrap"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "保存中" : "規約に同意してはじめる"}
-              </Button>
-            </div>
-          </footer>
+          <div className="gap-2 justify-end w-full">
+            <Button
+              type="submit"
+              size={"lg"}
+              className="w-full justify-center"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "保存中" : "保存"}
+            </Button>
+          </div>
         </form>
       </Form>
       <Modal
@@ -432,7 +348,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
               min={1}
               max={3}
               step={0.01}
-              className="w-full"
+              className={cn("w-full")}
               onValueChange={(value) => {
                 setZoom(value[0]);
               }}

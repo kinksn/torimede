@@ -6,15 +6,7 @@ import {
   postIdSchema,
   PostId,
 } from "@/app/api/post/model";
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
-
-const s3Client = new S3Client({
-  region: process.env.AWS_S3_REGION!,
-  credentials: {
-    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY!,
-  },
-});
+import { deleteImageFromS3 } from "@/app/api/upload/image/imageDao";
 
 export const getPostByPostId = async ({ postId }: { postId: PostId }) =>
   handleDaoError(
@@ -36,21 +28,6 @@ export const getPostByPostId = async ({ postId }: { postId: PostId }) =>
       return parsedData;
     }
   );
-
-const deleteImageFromS3 = async (imageUrl: string) => {
-  const imageKey = imageUrl.split("/").pop();
-  const params = {
-    Bucket: process.env.AWS_S3_BUCKET_NAME!,
-    Key: imageKey,
-  };
-  const command = new DeleteObjectCommand(params);
-  try {
-    await s3Client.send(command);
-  } catch (error) {
-    console.error("An error occurred while deleting an image from S3:", error);
-    throw new Error("Failed to delete image");
-  }
-};
 
 export const deletePostByPostId = async ({ postId }: { postId: PostId }) =>
   handleDaoError(

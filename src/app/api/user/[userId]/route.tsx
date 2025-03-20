@@ -13,6 +13,7 @@ import {
   updateUserImage,
   updateUserIsFirstLogin,
   updateUserName,
+  updateUserUploadProfileImage,
 } from "@/app/api/user/userDao";
 
 type ContextProps = {
@@ -21,17 +22,22 @@ type ContextProps = {
   };
 };
 
-export async function GET(_req: Request, context: ContextProps) {
+export async function GET(req: Request, context: ContextProps) {
   try {
-    const userId = context.params.userId;
+    const { userId } = context.params;
+    const { searchParams } = new URL(req.url);
+
+    const isIncludePosts = searchParams.get("posts") === "true";
+    const isIncludeMededPosts = searchParams.get("mededPosts") === "true";
+
     const profile = await getUserProfileByUserId({ userId });
-    const posts = await getUserPostsByUserId({ userId });
-    const mededPosts = await getUserMededPostsByUserId({ userId });
 
     const response = {
       profile,
-      posts,
-      mededPosts,
+      ...(isIncludePosts && { posts: await getUserPostsByUserId({ userId }) }),
+      ...(isIncludeMededPosts && {
+        mededPosts: await getUserMededPostsByUserId({ userId }),
+      }),
     };
 
     return NextResponse.json(getUserOutputSchema.parse(response), {
@@ -53,7 +59,7 @@ export async function PATCH(req: Request, context: ContextProps) {
     const userId = context.params.userId;
     const session = await auth();
     const input = updateUserInputSchema.parse(await req.json());
-    const { name, image, isFirstLogin } = input;
+    const { name, image, uploadProfileImage, isFirstLogin } = input;
 
     if (session?.user?.id !== userId) {
       return NextResponse.json(
@@ -63,10 +69,27 @@ export async function PATCH(req: Request, context: ContextProps) {
     }
 
     if (name) await updateUserName({ name, userId });
-    if (image) await updateUserImage({ image, userId });
-    await updateUserIsFirstLogin({ isFirstLogin, userId });
+    if (uploadProfileImage) {
+      await updateUserUploadProfileImage({ uploadProfileImage, userId });
+      await updateUserImage({ image: uploadProfileImage, userId });
+    }
+    if (image && !uploadProfileImage) await updateUserImage({ image, userId });
+    if (isFirstLogin !== undefined)
+      await updateUserIsFirstLogin({ isFirstLogin, userId });
 
-    return NextResponse.json({ message: "update success" }, { status: 200 });
+    const updateResult = await getUserProfileByUserId({ userId });
+
+    return NextResponse.json(
+      {
+        message: "update success",
+        updateResult: {
+          id: updateResult.id,
+          name: updateResult.name,
+          image: updateResult.image,
+        },
+      },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json({ message: error }, { status: 500 });
   }
