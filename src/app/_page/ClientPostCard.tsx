@@ -12,6 +12,7 @@ import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
 // 本家だとSSR時にwindowオブジェクトがエラーになるバグがあったため直接プロジェクトに入れて読み込んでいる
 import Masonry from "@/components/react-layout-masonry";
 import { FaceLoader } from "@/components/basic/FaceLoader";
+import { toast } from "sonner";
 
 type FetchPostParams = {
   take?: number;
@@ -47,12 +48,31 @@ const ClientPostCard = () => {
   });
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const FetchNextPage = async () => {
+      if (hasNextPage) {
+        try {
+          await fetchNextPage();
+          timeoutId = setTimeout(FetchNextPage, 500);
+        } catch (error) {
+          toast.error("投稿の読み込みに失敗しました");
+          console.error(error);
+        }
+      }
+    };
+
     if (inView && hasNextPage) {
-      fetchNextPage();
+      FetchNextPage();
     }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [inView, hasNextPage, fetchNextPage]);
 
-  if (error) return <div>エラーが発生しました: {JSON.stringify(error)}</div>;
+  if (error)
+    return <div>投稿の読み込みに失敗しました: {JSON.stringify(error)}</div>;
 
   return (
     <>
