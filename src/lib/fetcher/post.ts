@@ -4,7 +4,7 @@ import {
   getUserPostsOutputSchema,
   PostId,
 } from "@/app/api/post/model";
-import { Mede, Post, PostTag, Tag, User } from "@prisma/client";
+import { Mede, Post, Tag, User } from "@prisma/client";
 import { db } from "@/lib/db";
 import { UserId } from "@/app/api/user/model";
 import { getUserMedeCountForPost } from "@/app/api/mede/[postId]/medeDao";
@@ -33,6 +33,10 @@ export async function getPost(postId: string) {
       },
     });
 
+  if (post == null) {
+    return null;
+  }
+
   const formattedPosts = {
     ...post,
     tags: post.tags.map((tagRelation) => ({
@@ -46,6 +50,10 @@ export async function getPost(postId: string) {
 }
 
 export async function getPostByUserId(userId: string, postId: string) {
+  if (!userId) {
+    return [];
+  }
+
   const posts = await db.post.findMany({
     where: {
       userId,

@@ -3,7 +3,7 @@ import ButtonAction from "@/components/ButtonAction";
 import { getPostDetailOutputSchema, PostId } from "@/app/api/post/model";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 async function getPostByUserId(postId: string) {
   const post = await db.post.findFirst({
@@ -25,6 +25,10 @@ async function getPostByUserId(postId: string) {
       medes: true,
     },
   });
+
+  if (post == null) {
+    return null;
+  }
 
   const formattedPost = {
     ...post,
@@ -50,7 +54,11 @@ const Edit = async ({ params }: EditPostPageProps) => {
   const post = await getPostByUserId(params.id);
   const session = await auth();
 
-  if (session?.user?.id !== post.userId) {
+  if (post == null) {
+    notFound();
+  }
+
+  if (session?.user?.id !== post?.userId) {
     redirect("/");
   }
 

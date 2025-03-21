@@ -4,6 +4,7 @@ import { UserId } from "@/app/api/user/model";
 import { auth } from "@/lib/auth";
 import ModalPostDetailPage from "@/app/@modal/(.)post/[...id]/ModalPostDetailPage";
 import { getUserMedeCount, getPost, getPostByUserId } from "@/lib/fetcher/post";
+import { notFound } from "next/navigation";
 
 type PostProps = {
   params: {
@@ -21,6 +22,10 @@ const PostDetail: FC<PostProps> = async ({ params }) => {
     postId,
     userId: session?.user?.id,
   });
+
+  if (post == null) {
+    notFound();
+  }
 
   return (
     <ModalPostDetailPage
