@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { UserId } from "@/app/api/user/model";
 import { DESCRIPTION } from "@/app/shared-metadata";
 import { getPost, getPostByUserId, getUserMedeCount } from "@/lib/fetcher/post";
+import { notFound } from "next/navigation";
 
 type PostProps = {
   params: {
@@ -38,6 +39,12 @@ export async function generateMetadata({
   const [postId] = params.id;
   const post = await getPost(postId);
 
+  if (post == null) {
+    return {
+      title: "投稿が見つかりませんでした",
+    };
+  }
+
   const ogParams: OgParams[] = [
     { param: "title", value: post.title },
     { param: "image", value: post.images[0].url },
@@ -67,6 +74,10 @@ export default async function PostDetail({ params }: PostProps) {
     postId,
     userId: session?.user?.id,
   });
+
+  if (post == null) {
+    notFound();
+  }
 
   return (
     <PostDetailPage
