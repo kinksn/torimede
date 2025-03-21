@@ -1,17 +1,11 @@
 "use client";
 
-import {
-  FC,
-  useState,
-  useRef,
-  ChangeEvent,
-  useCallback,
-  useEffect,
-} from "react";
+import axios from "axios";
+import SpinnerIcon from "@/components/assets/icon/color-fixed/spinner.svg";
+import { SVGIcon } from "@/components/ui/SVGIcon";
+import { FC, useState, ChangeEvent } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import {
   createPostSchema,
   updatePostBodySchema,
@@ -33,10 +27,12 @@ import { Session } from "next-auth";
 import { TagEditMenu } from "@/components/TagEditMenu";
 import { Button } from "@/components/basic/Button";
 import { toast } from "sonner";
-import { Modal } from "@/components/basic/Modal";
 import { FormInputPost } from "@/app/api/_common/model/form";
+import { ConfirmModal } from "@/components/ConfirmModal";
+import { useUIBlock } from "@/hooks/useUIBlock";
+import { UIBlocker } from "@/components/UIBlocker";
 
-interface FromPostProps {
+interface PostFormProps {
   submit: SubmitHandler<FormInputPost>;
   type?: "post" | "edit";
   initialValue?: EditPost;
@@ -45,7 +41,7 @@ interface FromPostProps {
   isSubmitPending: boolean;
 }
 
-const FormPost: FC<FromPostProps> = ({
+export const PostForm: FC<PostFormProps> = ({
   submit,
   type = "post",
   initialValue,
@@ -55,6 +51,7 @@ const FormPost: FC<FromPostProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFile, setImageFile] = useState<File[]>([]);
+  const { block, unblock } = useUIBlock();
 
   const form = useForm<EditPost>({
     mode: "onChange",
@@ -68,6 +65,7 @@ const FormPost: FC<FromPostProps> = ({
 
   const handleFormSubmit: SubmitHandler<FormInputPost> = async (data) => {
     try {
+      block();
       setIsSubmitting(true);
       const imageUrl =
         type === "edit"
@@ -86,6 +84,7 @@ const FormPost: FC<FromPostProps> = ({
       console.error("submit failed :", error);
     } finally {
       setIsSubmitting(false);
+      unblock();
     }
   };
 
@@ -137,7 +136,7 @@ const FormPost: FC<FromPostProps> = ({
   };
 
   const submitButtonLabel = (
-    type: FromPostProps["type"],
+    type: PostFormProps["type"],
     isSubmitting: boolean
   ) => {
     if (type === "edit") {
@@ -149,6 +148,7 @@ const FormPost: FC<FromPostProps> = ({
 
   return (
     <>
+      <UIBlocker />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
@@ -255,6 +255,13 @@ const FormPost: FC<FromPostProps> = ({
             size={"lg"}
             className="w-full justify-center mt-5"
             disabled={isSubmitting}
+            iconLeft={
+              isSubmitting ? (
+                <SVGIcon svg={SpinnerIcon} className="w-6 animate-spin" />
+              ) : (
+                <></>
+              )
+            }
           >
             {submitButtonLabel(type, isSubmitting)}
           </Button>
@@ -262,103 +269,8 @@ const FormPost: FC<FromPostProps> = ({
       </Form>
 
       {!isSubmitting && !isSubmitPending && form.formState.isDirty && (
-        <ConfirmDialog disabled={!form.formState.isDirty} />
+        <ConfirmModal disabled={!form.formState.isDirty} />
       )}
     </>
   );
 };
-
-type ConfirmModalProps = {
-  disabled: boolean;
-};
-
-const ConfirmDialog: FC<ConfirmModalProps> = ({ disabled }) => {
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [nextRoute, setNextRoute] = useState<string | null>(null);
-  const [isBack, setIsBack] = useState(false);
-
-  // もともと router.push/back を保持する
-  const originalPush = useRef(router.push);
-  const originalBack = useRef(router.back);
-
-  // モーダル「OK」時の挙動
-  const handleConfirm = () => {
-    setOpen(false);
-    window.removeEventListener("beforeunload", beforeUnloadHandler);
-
-    if (isBack) {
-      originalBack.current();
-      return;
-    }
-    if (nextRoute) {
-      originalPush.current(nextRoute);
-      return;
-    }
-  };
-
-  // beforeUnload イベント
-  const beforeUnloadHandler = useCallback(
-    (event: BeforeUnloadEvent) => {
-      if (!disabled) {
-        event.preventDefault();
-        // これがないとChromeで動作しない
-        event.returnValue = "";
-      }
-    },
-    [disabled]
-  );
-
-  // ページ離脱時のダイアログ表示設定
-  useEffect(() => {
-    window.addEventListener("beforeunload", beforeUnloadHandler);
-    return () => {
-      window.removeEventListener("beforeunload", beforeUnloadHandler);
-    };
-  }, [beforeUnloadHandler]);
-
-  // router の push/back をフックして確認モーダルを表示する
-  useEffect(() => {
-    if (!disabled) {
-      const handleRouteChange = (url: string, isBackAction = false) => {
-        setNextRoute(url);
-        setIsBack(isBackAction);
-        setOpen(true);
-      };
-
-      // router.push を上書き
-      router.push = async (url) => {
-        handleRouteChange(url);
-      };
-
-      // router.back を上書き
-      router.back = () => {
-        handleRouteChange(document.referrer, true);
-      };
-
-      // cleanup で元に戻す
-      const currentPush = originalPush.current;
-      const currentBack = originalBack.current;
-      return () => {
-        router.push = currentPush;
-        router.back = currentBack;
-      };
-    }
-  }, [disabled, router]);
-
-  // モーダルの描画
-  return (
-    <Modal
-      title="フォームを離れますか？"
-      description="入力中のデータはリセットされます。<br />よろしいでしょうか？"
-      open={open}
-      onOpenChange={setOpen}
-      submit={() => setOpen(false)}
-      submitButtonLabel="留まる"
-      close={handleConfirm}
-      closeButtonLabel="離れる"
-    />
-  );
-};
-
-export default FormPost;

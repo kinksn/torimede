@@ -1,8 +1,8 @@
 import { InitialPagePathSetter } from "@/components/InitialPagePathSetter";
-import { ContentToolbar } from "@/components/ContentToolbar";
 import { PostSearchPage } from "@/app/post/PostSearchPage";
 import { Metadata } from "next";
 import { DESCRIPTION, METADATA_TITLE } from "@/app/shared-metadata";
+import { DetailPageLayout } from "@/components/DetailPageLayout";
 
 export async function generateMetadata({
   searchParams,
@@ -28,8 +28,9 @@ export default async function PostsPage() {
   return (
     <>
       <InitialPagePathSetter />
-      <ContentToolbar />
-      <PostSearchPage />
+      <DetailPageLayout>
+        <PostSearchPage />
+      </DetailPageLayout>
     </>
   );
 }

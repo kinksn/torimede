@@ -1,7 +1,7 @@
 "use client";
 
 import { FormInputPost } from "@/app/api/_common/model/form";
-import FormPost from "@/components/FormPost";
+import { PostForm } from "@/components/PostForm";
 import { postKeys } from "@/service/post/key";
 import { Tag } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -46,7 +46,7 @@ const CreatePostPage = ({ tags, session }: CreatePostPageProps) => {
       <h1 className="text-2xl font-bold text-center mb-5 font-zenMaruGothic">
         新規投稿
       </h1>
-      <FormPost
+      <PostForm
         isSubmitPending={isLoadingSubmit}
         submit={handleCreatePost}
         session={session}

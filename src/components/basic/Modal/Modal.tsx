@@ -37,6 +37,7 @@ type ModalProps = React.ButtonHTMLAttributes<HTMLDivElement> &
     closeButtonLabel?: string;
     closeClassName?: string;
     closeButtonType?: "text" | "outline";
+    onPointerDownOutside?: DialogPrimitive.DialogContentProps["onPointerDownOutside"];
   };
 
 export const Modal = ({
@@ -62,6 +63,7 @@ export const Modal = ({
   closeButtonLabel = "キャンセル",
   closeClassName,
   closeButtonType = "text",
+  onPointerDownOutside,
 }: ModalProps) => {
   const handleSubmit = () => {
     submit?.();
@@ -97,6 +99,7 @@ export const Modal = ({
         className={cn("max-sm:w-[89.3333%]", className)}
         aria-labelledby="dialog-title"
         aria-describedby="dialog-description"
+        onPointerDownOutside={onPointerDownOutside}
       >
         <DialogHeader
           className={cn(

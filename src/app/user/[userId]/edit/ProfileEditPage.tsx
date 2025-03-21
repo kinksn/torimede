@@ -2,6 +2,9 @@
 
 import axios from "axios";
 import Cropper, { Area } from "react-easy-crop";
+import SpinnerIcon from "@/components/assets/icon/color-fixed/spinner.svg";
+import { SVGIcon } from "@/components/ui/SVGIcon";
+import { useCallback, useState } from "react";
 import {
   GetUserProfile,
   UpdateUserInput,
@@ -23,13 +26,15 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { staticProfileIconList } from "@/lib/util/staticProfileIconList";
 import { z } from "zod";
-import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Modal } from "@/components/basic/Modal";
 import { getCroppedImg } from "@/app/edit/[id]/getCroppedImg";
 import { AvatarSelector } from "@/components/basic/AvatarSelector";
 import { Slider } from "@/components/basic/Slider";
+import { ConfirmModal } from "@/components/ConfirmModal";
+import { UIBlocker } from "@/components/UIBlocker";
+import { useUIBlock } from "@/hooks/useUIBlock";
 
 type ProfileEditPageProps = {
   userProfile: GetUserProfile;
@@ -65,6 +70,8 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
   // トリミング画像の座標、バイナリデータ生成のために必要
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area>();
 
+  const { block, unblock } = useUIBlock();
+
   const router = useRouter();
   const form = useForm<FormType>({
     mode: "onChange",
@@ -78,6 +85,7 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
   // プロフィール更新用のMutation
   const { mutate: updateProfile } = useMutation({
     mutationFn: ({ name, image, uploadProfileImage }: UpdateUserInput) => {
+      block();
       return axios.patch(`/api/user/${userProfile.id}`, {
         name,
         image,
@@ -95,6 +103,7 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
       form.setValue("image", updateImageUrl);
       setUploadProfileImagePreview(null);
       toast.success("プロフィールを更新しました");
+      unblock();
       router.refresh();
     },
   });
@@ -159,7 +168,7 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
 
     // トリミング画像のURLを取得してstate変数にセット
     const newBlobUrl = URL.createObjectURL(file);
-    setUploadProfileImagePreview(newBlobUrl);
+    form.setValue("image", newBlobUrl, { shouldDirty: true });
 
     setIsShowModal(false);
 
@@ -221,6 +230,7 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
 
   return (
     <div>
+      <UIBlocker />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
@@ -313,6 +323,13 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
               size={"lg"}
               className="w-full justify-center"
               disabled={isSubmitting}
+              iconLeft={
+                isSubmitting ? (
+                  <SVGIcon svg={SpinnerIcon} className="w-6 animate-spin" />
+                ) : (
+                  <></>
+                )
+              }
             >
               {isSubmitting ? "保存中" : "保存"}
             </Button>
@@ -356,6 +373,9 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
           </div>
         </div>
       </Modal>
+      {!isSubmitting && form.formState.isDirty && (
+        <ConfirmModal disabled={!form.formState.isDirty} />
+      )}
     </div>
   );
 };
