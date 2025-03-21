@@ -105,6 +105,8 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
       toast.success("プロフィールを更新しました");
       unblock();
       router.refresh();
+      // ダーティフラグをリセット
+      form.reset(form.getValues());
     },
   });
 
@@ -177,16 +179,13 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
 
   // トリミング後のFileをS3へアップロード
   const handleUploadCroppedImage = async () => {
-    if (!uploadProfileImagePreview) return;
-    // ボタン押下で直接クロップ＆アップロードしたい場合
     const file = await makeCroppedImage();
+
     if (!file) {
-      // トリミングに失敗
       console.error("Cropping failed or no file returned");
       return;
     }
 
-    // アップロード
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -211,6 +210,7 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
   const handleFormSubmit = async (values: UpdateUserInput) => {
     setIsSubmitting(true);
     const uploadProfileImage = await handleUploadCroppedImage();
+    form.setValue("image", uploadProfileImage);
     const patchData = {
       ...values,
       ...(uploadProfileImage && { uploadProfileImage }),
