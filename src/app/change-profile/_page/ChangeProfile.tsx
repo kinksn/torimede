@@ -1,7 +1,9 @@
 "use client";
 
 import axios from "axios";
+import SpinnerIcon from "@/components/assets/icon/color-fixed/spinner.svg";
 import Cropper, { Area } from "react-easy-crop";
+import { SVGIcon } from "@/components/ui/SVGIcon";
 import { UpdateUserInput, userNameSchema } from "@/app/api/user/model";
 import { useMutation } from "@tanstack/react-query";
 import { Session } from "next-auth";
@@ -9,7 +11,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { staticProfileIconList } from "@/lib/util/staticProfileIconList";
-import { useBreakpoints } from "@/hooks/useBreakpoints";
 import { Avatar } from "@/components/basic/Avatar";
 import {
   Form,
@@ -30,6 +31,8 @@ import { useRouter } from "next/navigation";
 import { getCroppedImg } from "@/app/edit/[id]/getCroppedImg";
 import { AvatarSelector } from "@/components/basic/AvatarSelector";
 import { Slider } from "@/components/basic/Slider";
+import { UIBlocker } from "@/components/UIBlocker";
+import { useUIBlock } from "@/hooks/useUIBlock";
 
 type ChangeProfileProps = {
   session: Session | null;
@@ -69,6 +72,8 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
   // トリミング画像の座標、バイナリデータ生成のために必要
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area>();
 
+  const { block, unblock } = useUIBlock();
+
   const router = useRouter();
 
   const { update } = useSession();
@@ -76,7 +81,6 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
   const userName = session?.user?.name || "";
   const defaultUserImage =
     session?.user?.image || staticProfileIconList[0].imageURL;
-  const { sm } = useBreakpoints();
   const form = useForm<Form>({
     defaultValues: { name: userName, image: defaultUserImage },
     resolver: zodResolver(formSchema),
@@ -105,6 +109,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
       uploadProfileImage,
       isFirstLogin,
     }: UpdateUserInput) => {
+      block();
       return axios.patch(`/api/user/${userId}`, {
         name,
         image,
@@ -123,6 +128,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
       const updateImageUrl = result.data.updateResult.image;
       setUploadedProfileImage(updateImageUrl);
       form.setValue("image", updateImageUrl);
+      unblock();
       router.refresh();
     },
   });
@@ -187,7 +193,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
 
     // トリミング画像のURLを取得してstate変数にセット
     const newBlobUrl = URL.createObjectURL(file);
-    setUploadProfileImagePreview(newBlobUrl);
+    form.setValue("image", newBlobUrl);
 
     setIsShowModal(false);
 
@@ -266,10 +272,11 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
           マイページからいつでも変更できます）
         </small>
       </div>
+      <UIBlocker />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleFormSubmit)}
-          className="flex flex-col gap-5 items-center justify-center bg-white rounded-20 mt-5 w-full pt-10 px-10 pb-5"
+          className="flex flex-col gap-10 items-center justify-center bg-white rounded-20 mt-5 w-full p-10"
         >
           <div className="flex flex-col w-full max-sm:gap-2 max-sm:w-full">
             {/* プロフィール画像選択 */}
@@ -396,8 +403,15 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
                 type="submit"
                 className="w-full justify-center whitespace-nowrap"
                 disabled={isSubmitting}
+                iconLeft={
+                  isSubmitting ? (
+                    <SVGIcon svg={SpinnerIcon} className="w-6 animate-spin" />
+                  ) : (
+                    <></>
+                  )
+                }
               >
-                {isSubmitting ? "保存中" : "規約に同意してはじめる"}
+                規約に同意してはじめる
               </Button>
             </div>
           </footer>

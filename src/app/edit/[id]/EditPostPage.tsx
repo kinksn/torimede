@@ -1,6 +1,6 @@
 "use client";
 
-import FormPost from "@/components/FormPost";
+import { PostForm } from "@/components/PostForm";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { FC } from "react";
@@ -46,7 +46,7 @@ const EditPostPage: FC<EditPostPageProps> = ({ post, tags, session }) => {
       <h1 className="text-2xl font-bold text-center mb-5 font-zenMaruGothic">
         編集
       </h1>
-      <FormPost
+      <PostForm
         /**
           react-hook-formのdefaultValueは初期化時にのみ評価され、
           apiから非同期でデータ取得するなどしてinitialValueが更新されてもフォームの値が更新されないという特性がある。
