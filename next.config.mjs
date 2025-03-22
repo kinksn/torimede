@@ -22,10 +22,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
-      // prod
+      // Vercel
       {
         protocol: "https",
         hostname: "torimede.vercel.app",
+      },
+      {
+        protocol: "https",
+        hostname: "www.torimede.com",
       },
     ],
   },
