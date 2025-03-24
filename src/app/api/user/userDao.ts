@@ -73,11 +73,7 @@ export const getUserMededPostsByUserId = async ({ userId }: InputUserId) =>
     async () => {
       const data = await db.mede.findMany({
         where: {
-          post: {
-            NOT: {
-              userId, // 自分の投稿ではない
-            },
-          },
+          userId,
         },
         include: {
           post: {

@@ -1,6 +1,6 @@
 import { postImageIdSchema } from "@/app/api/_common/model/id";
+import { uploadImageSchema } from "@/app/api/image/model";
 import { medeSchema } from "@/app/api/mede/[postId]/model";
-import { uploadImageSchema } from "@/app/api/upload/image/model";
 import { tagIdSchema, tagSchema } from "@/app/api/tag/model";
 import { userIdSchema, userSchema } from "@/app/api/user/model";
 import { idWithBrandSchema } from "@/lib/util/entity";

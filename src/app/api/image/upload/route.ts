@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { processImage } from "@/app/api/upload/image/imageProcessor";
 import { ACCEPT_IMAGE_TYPES, MAX_IMAGE_SIZE } from "@/lib/constants/image";
-import { uploadFileToS3 } from "@/app/api/upload/image/imageDao";
 import { auth } from "@/lib/auth";
+import { processImage } from "@/app/api/image/imageProcessor";
+import { uploadFileToS3 } from "@/app/api/image/imageDao";
 
 export async function POST(request: Request) {
   try {

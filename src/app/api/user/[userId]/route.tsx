@@ -56,7 +56,7 @@ export async function GET(req: Request, context: ContextProps) {
 
 export async function PATCH(req: Request, context: ContextProps) {
   try {
-    const userId = context.params.userId;
+    const { userId } = context.params;
     const session = await auth();
     const input = updateUserInputSchema.parse(await req.json());
     const { name, image, uploadProfileImage, isFirstLogin } = input;

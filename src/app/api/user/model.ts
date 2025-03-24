@@ -56,6 +56,7 @@ export const updateUserInputSchema = z.object({
   name: userNameSchema.optional(),
   image: z.string().optional(),
   uploadProfileImage: z.string().optional(),
+  oldUploadProfileImage: z.string().optional(),
   isFirstLogin: z.boolean().optional(),
 });
 export type UpdateUserInput = z.infer<typeof updateUserInputSchema>;

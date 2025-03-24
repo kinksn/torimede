@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import SpinnerIcon from "@/components/assets/icon/color-fixed/spinner.svg";
+import imageCompression from "browser-image-compression";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { FC, useState, ChangeEvent } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -31,6 +32,7 @@ import { FormInputPost } from "@/app/api/_common/model/form";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { useUIBlock } from "@/hooks/useUIBlock";
 import { UIBlocker } from "@/components/UIBlocker";
+import { POST_COMPRESSION_OPTIONS } from "@/lib/constants/image";
 
 interface PostFormProps {
   submit: SubmitHandler<FormInputPost>;
@@ -105,19 +107,35 @@ export const PostForm: FC<PostFormProps> = ({
   };
 
   const uploadImage = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
     try {
-      const res = await axios.post("/api/upload/image", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // 画像を圧縮
+      const compressedFile = await imageCompression(
+        file,
+        POST_COMPRESSION_OPTIONS
+      );
+      // S3の署名付きURL取得APIを呼び出し
+      const signedUrlRes = await axios.post("/api/s3SignedUrl", {
+        fileType: compressedFile.type,
       });
-      if (res.status !== 200) {
+      if (signedUrlRes.status !== 200) {
+        toast.error("画像のアップロードに失敗しました");
+        console.error("Failed to get signed URL");
+        return null;
+      }
+      const { signedUrl, fileUrl } = signedUrlRes.data;
+      // 取得した署名付きURLを使ってS3に直接アップロード
+      const uploadRes = await axios.put(signedUrl, compressedFile, {
+        headers: { "Content-Type": compressedFile.type },
+      });
+      if (uploadRes.status !== 200) {
+        toast.error("画像のアップロードに失敗しました");
         console.error("Image upload failed");
         return null;
       }
-      return res.data.fileUrl;
+      return fileUrl;
     } catch (error) {
-      console.error("Image upload failed", error);
+      toast.error("画像のアップロードに失敗しました");
+      console.error("Image upload error:", error);
       return null;
     }
   };

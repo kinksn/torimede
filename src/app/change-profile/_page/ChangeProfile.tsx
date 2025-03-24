@@ -1,8 +1,9 @@
 "use client";
 
 import axios from "axios";
-import SpinnerIcon from "@/components/assets/icon/color-fixed/spinner.svg";
 import Cropper, { Area } from "react-easy-crop";
+import SpinnerIcon from "@/components/assets/icon/color-fixed/spinner.svg";
+import imageCompression from "browser-image-compression";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { UpdateUserInput, userNameSchema } from "@/app/api/user/model";
 import { useMutation } from "@tanstack/react-query";
@@ -33,6 +34,7 @@ import { AvatarSelector } from "@/components/basic/AvatarSelector";
 import { Slider } from "@/components/basic/Slider";
 import { UIBlocker } from "@/components/UIBlocker";
 import { useUIBlock } from "@/hooks/useUIBlock";
+import { POST_COMPRESSION_OPTIONS } from "@/lib/constants/image";
 
 type ChangeProfileProps = {
   session: Session | null;
@@ -49,7 +51,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // トリミング後の画像データ
-  // このデータのfileプロパティが最終的に api/upload/image のbodyに渡されてアップロードされる
+  // このデータのfileプロパティが最終的に api/image/upload のbodyに渡されてアップロードされる
   const [uploadProfileImagePreview, setUploadProfileImagePreview] = useState<
     string | null
   >(null);
@@ -193,6 +195,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
 
     // トリミング画像のURLを取得してstate変数にセット
     const newBlobUrl = URL.createObjectURL(file);
+    setUploadProfileImagePreview(newBlobUrl);
     form.setValue("image", newBlobUrl);
 
     setIsShowModal(false);
@@ -203,26 +206,39 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
   // トリミング後のFileをS3へアップロード
   const handleUploadCroppedImage = async () => {
     if (!uploadProfileImagePreview) return;
-    // ボタン押下で直接クロップ＆アップロードしたい場合
-    const file = await makeCroppedImage();
-    if (!file) {
-      // トリミングに失敗
-      console.error("Cropping failed or no file returned");
-      return null;
-    }
-
-    // アップロード
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await axios.post("/api/upload/image", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (res.status === 200 && res.data?.fileUrl) {
-        const s3Url = res.data.fileUrl;
-        return s3Url;
+      // ボタン押下で直接クロップ＆アップロードしたい場合
+      const file = await makeCroppedImage();
+      if (!file) {
+        toast.error("画像のアップロードに失敗しました");
+        console.error("Cropping failed or no file returned");
+        return;
       }
+      // 画像を圧縮
+      const compressedFile = await imageCompression(
+        file,
+        POST_COMPRESSION_OPTIONS
+      );
+      // S3の署名付きURL取得APIを呼び出し
+      const signedUrlRes = await axios.post("/api/s3SignedUrl", {
+        fileType: compressedFile.type,
+      });
+      if (signedUrlRes.status !== 200) {
+        toast.error("画像のアップロードに失敗しました");
+        console.error("Failed to get signed URL");
+        return null;
+      }
+      const { signedUrl, fileUrl } = signedUrlRes.data;
+      // 取得した署名付きURLを使ってS3に直接アップロード
+      const uploadRes = await axios.put(signedUrl, compressedFile, {
+        headers: { "Content-Type": compressedFile.type },
+      });
+      if (uploadRes.status !== 200) {
+        toast.error("画像のアップロードに失敗しました");
+        console.error("Image upload failed");
+        return null;
+      }
+      return fileUrl;
     } catch (err) {
       toast.error("アップロードに失敗しました");
       console.error(err);
