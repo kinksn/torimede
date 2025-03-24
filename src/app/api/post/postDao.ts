@@ -6,7 +6,7 @@ import {
   postIdSchema,
   PostId,
 } from "@/app/api/post/model";
-import { deleteImageFromS3 } from "@/app/api/upload/image/imageDao";
+import { deleteImageFromS3 } from "@/app/api/image/imageDao";
 
 export const getPostByPostId = async ({ postId }: { postId: PostId }) =>
   handleDaoError(

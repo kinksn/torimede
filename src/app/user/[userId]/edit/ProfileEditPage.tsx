@@ -3,6 +3,7 @@
 import axios from "axios";
 import Cropper, { Area } from "react-easy-crop";
 import SpinnerIcon from "@/components/assets/icon/color-fixed/spinner.svg";
+import imageCompression from "browser-image-compression";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { useCallback, useState } from "react";
 import {
@@ -35,6 +36,7 @@ import { Slider } from "@/components/basic/Slider";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { UIBlocker } from "@/components/UIBlocker";
 import { useUIBlock } from "@/hooks/useUIBlock";
+import { POST_COMPRESSION_OPTIONS } from "@/lib/constants/image";
 
 type ProfileEditPageProps = {
   userProfile: GetUserProfile;
@@ -49,9 +51,12 @@ type FormType = z.infer<typeof formSchema>;
 export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
   const [isShowModal, setIsShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [oldUploadProfileImage, setOldUploadProfileImage] = useState(
+    userProfile.uploadProfileImage
+  );
 
   // トリミング後の画像データ
-  // このデータのfileプロパティが最終的に api/upload/image のbodyに渡されてアップロードされる
+  // このデータのfileプロパティが最終的に api/image/upload のbodyに渡されてアップロードされる
   const [uploadProfileImagePreview, setUploadProfileImagePreview] = useState<
     string | null
   >(null);
@@ -97,10 +102,21 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
       toast.error("プロフィールの更新に失敗しました");
       console.error(error);
     },
-    onSuccess: (result) => {
+    onSuccess: async (result) => {
       setIsSubmitting(false);
       const updateImageUrl = result.data.updateResult.image;
       form.setValue("image", updateImageUrl);
+      // 古いアップロードプロフィール画像がある場合は削除
+      if (!!oldUploadProfileImage && uploadProfileImagePreview) {
+        try {
+          await axios.post("/api/image/delete", {
+            imageUrl: oldUploadProfileImage,
+          });
+          setOldUploadProfileImage(updateImageUrl);
+        } catch {
+          console.error("failt to delete upload profile image");
+        }
+      }
       setUploadProfileImagePreview(null);
       toast.success("プロフィールを更新しました");
       unblock();
@@ -170,6 +186,7 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
 
     // トリミング画像のURLを取得してstate変数にセット
     const newBlobUrl = URL.createObjectURL(file);
+    setUploadProfileImagePreview(newBlobUrl);
     form.setValue("image", newBlobUrl, { shouldDirty: true });
 
     setIsShowModal(false);
@@ -179,24 +196,39 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
 
   // トリミング後のFileをS3へアップロード
   const handleUploadCroppedImage = async () => {
-    const file = await makeCroppedImage();
-
-    if (!file) {
-      console.error("Cropping failed or no file returned");
-      return;
-    }
-
+    if (!uploadProfileImagePreview) return;
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await axios.post("/api/upload/image", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (res.status === 200 && res.data?.fileUrl) {
-        const s3Url = res.data.fileUrl;
-        return s3Url;
+      const file = await makeCroppedImage();
+      if (!file) {
+        toast.error("画像のアップロードに失敗しました");
+        console.error("Cropping failed or no file returned");
+        return;
       }
+      // 画像を圧縮
+      const compressedFile = await imageCompression(
+        file,
+        POST_COMPRESSION_OPTIONS
+      );
+      // S3の署名付きURL取得APIを呼び出し
+      const signedUrlRes = await axios.post("/api/s3SignedUrl", {
+        fileType: compressedFile.type,
+      });
+      if (signedUrlRes.status !== 200) {
+        toast.error("画像のアップロードに失敗しました");
+        console.error("Failed to get signed URL");
+        return null;
+      }
+      const { signedUrl, fileUrl } = signedUrlRes.data;
+      // 取得した署名付きURLを使ってS3に直接アップロード
+      const uploadRes = await axios.put(signedUrl, compressedFile, {
+        headers: { "Content-Type": compressedFile.type },
+      });
+      if (uploadRes.status !== 200) {
+        toast.error("画像のアップロードに失敗しました");
+        console.error("Image upload failed");
+        return null;
+      }
+      return fileUrl;
     } catch (err) {
       toast.error("アップロードに失敗しました");
       console.error(err);
