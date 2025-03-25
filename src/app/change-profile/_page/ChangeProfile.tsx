@@ -34,7 +34,12 @@ import { AvatarSelector } from "@/components/basic/AvatarSelector";
 import { Slider } from "@/components/basic/Slider";
 import { UIBlocker } from "@/components/UIBlocker";
 import { useUIBlock } from "@/hooks/useUIBlock";
-import { POST_COMPRESSION_OPTIONS } from "@/lib/constants/image";
+import {
+  POST_COMPRESSION_OPTIONS,
+  MAX_IMAGE_SIZE,
+  ACCEPT_IMAGE_TYPES,
+  SIZE_OVER_ERROR_MESSAGE,
+} from "@/lib/constants/image";
 
 type ChangeProfileProps = {
   session: Session | null;
@@ -111,7 +116,6 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
       uploadProfileImage,
       isFirstLogin,
     }: UpdateUserInput) => {
-      block();
       return axios.patch(`/api/user/${userId}`, {
         name,
         image,
@@ -144,6 +148,25 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
+      // 既存のエラーをクリア
+      form.clearErrors("image");
+
+      if (!ACCEPT_IMAGE_TYPES.includes(file.type)) {
+        form.setError("image", {
+          type: "manual",
+          message: "拡張子（png, jpg, jpeg, gif）のファイルを設定してください",
+        });
+        return;
+      }
+
+      if (file.size > MAX_IMAGE_SIZE) {
+        form.setError("image", {
+          type: "manual",
+          message: SIZE_OVER_ERROR_MESSAGE,
+        });
+        return;
+      }
+
       // オブジェクトURLを生成してCropperに渡せる形にする
       // createObjectURLを使うことで `blob:`プロトコルで始まる
       // ブラウザのメモリ上のバイナリデータを参照できるようになる
@@ -157,14 +180,13 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
       // そのためにここでファイル名だけ抽出している
       // 例）"myPhoto.png" → ["myPhoto", "png"] → baseName = "myPhoto"
       const parts = file.name.split(".");
-      parts.pop(); // 拡張子を取り除く
+      parts.pop();
       setBaseName(parts.join(".") || "cropped-image");
 
       setIsShowModal(true);
-
       e.target.value = "";
     },
-    []
+    [form]
   );
 
   // トリミング終了時に座標をstateに格納
@@ -183,8 +205,8 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
     const file = await getCroppedImg(
       imgSrc,
       croppedAreaPixels,
-      baseName, // 例: "myPicture"
-      originalMimeType // 例: "image/png"
+      baseName, // アップロードしたファイルから抽出したファイル名
+      originalMimeType
     );
     if (!file) return null;
 
@@ -244,6 +266,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
       console.error(err);
     } finally {
       setIsShowModal(false);
+      unblock();
     }
 
     return null;
@@ -263,6 +286,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
     Omit<UpdateUserInput, "isFirstLogin">
   > = async ({ name, image }) => {
     setIsSubmitting(true);
+    block();
     const uploadProfileImage = await handleUploadCroppedImage();
     updateProfile({
       name,
@@ -440,7 +464,7 @@ export const ChangeProfile = ({ session }: ChangeProfileProps) => {
         submitButtonLabel="決定"
         submit={makeCroppedImage}
         close={onModalClose}
-        className="max-w-[600px] max-sm:max-w-[100%] w-full max-sm:w-full max-sm:h-screen max-sm:auto-rows-max"
+        className="max-w-[600px] max-sm:max-w-[100%] w-full max-sm:w-full max-sm:h-screen max-sm:auto-rows-max [&[data-state=open]]:animate-none"
         footerClassName="pt-5"
       >
         <div className="flex flex-col gap-5">
