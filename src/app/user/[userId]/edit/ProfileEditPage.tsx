@@ -36,7 +36,12 @@ import { Slider } from "@/components/basic/Slider";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { UIBlocker } from "@/components/UIBlocker";
 import { useUIBlock } from "@/hooks/useUIBlock";
-import { POST_COMPRESSION_OPTIONS } from "@/lib/constants/image";
+import {
+  POST_COMPRESSION_OPTIONS,
+  MAX_IMAGE_SIZE,
+  ACCEPT_IMAGE_TYPES,
+  SIZE_OVER_ERROR_MESSAGE,
+} from "@/lib/constants/image";
 
 type ProfileEditPageProps = {
   userProfile: GetUserProfile;
@@ -55,28 +60,19 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
     userProfile.uploadProfileImage
   );
 
-  // トリミング後の画像データ
-  // このデータのfileプロパティが最終的に api/image/upload のbodyに渡されてアップロードされる
   const [uploadProfileImagePreview, setUploadProfileImagePreview] = useState<
     string | null
   >(null);
-  // 元ファイルのファイル名(拡張子除く)
   const [baseName, setBaseName] = useState("cropped-image");
-  // 元ファイルのMIME Type
   const [originalMimeType, setOriginalMimeType] = useState("image/jpeg");
 
   /** react-easy-crop 周りのステート */
-  // アップロードした画像のURL
   const [imgSrc, setImgSrc] = useState("");
-  // トリミング範囲の座標
   const [crop, setCrop] = useState({ x: 0, y: 0 });
-  // トリミング範囲の拡大率
   const [zoom, setZoom] = useState(1);
-  // トリミング画像の座標、バイナリデータ生成のために必要
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area>();
 
   const { block, unblock } = useUIBlock();
-
   const router = useRouter();
   const form = useForm<FormType>({
     mode: "onChange",
@@ -87,10 +83,8 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
     },
   });
 
-  // プロフィール更新用のMutation
   const { mutate: updateProfile } = useMutation({
     mutationFn: ({ name, image, uploadProfileImage }: UpdateUserInput) => {
-      block();
       return axios.patch(`/api/user/${userProfile.id}`, {
         name,
         image,
@@ -126,14 +120,29 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
     },
   });
 
-  /**
-   * ファイルアップロード後
-   * 画像ファイルのURLをセットしモーダルを表示する
-   */
   const onFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
+
+      // 既存のエラーをクリア
+      form.clearErrors("image");
+
+      if (!ACCEPT_IMAGE_TYPES.includes(file.type)) {
+        form.setError("image", {
+          type: "manual",
+          message: "拡張子（png, jpg, jpeg, gif）のファイルを設定してください",
+        });
+        return;
+      }
+
+      if (file.size > MAX_IMAGE_SIZE) {
+        form.setError("image", {
+          type: "manual",
+          message: SIZE_OVER_ERROR_MESSAGE,
+        });
+        return;
+      }
 
       // オブジェクトURLを生成してCropperに渡せる形にする
       // createObjectURLを使うことで `blob:`プロトコルで始まる
@@ -148,17 +157,16 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
       // そのためにここでファイル名だけ抽出している
       // 例）"myPhoto.png" → ["myPhoto", "png"] → baseName = "myPhoto"
       const parts = file.name.split(".");
-      parts.pop(); // 拡張子を取り除く
+      parts.pop();
       setBaseName(parts.join(".") || "cropped-image");
 
       setIsShowModal(true);
-
       e.target.value = "";
     },
-    []
+    [form]
   );
 
-  // トリミング終了時に座標をstateに格納
+  // react-easy-crop でトリミング範囲が確定したら
   const onCropComplete = useCallback(
     (_croppedArea: Area, croppedAreaPixels: Area) => {
       setCroppedAreaPixels(croppedAreaPixels);
@@ -174,8 +182,8 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
     const file = await getCroppedImg(
       imgSrc,
       croppedAreaPixels,
-      baseName, // 例: "myPicture"
-      originalMimeType // 例: "image/png"
+      baseName, // アップロードしたファイルから抽出したファイル名
+      originalMimeType
     );
     if (!file) return null;
 
@@ -190,7 +198,6 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
     form.setValue("image", newBlobUrl, { shouldDirty: true });
 
     setIsShowModal(false);
-
     return file;
   };
 
@@ -234,13 +241,15 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
       console.error(err);
     } finally {
       setIsShowModal(false);
+      unblock();
     }
-
     return null;
   };
 
+  // フォーム送信時
   const handleFormSubmit = async (values: UpdateUserInput) => {
     setIsSubmitting(true);
+    block();
     const uploadProfileImage = await handleUploadCroppedImage();
     form.setValue("image", uploadProfileImage);
     const patchData = {
@@ -358,9 +367,7 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
               iconLeft={
                 isSubmitting ? (
                   <SVGIcon svg={SpinnerIcon} className="w-6 animate-spin" />
-                ) : (
-                  <></>
-                )
+                ) : null
               }
             >
               {isSubmitting ? "保存中" : "保存"}
@@ -375,13 +382,12 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
         submitButtonLabel="決定"
         submit={makeCroppedImage}
         close={onModalClose}
-        className="max-w-[600px] max-sm:max-w-[100%] w-full max-sm:w-full max-sm:h-screen max-sm:auto-rows-max"
+        className="max-w-[600px] max-sm:max-w-[100%] w-[600px] max-sm:w-full max-sm:h-screen max-sm:auto-rows-max [&[data-state=open]]:animate-none"
         footerClassName="pt-5"
       >
         <div className="flex flex-col gap-5">
           <div className="w-full aspect-[3/2] relative rounded-md overflow-hidden">
             <Cropper
-              // Cropperが画像を読み込むにはバイナリデータのURLを渡す必要がある
               image={imgSrc}
               crop={crop}
               zoom={zoom}

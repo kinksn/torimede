@@ -1,4 +1,8 @@
-import { ACCEPT_IMAGE_TYPES, MAX_IMAGE_SIZE } from "@/lib/constants/image";
+import {
+  ACCEPT_IMAGE_TYPES,
+  MAX_IMAGE_SIZE,
+  SIZE_OVER_ERROR_MESSAGE,
+} from "@/lib/constants/image";
 import { z } from "zod";
 
 export const uploadImageSchema = z
@@ -11,5 +15,5 @@ export const uploadImageSchema = z
     }
   )
   .refine((files) => files.every((file) => file.size <= MAX_IMAGE_SIZE), {
-    message: "ファイルサイズは15MB以内にしてください",
+    message: SIZE_OVER_ERROR_MESSAGE,
   });

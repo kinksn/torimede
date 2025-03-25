@@ -1,4 +1,5 @@
-export const MAX_IMAGE_SIZE = 15 * 1024 * 1024; // 15MB
+const maxImageSizeMB = 15;
+export const MAX_IMAGE_SIZE = maxImageSizeMB * 1024 * 1024; // 15MB
 
 export const ACCEPT_IMAGE_TYPES = [
   "image/jpg",
@@ -21,3 +22,5 @@ export const POST_COMPRESSION_OPTIONS = {
   useWebWorker: true,
   initialQuality: 0.8, // JPEGの品質（80%）
 };
+
+export const SIZE_OVER_ERROR_MESSAGE = `ファイルサイズは${maxImageSizeMB}MB以内にしてください`;
