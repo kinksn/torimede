@@ -11,6 +11,7 @@ export const medeSchema = z.object({
   // TODO: postIdSchemaにしたいが循環参照でエラーになる
   postId: z.string(),
 });
+export type Mede = z.infer<typeof medeSchema>;
 
 export const createMedeSchema = z.object({
   // TODO: postIdSchemaにしたいが循環参照でエラーになる

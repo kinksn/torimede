@@ -1,7 +1,7 @@
 "use client";
 
 import { GetUserPostsOutput } from "@/app/api/post/model";
-import PostCard from "@/components/PostCard";
+import { PostImage } from "@/components/PostImage";
 // メインソンリーーレイアウト実現ライブラリ：https://github.com/sibiraj-s/react-layout-masonry#readme
 // 本家だとSSR時にwindowオブジェクトがエラーになるバグがあったため直接プロジェクトに入れて読み込んでいる
 import Masonry from "@/components/react-layout-masonry";
@@ -26,7 +26,7 @@ const UserPostCards = ({ userPosts, userName, className }: PostCardProps) => {
           className="max-w-[1600px] mx-auto mt-10 max-sm:mt-5 px-5 max-sm:px-0"
         >
           {userPosts.map((post) => (
-            <PostCard post={post} key={post.id} />
+            <PostImage post={post} key={post.id} />
           ))}
         </Masonry>
       </div>

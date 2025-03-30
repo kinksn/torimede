@@ -3,6 +3,7 @@ import { GetUserOutput, UserId } from "@/app/api/user/model";
 type GetUserOptions = {
   posts?: boolean;
   mededPosts?: boolean;
+  kiraPosts?: boolean;
 };
 
 export const getUser = async (userId: UserId, options?: GetUserOptions) => {
@@ -12,6 +13,9 @@ export const getUser = async (userId: UserId, options?: GetUserOptions) => {
   }
   if (options?.mededPosts) {
     queryParams.set("mededPosts", "true");
+  }
+  if (options?.kiraPosts) {
+    queryParams.set("kiraPosts", "true");
   }
 
   const url = `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}${

@@ -10,6 +10,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      transformStyle: {
+        "3d": "preserve-3d",
+      },
       keyframes: {
         slideUp: {
           "0%": { transform: "translateY(24px)", opacity: "0.2" },

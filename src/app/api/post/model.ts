@@ -111,6 +111,20 @@ export type GetPostSelectTagsOutput = z.infer<
   typeof getPostSelectTagsOutputSchema
 >;
 
+export const getPostsSelectMedesOutputSchema = z.array(
+  z.object({
+    id: postIdSchema,
+    title: z.string(),
+    content: z.string().optional(),
+    images: postImagesSchema.array(),
+    userId: userIdSchema,
+    medes: z.array(medeSchema),
+  })
+);
+export type GetPostsSelectMedesOutput = z.infer<
+  typeof getPostsSelectMedesOutputSchema
+>;
+
 export const getPostOutputSchema = z.object({
   posts: z.array(
     z.object({

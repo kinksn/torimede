@@ -333,7 +333,7 @@ export function PostDetailPage({
         >
           {post?.content && (
             <p
-              className={`text-typography-md whitespace-pre-line max-sm:whitespace-normal ${
+              className={`text-typography-md whitespace-pre-line ${
                 post.tags.length > 0 && "mb-4"
               }`}
             >

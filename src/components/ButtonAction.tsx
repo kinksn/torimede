@@ -102,9 +102,8 @@ const ButtonAction = ({
           location.href = "/";
         }
         router.push("/");
-      } else {
-        router.refresh();
       }
+      router.refresh();
     },
   });
 

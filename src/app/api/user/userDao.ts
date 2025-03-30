@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import {
+  getUserOutputSchema,
   getUserPostsSchema,
   getUserProfileSchema,
   UpdateUserImage,
@@ -11,6 +12,7 @@ import {
 import { unique } from "@/lib/util/unique";
 import { Post } from "@prisma/client";
 import { handleDaoError } from "@/lib/api/daoUtil";
+import { getPostsSelectMedesOutputSchema } from "@/app/api/post/model";
 
 type ParsedMededPost = {
   id: string;
@@ -94,6 +96,38 @@ export const getUserMededPostsByUserId = async ({ userId }: InputUserId) =>
       return unique(
         getUserPostsSchema.parse(data.map((post: ParsedMededPost) => post.post))
       );
+    }
+  );
+
+const KIRA_POST_THRESHOLD = 150;
+export const getKiraPostsByUserId = async ({ userId }: InputUserId) =>
+  handleDaoError(
+    { errorMessage: "database error by getKiraPostsByUserId" },
+    async () => {
+      // TODO: Prismaのバージョンを上げれば_countを指定して、
+      const data = await db.post.findMany({
+        where: {
+          userId,
+        },
+        include: {
+          images: true,
+          medes: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      if (!data) {
+        throw new Error(USER_NOTFOUND_MESSAGE);
+      }
+
+      const parsedData = getPostsSelectMedesOutputSchema.parse(data);
+      const filterdData = parsedData.filter(
+        (post) => post.medes.length >= KIRA_POST_THRESHOLD
+      );
+
+      return getUserPostsSchema.parse(filterdData);
     }
   );
 
