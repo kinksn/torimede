@@ -49,6 +49,7 @@ export const getUserOutputSchema = z.object({
   profile: getUserProfileSchema,
   posts: getUserPostsSchema.optional(),
   mededPosts: getUserPostsSchema.optional(),
+  kiraPosts: getUserPostsSchema.optional(),
 });
 export type GetUserOutput = z.infer<typeof getUserOutputSchema>;
 

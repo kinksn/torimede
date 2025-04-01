@@ -34,6 +34,7 @@ export default async function User({ params }: UserProps) {
   const profile: GetUserOutput = await getUser(params.userId, {
     posts: true,
     mededPosts: true,
+    kiraPosts: true,
   });
 
   if (profile.profile === undefined) {

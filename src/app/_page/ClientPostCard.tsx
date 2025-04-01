@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import PostCard from "@/components/PostCard";
+import { PostImage } from "@/components/PostImage";
 import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -81,7 +81,7 @@ const ClientPostCard = () => {
         {isSuccess &&
           data?.pages.map((pages) =>
             pages.posts.map((post: any) => {
-              return <PostCard post={post} key={post.id} />;
+              return <PostImage post={post} key={post.id} />;
             })
           )}
       </Masonry>

@@ -7,6 +7,7 @@ import {
 } from "@/app/api/user/model";
 import {
   USER_NOTFOUND_MESSAGE,
+  getKiraPostsByUserId,
   getUserMededPostsByUserId,
   getUserPostsByUserId,
   getUserProfileByUserId,
@@ -29,6 +30,7 @@ export async function GET(req: Request, context: ContextProps) {
 
     const isIncludePosts = searchParams.get("posts") === "true";
     const isIncludeMededPosts = searchParams.get("mededPosts") === "true";
+    const isIncludeKiraPosts = searchParams.get("kiraPosts") === "true";
 
     const profile = await getUserProfileByUserId({ userId });
 
@@ -37,6 +39,9 @@ export async function GET(req: Request, context: ContextProps) {
       ...(isIncludePosts && { posts: await getUserPostsByUserId({ userId }) }),
       ...(isIncludeMededPosts && {
         mededPosts: await getUserMededPostsByUserId({ userId }),
+        ...(isIncludeKiraPosts && {
+          kiraPosts: await getKiraPostsByUserId({ userId }),
+        }),
       }),
     };
 

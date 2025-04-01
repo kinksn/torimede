@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Masonry from "@/components/react-layout-masonry";
-import PostCard from "@/components/PostCard";
+import { PostImage } from "@/components/PostImage";
 import SyoboMedeChan from "@/components/assets/mede-chan/syobo.svg";
 import { GetPostOutput } from "@/app/api/post/model";
 import { useQuery } from "@tanstack/react-query";
@@ -59,7 +59,7 @@ export const PostSearchPage = () => {
       ) : posts && posts.length > 0 ? (
         <Masonry columns={{ 845: 2, 1024: 3, 1280: 4 }} gap={20}>
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostImage key={post.id} post={post} />
           ))}
         </Masonry>
       ) : searchQuery || searchTag ? (
