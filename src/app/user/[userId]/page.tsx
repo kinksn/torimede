@@ -1,4 +1,3 @@
-import React from "react";
 import { notFound } from "next/navigation";
 import { GetUserOutput, UserId } from "@/app/api/user/model";
 import { UserPage } from "@/app/user/[userId]/_page/UserPage";

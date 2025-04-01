@@ -1,6 +1,5 @@
 import { db } from "@/lib/db";
 import {
-  getUserOutputSchema,
   getUserPostsSchema,
   getUserProfileSchema,
   UpdateUserImage,
@@ -13,6 +12,7 @@ import { unique } from "@/lib/util/unique";
 import { Post } from "@prisma/client";
 import { handleDaoError } from "@/lib/api/daoUtil";
 import { getPostsSelectMedesOutputSchema } from "@/app/api/post/model";
+import { KIRA_POST_MEDE_COUNT_THRESHOLD } from "@/lib/constants/limits";
 
 type ParsedMededPost = {
   id: string;
@@ -99,7 +99,6 @@ export const getUserMededPostsByUserId = async ({ userId }: InputUserId) =>
     }
   );
 
-const KIRA_POST_THRESHOLD = 150;
 export const getKiraPostsByUserId = async ({ userId }: InputUserId) =>
   handleDaoError(
     { errorMessage: "database error by getKiraPostsByUserId" },
@@ -124,7 +123,7 @@ export const getKiraPostsByUserId = async ({ userId }: InputUserId) =>
 
       const parsedData = getPostsSelectMedesOutputSchema.parse(data);
       const filterdData = parsedData.filter(
-        (post) => post.medes.length >= KIRA_POST_THRESHOLD
+        (post) => post.medes.length >= KIRA_POST_MEDE_COUNT_THRESHOLD
       );
 
       return getUserPostsSchema.parse(filterdData);
@@ -212,5 +211,41 @@ export const updateUserIsFirstLogin = async ({
       if (!data) {
         throw new Error("failed to update user isFirstLogin in the database");
       }
+    }
+  );
+
+const JST_HOURS_OFFSET = 9;
+export const getUserDailyPostCount = async ({ userId }: InputUserId) =>
+  handleDaoError(
+    { errorMessage: "database error by getUserDailyPostCount" },
+    async () => {
+      const jstNow = new Date();
+      jstNow.setHours(jstNow.getHours() + JST_HOURS_OFFSET);
+
+      // 日本時間での当日の0時0分0秒を計算
+      const jstToday = new Date(
+        jstNow.getFullYear(),
+        jstNow.getMonth(),
+        jstNow.getDate(),
+        0,
+        0,
+        0
+      );
+
+      // 日本時間の0時0分0秒をUTCに戻す（DBクエリ用）
+      const utcStartOfJstDay = new Date(jstToday);
+      utcStartOfJstDay.setHours(utcStartOfJstDay.getHours() - JST_HOURS_OFFSET);
+
+      // 当日（日本時間基準）の投稿数をカウント
+      const count = await db.post.count({
+        where: {
+          userId,
+          createdAt: {
+            gte: utcStartOfJstDay,
+          },
+        },
+      });
+
+      return count;
     }
   );
