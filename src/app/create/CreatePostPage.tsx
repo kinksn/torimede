@@ -5,7 +5,7 @@ import { PostForm } from "@/components/PostForm";
 import { postKeys } from "@/service/post/key";
 import { Tag } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Session } from "next-auth";
 import { useRouter } from "next/navigation";
 import { SubmitHandler } from "react-hook-form";
@@ -27,8 +27,10 @@ const CreatePostPage = ({ tags, session }: CreatePostPageProps) => {
     mutationFn: (newPost: FormInputPost) => {
       return axios.post("/api/post/create", newPost);
     },
-    onError: (error) => {
-      toast.error("投稿できませんでした");
+    onError: (error: AxiosError<{ message: string }>) => {
+      const errorMessage =
+        error.response?.data?.message || "投稿できませんでした";
+      toast.error(errorMessage);
       console.error(error);
     },
     onSuccess: async () => {
