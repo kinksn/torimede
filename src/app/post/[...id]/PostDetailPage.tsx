@@ -235,7 +235,7 @@ export function PostDetailPage({
                 <Avatar
                   size="sm"
                   profileImage={userProfileImage}
-                  className="max-sm:w-6 h-6"
+                  className="max-sm:w-6 max-sm:h-6"
                 />
                 <p className="overflow-hidden whitespace-nowrap text-ellipsis max-w-[20ch] max-sm:max-w-[9ch]">
                   {userName}

@@ -30,6 +30,7 @@ export type GetUserProfile = z.infer<typeof getUserProfileSchema>;
 
 // TODO: postIdSchemaをimportしたいが循環参照でエラーになる
 const postIdSchema = idWithBrandSchema("PostId");
+
 export const getUserPostsSchema = z.array(
   z.object({
     id: postIdSchema,
@@ -44,6 +45,7 @@ export const getUserPostsSchema = z.array(
     ),
   })
 );
+export type GetUserPosts = z.infer<typeof getUserPostsSchema>;
 
 export const getUserOutputSchema = z.object({
   profile: getUserProfileSchema,

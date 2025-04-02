@@ -5,5 +5,9 @@ export default async function EditLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <DetailPageLayout>{children}</DetailPageLayout>;
+  return (
+    <DetailPageLayout whiteSectionClassName="bg-transparent pt-0 px-0 pb-0 max-sm:px-0">
+      {children}
+    </DetailPageLayout>
+  );
 }
