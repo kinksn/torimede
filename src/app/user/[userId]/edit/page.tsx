@@ -37,12 +37,12 @@ const page = async ({ params }: UserEditProps) => {
   }
 
   return (
-    <>
+    <div className="bg-white h-full rounded-20 px-10 max-sm:px-5 py-10">
       <h1 className="text-2xl font-bold text-center mb-5 font-zenMaruGothic">
         {METADATA_TITLE.user.edit}
       </h1>
       <ProfileEditPage userProfile={profile.profile} />
-    </>
+    </div>
   );
 };
 

@@ -28,7 +28,7 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
   return (
     <>
       <InitialPagePathSetter />
-      <div className="max-sm:mx-auto">
+      <div className="max-sm:mx-auto h-full grid grid-rows-[auto_1fr]">
         <UserProfile userProfile={userProfile} readonly={!isMe} />
         <div className="mt-10 bg-white py-10 max-sm:py-5 rounded-20 px-5">
           {isMe ? (
