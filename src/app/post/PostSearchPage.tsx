@@ -3,7 +3,7 @@
 import axios from "axios";
 import Masonry from "@/components/react-layout-masonry";
 import { PostImage } from "@/components/PostImage";
-import SyoboMedeChan from "@/components/assets/mede-chan/syobo.svg";
+import TankenMedechan from "@/components/assets/mede-chan/tanken.svg";
 import { GetPostOutput } from "@/app/api/post/model";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
@@ -49,7 +49,7 @@ export const PostSearchPage = () => {
         </div>
       ) : error ? (
         <div className="flex flex-col items-center justify-center gap-5">
-          <SVGIcon svg={SyoboMedeChan} />
+          <SVGIcon svg={TankenMedechan} />
           <p className="text-center max-sm:text-left">
             ごめんなさい、検索中にエラーが発生しました。
             <br className="max-sm:hidden" />
@@ -64,16 +64,16 @@ export const PostSearchPage = () => {
         </Masonry>
       ) : searchQuery || searchTag ? (
         <div className="flex flex-col items-center justify-center gap-5">
-          <SVGIcon svg={SyoboMedeChan} />
+          <SVGIcon svg={TankenMedechan} />
           <p className="text-center max-sm:text-left">
-            ごめんなさい、探している鳥さんは見つかりませんでした。
+            探している鳥さんは見つかりませんでした。
             <br className="max-sm:hidden" />
             言葉を変えて探してみてください。
           </p>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center gap-5">
-          <SVGIcon svg={SyoboMedeChan} />
+          <SVGIcon svg={TankenMedechan} />
           <p className="text-center max-sm:text-left">
             検索ワードを入力してください
           </p>
