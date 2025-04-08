@@ -1,3 +1,4 @@
+import { DetailPageLayout } from "@/components/DetailPageLayout";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,8 +12,8 @@ export default async function EditLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="px-5 max-sm:px-0 h-full max-sm:h-auto">
-      <div className="w-full rounded-20">{children}</div>
-    </div>
+    <DetailPageLayout whiteSectionClassName="px-0 py-0 overflow-hidden max-sm:px-0">
+      {children}
+    </DetailPageLayout>
   );
 }

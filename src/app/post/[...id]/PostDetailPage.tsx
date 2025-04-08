@@ -7,6 +7,7 @@ import PostBottomLeftPC from "@/components/assets/ornament/post-bottom-left-pc.s
 import PostBottomRightSP from "@/components/assets/ornament/post-bottom-right-sp.svg";
 import PostBottomLeftSP from "@/components/assets/ornament/post-bottom-left-sp.svg";
 import axiosInstance from "@/lib/axios";
+import UserPostCards from "@/app/post/[...id]/_components/UserPostCards";
 import { ShareButtons } from "@/components/ShareButtons";
 import { UrlCopyButton } from "@/components/UrlCopyButton";
 import {
@@ -15,7 +16,6 @@ import {
   PostId,
 } from "@/app/api/post/model";
 import { ImageItem } from "@/components/basic/ImageItem";
-import UserPostCards from "@/app/post/[...id]/_components/UserPostCards";
 import { SVGIcon } from "@/components/ui/SVGIcon";
 import { Avatar } from "@/components/basic/Avatar";
 import { Tag } from "@/components/basic/Tag";
@@ -37,6 +37,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { RoundButton } from "@/components/basic/RoundButton";
+import { ReportForm } from "@/app/post/[...id]/_components/ReportForm";
 
 // メデ文字のカラーバリエーション
 const medeMojiColorKeys = Object.keys(
@@ -196,12 +197,12 @@ export function PostDetailPage({
       }`}
     >
       <UIBlocker zIndex={1} />
-      <div className="max-w-[1064px] mx-auto">
+      <div className="max-w-[1024px] mx-auto">
         {isParentModal && (
           <div className="hidden max-sm:block w-full h-[16px]" />
         )}
         <div
-          className={`flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 z-[21] bg-base-bg w-full ${
+          className={`flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 z-[21] w-full ${
             isParentModal && "max-sm:fixed max-sm:top-[19px] max-sm:pb-2 "
           }`}
         >
@@ -285,7 +286,7 @@ export function PostDetailPage({
           })}
         </div>
       </div>
-      <div className="flex max-w-[1064px] w-full mx-auto px-5 max-sm:px-0">
+      <div className="flex max-w-[1032px] w-full mx-auto px-5 max-sm:px-0">
         <div>
           <SVGIcon svg={PostBottomLeftPC} className="h-10 max-sm:hidden" />
           <SVGIcon svg={PostBottomLeftSP} className="h-5 hidden max-sm:block" />
@@ -351,17 +352,22 @@ export function PostDetailPage({
           )}
         </div>
         <div
-          className={`flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[fit-content] max-sm:min-w-[unset] border border-primary-50 bg-base-content rounded-20 p-6 max-sm:p-4 max-sm:w-full ${
-            !post?.content &&
-            post.tags.length === 0 &&
-            "w-full justify-center max-sm:mb-5"
-          }`}
+          className={`flex flex-col gap-5 ${!post?.content && post.tags.length === 0 && "w-full"} max-sm:w-full`}
         >
-          <p className="text-typography-xs">共有</p>
-          <div className="flex gap-3 max-sm:w-full max-sm:justify-between whitespace-nowrap">
-            <ShareButtons text={post.title} />
-            <UrlCopyButton />
+          <div
+            className={`flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[fit-content] max-sm:min-w-[unset] border border-primary-50 bg-base-bg rounded-20 p-6 max-sm:p-4 max-sm:w-full ${
+              !post?.content &&
+              post.tags.length === 0 &&
+              "w-full justify-center max-sm:mb-5"
+            }`}
+          >
+            <p className="text-typography-xs">共有</p>
+            <div className="flex gap-3 max-sm:w-full max-sm:justify-between whitespace-nowrap">
+              <ShareButtons text={post.title} />
+              <UrlCopyButton />
+            </div>
           </div>
+          <ReportForm postId={postId} userId={userId} />
         </div>
       </div>
       {userPosts.length > 0 && (

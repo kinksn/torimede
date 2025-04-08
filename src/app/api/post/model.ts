@@ -167,3 +167,22 @@ export const getUserPostsOutputSchema = z.array(
   })
 );
 export type GetUserPostsOutput = z.infer<typeof getUserPostsOutputSchema>;
+
+const postReportReasonEnumSchema = z.enum(
+  [
+    "COPYRIGHT", // 著作権違反
+    "DEFAMATION", // 誹謗中傷
+    "ADULT_VIOLENCE", // ポルノ・暴力
+    "OTHER", // その他
+  ],
+  {
+    errorMap: () => ({ message: "項目を選択してください" }),
+  }
+);
+export type PostReportReasonEnum = z.infer<typeof postReportReasonEnumSchema>;
+
+export const postReportInputSchema = z.object({
+  reason: postReportReasonEnumSchema,
+  content: z.string().max(300, "300文字以内で入力してください").optional(),
+});
+export type PostReportInput = z.infer<typeof postReportInputSchema>;

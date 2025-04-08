@@ -12,13 +12,13 @@ import {
 } from "@/app/api/mede/[postId]/medeDao";
 import { getPostByPostId } from "@/app/api/post/postDao";
 
-type ContextPropds = {
+type ContextProps = {
   params: {
     postId: PostId;
   };
 };
 
-export async function POST(req: Request, context: ContextPropds) {
+export async function POST(req: Request, context: ContextProps) {
   try {
     const session = await auth();
     const { postId } = context.params;
