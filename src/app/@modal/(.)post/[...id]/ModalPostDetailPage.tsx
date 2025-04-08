@@ -41,7 +41,7 @@ const ModalPostDetailPage = ({
   return (
     <Credenza open={isOpen} onOpenChange={onDismiss}>
       <CredenzaContent
-        className="p-0 h-full bg-base-bg translate-x-0 translate-y-0 overflow-y-scroll bottom-0 w-full rounded-br-none rounded-bl-none max-sm:rounded-tr-[20px] max-sm:rounded-tl-[20px] data-[state=open]:!animate-slideUp data-[state=closed]:transition-none data-[state=closed]:!animate-none max-sm:mt-0 overflow-hidden border-none [&>.hinge]:mb-1"
+        className="p-0 h-full bg-base-content translate-x-0 translate-y-0 overflow-y-scroll bottom-0 w-full rounded-br-none rounded-bl-none max-sm:rounded-tr-[20px] max-sm:rounded-tl-[20px] data-[state=open]:!animate-slideUp data-[state=closed]:transition-none data-[state=closed]:!animate-none max-sm:mt-0 overflow-hidden border-none [&>.hinge]:mb-1"
         style={{ top: "12px", left: "unset" }}
       >
         <CredenzaTitle className="sr-only">{post.title}</CredenzaTitle>

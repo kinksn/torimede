@@ -38,7 +38,7 @@ export const Tag = ({
       role="listitem"
       aria-label={`タグ: ${children}`}
       className={cn(
-        `text-typography-md text-left bg-white rounded-full font-bold py-2 px-3 leading-none shadow-basic inline-flex items-center gap-1 ${
+        `text-typography-md text-left bg-white rounded-full font-bold py-2 px-3 leading-none shadow-basic inline-flex items-center gap-1 border border-primary-700 ${
           href ? "cursor-pointer" : "cursor-default"
         }`,
         className

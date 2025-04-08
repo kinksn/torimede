@@ -15,8 +15,8 @@ type PostCardProps = {
 
 const UserPostCards = ({ userPosts, userName, className }: PostCardProps) => {
   return (
-    <div className={cn("px-10 max-sm:px-0 mb-10 max-sm:mb-5", className)}>
-      <div className="bg-base-content p-10 rounded-20 max-sm:p-5">
+    <div className={cn("mb-10 max-sm:mb-5", className)}>
+      <div className="bg-base-content px-5 py-10 max-sm:py-5 rounded-20">
         <h2 className="font-bold text-typography-lg leading-normal text-center font-zenMaruGothic">
           {userName}の投稿
         </h2>
