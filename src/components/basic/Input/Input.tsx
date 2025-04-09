@@ -44,6 +44,7 @@ type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> &
     requirement?: "optional" | "required";
     error?: boolean;
     inputClassName?: string;
+    formMessageClassName?: string;
     icon?: React.ReactNode;
   };
 
@@ -51,6 +52,7 @@ export const Input = ({
   size,
   className,
   inputClassName,
+  formMessageClassName,
   label,
   colorTheme,
   requirement,
@@ -90,7 +92,12 @@ export const Input = ({
           />
         </div>
       </FormControl>
-      <FormMessage className="!mt-1 text-state-error letter-spacing-[0] text-xs" />
+      <FormMessage
+        className={cn(
+          "!mt-1 text-state-error letter-spacing-[0] text-xs",
+          formMessageClassName
+        )}
+      />
     </FormItem>
   );
 };

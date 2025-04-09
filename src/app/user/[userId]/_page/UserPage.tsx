@@ -1,6 +1,7 @@
 "use client";
 
 import ButtonAction from "@/components/ButtonAction";
+import MedeChan from "@/components/assets/mede-chan/default-pale.svg";
 import { GetUserOutput, GetUserPosts } from "@/app/api/user/model";
 import { UserProfile } from "@/app/user/[userId]/_components/UserProfile";
 import { PostImage } from "@/components/PostImage";
@@ -11,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // 本家だとSSR時にwindowオブジェクトがエラーになるバグがあったため直接プロジェクトに入れて読み込んでいる
 import Masonry from "@/components/react-layout-masonry";
 import { KiraImage } from "@/app/user/[userId]/_components/KiraImage";
+import { SVGIcon } from "@/components/ui/SVGIcon";
 
 const kiraPostsTabTextStyle =
   "bg-gradient-to-r from-[#E87E3D] via-[#ECC707] to-[#39ADF0] inline-block text-transparent bg-clip-text";
@@ -66,7 +68,10 @@ export const UserPage = ({ profile, session }: UserPageProps) => {
                     ))}
                   </Masonry>
                 ) : (
-                  <div>まだ鳥さんを愛でてません</div>
+                  <div className="flex flex-col items-center justify-center gap-5">
+                    <SVGIcon svg={MedeChan} className="w-[120px]" />
+                    <p>まだ鳥さんを愛でてません</p>
+                  </div>
                 )}
               </TabsContent>
               {!!kiraPosts?.length && (
@@ -125,7 +130,10 @@ const MyPosts = ({ posts, isMe }: MyPostsProps) => {
           ))}
         </Masonry>
       ) : (
-        <div>まだ投稿がありません</div>
+        <div className="flex flex-col items-center justify-center gap-5">
+          <SVGIcon svg={MedeChan} className="w-[120px]" />
+          <p>まだ投稿がありません</p>
+        </div>
       )}
     </>
   );

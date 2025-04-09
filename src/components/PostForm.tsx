@@ -33,6 +33,7 @@ import { ConfirmModal } from "@/components/ConfirmModal";
 import { useUIBlock } from "@/hooks/useUIBlock";
 import { UIBlocker } from "@/components/UIBlocker";
 import { POST_COMPRESSION_OPTIONS } from "@/lib/constants/image";
+import { MAX_POST_TAG_COUNT } from "@/lib/constants/limits";
 
 interface PostFormProps {
   submit: SubmitHandler<FormInputPost>;
@@ -262,7 +263,7 @@ export const PostForm: FC<PostFormProps> = ({
                     }}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="!mt-1 text-state-error letter-spacing-[0] text-xs" />
               </FormItem>
             )}
           />

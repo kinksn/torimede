@@ -3,6 +3,7 @@ import { uploadImageSchema } from "@/app/api/image/model";
 import { medeSchema } from "@/app/api/mede/[postId]/model";
 import { tagIdSchema, tagSchema } from "@/app/api/tag/model";
 import { userIdSchema, userSchema } from "@/app/api/user/model";
+import { MAX_POST_TAG_COUNT } from "@/lib/constants/limits";
 import { idWithBrandSchema } from "@/lib/util/entity";
 import { ReportReason } from "@prisma/client";
 import { z } from "zod";
@@ -40,7 +41,9 @@ export const updatePostBodySchema = z.object({
     .max(400, "投稿内容は400文字以内で入力してください")
     .optional(),
   userId: userIdSchema,
-  tags: z.array(z.union([tagIdSchema, tagSchema])),
+  tags: z
+    .array(z.union([tagIdSchema, tagSchema]))
+    .max(MAX_POST_TAG_COUNT, `タグの設定は最大${MAX_POST_TAG_COUNT}個までです`),
 });
 
 export const createPostSchema = z.object({
@@ -53,7 +56,9 @@ export const createPostSchema = z.object({
     .max(400, "投稿内容は400文字以内で入力してください")
     .optional(),
   images: uploadImageSchema,
-  tags: z.array(tagIdSchema),
+  tags: z
+    .array(tagIdSchema)
+    .max(MAX_POST_TAG_COUNT, `タグの設定は最大${MAX_POST_TAG_COUNT}個までです`),
 });
 
 export const editPostSchema = z.object({
@@ -65,7 +70,9 @@ export const editPostSchema = z.object({
       alt: z.string().optional(),
     })
   ),
-  tags: z.array(tagSchema),
+  tags: z
+    .array(tagSchema)
+    .max(MAX_POST_TAG_COUNT, `タグの設定は最大${MAX_POST_TAG_COUNT}個までです`),
   userId: userIdSchema,
 });
 export type EditPost = z.infer<typeof editPostSchema>;
@@ -79,7 +86,9 @@ export const createPostBodySchema = z.object({
       alt: z.string().optional(),
     })
   ),
-  tags: z.array(tagIdSchema),
+  tags: z
+    .array(tagIdSchema)
+    .max(MAX_POST_TAG_COUNT, `タグの設定は最大${MAX_POST_TAG_COUNT}個までです`),
 });
 
 export const getPostSelectTagsSchema = z.object({
