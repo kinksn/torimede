@@ -17,7 +17,7 @@ export default async function Home() {
           <SVGIcon svg={Logo} className="w-[260px] max-sm:w-[180px]" />
         </h1>
         <h2 className="font-bold text-typography-md font-zenMaruGothic text-primary-900 mt-3 -mr-4 max-sm:text-typography-sm max-sm:font-bold max-sm:-mr-3">
-          鳥を愛でて、心ほっこり。
+          鳥さん愛でて、心ほっこり。
         </h2>
         <PillButton className="mt-6" colorTheme={"secondary"} asChild>
           <Link href={"/about"}>トリメデとは？</Link>

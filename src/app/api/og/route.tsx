@@ -75,7 +75,7 @@ export async function GET(req: Request) {
             backgroundColor: "#F0F0F0",
             width: "100%",
             height: "100%",
-            display: "flex", // ここで display: flex を指定
+            display: "flex",
           }}
         >
           <div
