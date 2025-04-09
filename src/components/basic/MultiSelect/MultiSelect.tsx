@@ -69,7 +69,7 @@ export const MultiSelect = <T,>({
   const defaultFilterOption = (option: T, searchTerm: string) => {
     const text =
       typeof option === "object" && option !== null && "name" in option
-        ? (option as any).name?.toString() ?? ""
+        ? ((option as any).name?.toString() ?? "")
         : String(option);
     return text.includes(searchTerm);
   };
@@ -219,6 +219,7 @@ export const MultiSelect = <T,>({
           <div className="mb-1">
             <Input
               inputClassName="rounded-tr-[6px] rounded-tl-[6px] rounded-br-none rounded-bl-none"
+              formMessageClassName="text-center bg-tertialy-fleshTomato-50 py-1"
               placeholder={`${label}を検索または追加`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
