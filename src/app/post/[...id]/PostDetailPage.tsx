@@ -367,7 +367,7 @@ export function PostDetailPage({
               <UrlCopyButton />
             </div>
           </div>
-          <ReportForm postId={postId} userId={userId} />
+          {session?.user && <ReportForm postId={postId} userId={userId} />}
         </div>
       </div>
       {userPosts.length > 0 && (

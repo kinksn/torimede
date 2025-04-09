@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "ReportReason" AS ENUM ('COPYRIGHT', 'DEFAMATION', 'ADULT_VIOLENCE', 'OTHER');
+
 -- CreateTable
 CREATE TABLE "Tag" (
     "id" TEXT NOT NULL,
@@ -57,6 +60,7 @@ CREATE TABLE "users" (
     "email_verified" TIMESTAMP(3),
     "image" TEXT,
     "oAuthProfileImage" TEXT,
+    "uploadProfileImage" TEXT DEFAULT '',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "password" TEXT,
@@ -110,6 +114,19 @@ CREATE TABLE "VerificationRequest" (
     CONSTRAINT "VerificationRequest_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Report" (
+    "id" TEXT NOT NULL,
+    "reason" "ReportReason" NOT NULL,
+    "content" VARCHAR(300),
+    "postId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Tag_name_key" ON "Tag"("name");
 
@@ -154,3 +171,9 @@ ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user
 
 -- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Report" ADD CONSTRAINT "Report_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Report" ADD CONSTRAINT "Report_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
