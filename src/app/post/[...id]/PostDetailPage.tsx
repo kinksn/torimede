@@ -193,58 +193,41 @@ export function PostDetailPage({
   return (
     <div
       className={`relative mt-10 max-sm:mt-4 ${
-        isParentModal && "max-sm:h-full"
+        isParentModal && "mt-5 max-sm:h-full max-sm:mt-auto"
       }`}
     >
       <UIBlocker zIndex={1} />
       <div className="max-w-[1024px] mx-auto">
-        {isParentModal && (
-          <div className="hidden max-sm:block w-full h-[16px]" />
-        )}
-        <div
-          className={`flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 z-[21] w-full ${
-            isParentModal && "max-sm:fixed max-sm:top-[19px] max-sm:pb-2 "
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            {isParentModal && (
-              <RoundButton
-                size={"sm"}
-                colorTheme={"white"}
-                className="bg-transparent w-9 min-w-9 h-9 max-sm:w-6 max-sm:min-w-6 max-sm:h-6 relative top-[2px] max-sm:top-[1px] max-sm:-left-2"
-                onClick={() => router.back()}
-                icon={
-                  <SVGIcon
-                    svg={ArrowLeft}
-                    className="w-5 font-bold text-textColor-basic"
-                  />
-                }
-              />
-            )}
-            <h2
-              className={`text-typography-xl max-sm:text-base font-bold leading-normal max-sm:leading-none font-zenMaruGothic line-clamp-2 max-sm:line-clamp-1`}
-            >
-              {post?.title}
-            </h2>
-          </div>
-          <div className="flex max-sm:text-xs font-bold items-center">
-            {userProfileImage && (
-              <a
-                href={`/user/${post.userId}`}
-                className="flex items-center gap-1"
+        {!isParentModal && (
+          <div
+            className={`flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 z-[21] w-full`}
+          >
+            <div className="flex items-center gap-4">
+              <h2
+                className={`text-typography-xl max-sm:text-base font-bold leading-normal max-sm:leading-none font-zenMaruGothic line-clamp-2 max-sm:line-clamp-1`}
               >
-                <Avatar
-                  size="sm"
-                  profileImage={userProfileImage}
-                  className="max-sm:w-6 max-sm:h-6"
-                />
-                <p className="overflow-hidden whitespace-nowrap text-ellipsis max-w-[20ch] max-sm:max-w-[9ch]">
-                  {userName}
-                </p>
-              </a>
-            )}
+                {post?.title}
+              </h2>
+            </div>
+            <div className="flex max-sm:text-xs font-bold items-center">
+              {userProfileImage && (
+                <a
+                  href={`/user/${post.userId}`}
+                  className="flex items-center gap-1"
+                >
+                  <Avatar
+                    size="sm"
+                    profileImage={userProfileImage}
+                    className="max-sm:w-6 max-sm:h-6"
+                  />
+                  <p className="overflow-hidden whitespace-nowrap text-ellipsis max-w-[20ch] max-sm:max-w-[9ch]">
+                    {userName}
+                  </p>
+                </a>
+              )}
+            </div>
           </div>
-        </div>
+        )}
         <div
           className={`relative flex justify-center mt-5 ${
             isParentModal ? "max-sm:mt-0" : "max-sm:mt-4"
@@ -342,7 +325,7 @@ export function PostDetailPage({
             </p>
           )}
           {post.tags.length > 0 && (
-            <div className="flex gap-2 max-sm:select-none">
+            <div className="flex flex-wrap gap-2 max-sm:select-none">
               {post.tags.map((tag) => (
                 <Tag href={tag.name} key={tag.id}>
                   {tag.name}
@@ -352,7 +335,7 @@ export function PostDetailPage({
           )}
         </div>
         <div
-          className={`flex flex-col gap-5 ${!post?.content && post.tags.length === 0 && "w-full"} max-sm:w-full`}
+          className={`flex flex-col gap-5 max-sm:w-full ${!post?.content && post.tags.length === 0 && "w-full"} ${userPosts.length <= 0 && isParentModal && "max-sm:pb-14"}`}
         >
           <div
             className={`flex items-center max-sm:flex-col max-sm:items-start gap-3 max-sm:gap-2 min-w-[fit-content] max-sm:min-w-[unset] border border-primary-50 bg-base-bg rounded-20 p-6 max-sm:p-4 max-sm:w-full ${
