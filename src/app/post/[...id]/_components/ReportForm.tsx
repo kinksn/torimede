@@ -71,11 +71,15 @@ export const ReportForm = ({ postId, userId }: ReportFormProps) => {
 
   return (
     <Modal
+      className="max-sm:w-[100svw] max-sm:h-[100svh] max-sm:content-baseline"
       open={isShowModal}
       onOpenChange={setIsShowModal}
       title="報告する"
       description="該当する項目をチェックしてください"
-      triggerContentClassName="w-fit mx-auto"
+      // MEMO：投稿モーダルを開いた状態で、このレポートフォームのモーダルを開くとタッチデバイスでのみテキストエリアが入力できなくなる
+      // 根本原因は特定しきれていないが、モーダルのトリガー（DialogTrigger）のtabindex属性をdevツールで消したら入力できるようになった
+      // が、ModalコンポーネントのtabIndexを消しても入力できなかったので、モーダルが開いている時はトリガーごとhiddenすることで入力はできるようになった
+      triggerContentClassName={`w-fit mx-auto ${isShowModal && "hidden"}`}
       triggerContent={
         <div className="flex items-center justify-center text-primary-600 w-fit mx-auto">
           <SVGIcon svg={Flag} className="w-5" />
