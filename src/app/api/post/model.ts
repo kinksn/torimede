@@ -4,6 +4,7 @@ import { medeSchema } from "@/app/api/mede/[postId]/model";
 import { tagIdSchema, tagSchema } from "@/app/api/tag/model";
 import { userIdSchema, userSchema } from "@/app/api/user/model";
 import { idWithBrandSchema } from "@/lib/util/entity";
+import { ReportReason } from "@prisma/client";
 import { z } from "zod";
 
 export const postIdSchema = idWithBrandSchema("PostId");
@@ -168,17 +169,9 @@ export const getUserPostsOutputSchema = z.array(
 );
 export type GetUserPostsOutput = z.infer<typeof getUserPostsOutputSchema>;
 
-const postReportReasonEnumSchema = z.enum(
-  [
-    "COPYRIGHT", // 著作権違反
-    "DEFAMATION", // 誹謗中傷
-    "ADULT_VIOLENCE", // ポルノ・暴力
-    "OTHER", // その他
-  ],
-  {
-    errorMap: () => ({ message: "項目を選択してください" }),
-  }
-);
+const postReportReasonEnumSchema = z.nativeEnum(ReportReason, {
+  errorMap: () => ({ message: "項目を選択してください" }),
+});
 export type PostReportReasonEnum = z.infer<typeof postReportReasonEnumSchema>;
 
 export const postReportInputSchema = z.object({

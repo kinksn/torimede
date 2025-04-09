@@ -17,7 +17,8 @@
     "db:migrate": "dotenv -e .env.local -- prisma migrate deploy",
     "db:seed": "dotenv -e .env.local -- ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed.ts",
     "db:reset": "dotenv -e .env.local -- prisma migrate reset -f",
-    "db:production:reset": "dotenv -e .env.production -- prisma db push --force-reset"
+    "db:production:reset": "dotenv -e .env.production -- prisma db push --force-reset",
+    "db:production:push": "dotenv -e .env.production -- prisma db push"
   },
   "dependencies": {
     "@auth/core": "0.38.0",

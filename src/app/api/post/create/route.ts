@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ message: "not login" }, { status: 401 });
+      return NextResponse.json({ message: "Not login" }, { status: 401 });
     }
 
     // 当日（日本時間基準）の投稿数をチェック
