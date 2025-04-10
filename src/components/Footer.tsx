@@ -28,7 +28,10 @@ export const Footer = () => {
             街中で野鳥を眺めるような気持ちでお楽しみください。
           </p>
           <small className="font-comfortaa text-typography-xxs">
-            Created By SHUNYA KATAOKA
+            Created By{" "}
+            <a href="https://x.com/ktchpppp" target="_blank">
+              CHUNYA KATAOKA
+            </a>
           </small>
         </div>
         <div className="self-end justify-self-end whitespace-nowrap max-sm:justify-self-start">
@@ -40,12 +43,12 @@ export const Footer = () => {
               <Link href="/privacy">プライバシーポリシー</Link>
             </li>
             <li>
-              <a href="/" target="_blank">
+              <a href="https://forms.gle/33Xy8jJWWRHmxye26" target="_blank">
                 ご要望・お問い合わせ
               </a>
             </li>
             <li>
-              <a href="https://x.com/" target="_blank">
+              <a href="https://x.com/torimede" target="_blank">
                 <SVGIcon svg={XIcon} className="text-primary-700 w-[24px]" />
               </a>
             </li>
