@@ -106,11 +106,11 @@ export const ProfileEditPage = ({ userProfile }: ProfileEditPageProps) => {
           await axios.post("/api/image/delete", {
             imageUrl: oldUploadProfileImage,
           });
-          setOldUploadProfileImage(updateImageUrl);
         } catch {
           console.error("failt to delete upload profile image");
         }
       }
+      setOldUploadProfileImage(updateImageUrl);
       setUploadProfileImagePreview(null);
       toast.success("プロフィールを更新しました");
       unblock();

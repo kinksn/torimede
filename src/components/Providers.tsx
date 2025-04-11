@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { PATH } from "@/lib/constants/path";
 import { ToastProvider } from "@/components/basic/Toast";
 import { TanstackProvider } from "@/components/TanstackProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { auth } from "@/lib/auth";
 
 const Providers = async ({ children }: { children: React.ReactNode }) => {
@@ -24,6 +25,7 @@ const Providers = async ({ children }: { children: React.ReactNode }) => {
         <Analytics />
       </div>
       <ToastProvider />
+      <SpeedInsights />
     </>
   );
 };

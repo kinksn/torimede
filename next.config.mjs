@@ -2,10 +2,15 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      // S3
+      // S3（Local/STG）
       {
         protocol: "https",
         hostname: "pp-web-strage.s3.ap-southeast-2.amazonaws.com",
+      },
+      // S3（Prod）
+      {
+        protocol: "https",
+        hostname: "torimede.s3.ap-northeast-1.amazonaws.com",
       },
       // LINE
       {
@@ -22,11 +27,12 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
-      // Vercel
+      // Stg
       {
         protocol: "https",
-        hostname: "torimede.vercel.app",
+        hostname: "stg.torimede.com",
       },
+      // Prod
       {
         protocol: "https",
         hostname: "www.torimede.com",
