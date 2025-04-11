@@ -192,16 +192,14 @@ export function PostDetailPage({
 
   return (
     <div
-      className={`relative mt-10 max-sm:mt-4 ${
-        isParentModal && "mt-5 max-sm:h-full max-sm:mt-auto"
+      className={`relative max-sm:mt-4 ${
+        isParentModal && "max-sm:h-full max-sm:mt-auto"
       }`}
     >
       <UIBlocker zIndex={1} />
-      <div className="max-w-[1024px] mx-auto">
+      <div className="max-w-[1064px] mx-auto px-5 max-sm:px-0">
         {!isParentModal && (
-          <div
-            className={`flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 z-[21] w-full`}
-          >
+          <div className="flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 mb-5 max-sm:mb-2 z-[21] w-full">
             <div className="flex items-center gap-4">
               <h2
                 className={`text-typography-xl max-sm:text-base font-bold leading-normal max-sm:leading-none font-zenMaruGothic line-clamp-2 max-sm:line-clamp-1`}
@@ -229,9 +227,7 @@ export function PostDetailPage({
           </div>
         )}
         <div
-          className={`relative flex justify-center mt-5 ${
-            isParentModal ? "max-sm:mt-0" : "max-sm:mt-4"
-          }`}
+          className={`relative flex justify-center`}
           ref={medeMojiContainerRef}
         >
           {post.images.map((image) => (
@@ -269,7 +265,7 @@ export function PostDetailPage({
           })}
         </div>
       </div>
-      <div className="flex max-w-[1032px] w-full mx-auto px-5 max-sm:px-0">
+      <div className="flex max-w-[1064px] w-full mx-auto px-[34px] max-sm:px-0">
         <div>
           <SVGIcon svg={PostBottomLeftPC} className="h-10 max-sm:hidden" />
           <SVGIcon svg={PostBottomLeftSP} className="h-5 hidden max-sm:block" />

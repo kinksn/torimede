@@ -52,7 +52,7 @@ const ModalPostDetailPage = ({
         className="p-0 h-full content-baseline bg-base-content translate-x-0 translate-y-0 overflow-y-scroll bottom-0 w-full rounded-br-none rounded-bl-none max-sm:rounded-tr-[20px] max-sm:rounded-tl-[20px] data-[state=open]:!animate-slideUp data-[state=closed]:transition-none data-[state=closed]:!animate-none max-sm:mt-0 overflow-hidden border-none [&>.hinge]:mb-1 gap-0"
         style={{ top: "12px", left: "unset" }}
       >
-        <CredenzaHeader className="p-0 max-w-[1024px] mx-auto w-full">
+        <CredenzaHeader className="p-0 max-w-[1064px] px-5 max-sm:px-0 mx-auto w-full pb-5 max-sm:pb-0">
           <div
             className={`flex justify-between items-center gap-3 max-sm:px-5 mt-10 max-sm:mt-0 w-full max-sm:pb-2`}
           >
