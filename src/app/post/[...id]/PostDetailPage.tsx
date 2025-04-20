@@ -235,7 +235,7 @@ export function PostDetailPage({
               key={image.id}
               imageUrl={image.url}
               alt={image?.alt}
-              className="w-full max-h-[633px] max-sm:rounded-none max-sm:max-h-[72svh]"
+              className="w-full max-h-[768px] max-sm:rounded-none max-sm:max-h-[72svh]"
               actionButton={
                 isMyPost && (
                   <ButtonAction

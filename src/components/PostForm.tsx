@@ -179,7 +179,7 @@ export const PostForm: FC<PostFormProps> = ({
             name="images"
             render={({ field, fieldState }) => (
               <Uploader
-                label="画像"
+                label={type === "post" ? "画像" : undefined}
                 requirement="required"
                 className="w-full"
                 error={!!fieldState.error}

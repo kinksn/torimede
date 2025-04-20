@@ -43,6 +43,14 @@ export const Footer = () => {
               <Link href="/privacy">プライバシーポリシー</Link>
             </li>
             <li>
+              <a
+                href="https://torimede.gitbook.io/torimedehelp/"
+                target="_blank"
+              >
+                ヘルプページ
+              </a>
+            </li>
+            <li>
               <a href="https://forms.gle/33Xy8jJWWRHmxye26" target="_blank">
                 ご要望・お問い合わせ
               </a>

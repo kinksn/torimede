@@ -163,8 +163,8 @@ export default function About() {
             </>
           }
         >
-          <ul className="flex justify-center max-sm:flex-col mt-10 gap-10 max-w-[1280px]">
-            <li className="flex flex-col gap-1 p-10 rounded-20 bg-secondary-50 border-4 border-secondary-100">
+          <ul className="flex justify-center max-sm:flex-col mt-10 gap-10 max-w-[1220px]">
+            <li className="flex flex-col gap-1 max-w-[380px] p-10 rounded-20 bg-secondary-50 border-4 border-secondary-100">
               <h2 className="flex items-center gap-2 text-tertialy-oceanblue-400 font-bold text-typography-lg font-zenMaruGothic">
                 <div className="flex items-center justify-center rounded-full w-6 h-6 bg-tertialy-oceanblue-400">
                   <SVGIcon svg={Check} className="w-5 text-base-content" />
@@ -173,7 +173,7 @@ export default function About() {
               </h2>
               <p>あなたが愛でた鳥さんを投稿者や他の人に知らせません。</p>
             </li>
-            <li className="flex flex-col gap-1 p-10 rounded-20 bg-secondary-50 border-4 border-secondary-100">
+            <li className="flex flex-col gap-1 max-w-[380px] p-10 rounded-20 bg-secondary-50 border-4 border-secondary-100">
               <h2 className="flex items-center gap-2 text-tertialy-oceanblue-400 font-bold text-typography-lg font-zenMaruGothic">
                 <div className="flex items-center justify-center rounded-full w-6 h-6 bg-tertialy-oceanblue-400">
                   <SVGIcon svg={Check} className="w-5 text-base-content" />
@@ -182,7 +182,7 @@ export default function About() {
               </h2>
               <p>愛でた回数やあなたの行動を数値化して他の人に見せません。</p>
             </li>
-            <li className="flex flex-col gap-1 p-10 rounded-20 bg-secondary-50 border-4 border-secondary-100">
+            <li className="flex flex-col gap-1 max-w-[380px] p-10 rounded-20 bg-secondary-50 border-4 border-secondary-100">
               <h2 className="flex items-center gap-2 text-tertialy-oceanblue-400 font-bold text-typography-lg font-zenMaruGothic">
                 <div className="flex items-center justify-center rounded-full w-6 h-6 bg-tertialy-oceanblue-400">
                   <SVGIcon svg={Check} className="w-5 text-base-content" />
@@ -194,6 +194,49 @@ export default function About() {
               </p>
             </li>
           </ul>
+        </Section>
+        <Section>
+          <div className="relative">
+            <div className="absolute top-2 -right-2 w-full h-full z-[-1] rounded-20 bg-primary-100 bg-opacity-80" />
+            <a
+              className="transition-all hover:translate-x-2 hover:translate-y-2 relative flex max-sm:flex-col max-sm:justify-center max-sm:items-center gap-9 max-sm:gap-7 rounded-20 px-[60px] max-sm:px-10 pt-[60px] pb-[60px] max-sm:pb-10 border-8 border-tertialy-oceanblue-400 bg-base-content bg-cover"
+              style={{
+                backgroundImage: `url(${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/image/about/help-bunner-bg.png)`,
+              }}
+              href="https://torimede.gitbook.io/torimedehelp/"
+              target="_blank"
+            >
+              <Image
+                src={`${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/image/about/external-icon.svg`}
+                alt=""
+                width={20}
+                height={20}
+                className="absolute top-5 right-5"
+              />
+              <div className="flex flex-col gap-2">
+                <span className="font-comfortaa text-secondary-400 leading-none">
+                  help
+                </span>
+                <h1 className="-ml-2 font-zenMaruGothic text-primary-700 text-typography-xxl max-sm:text-typography-xxl font-bold max-sm:font-bold leading-[1.6] max-sm:leading-[1.6]">
+                  トリメデについて
+                  <br />
+                  もっと詳しく知る
+                </h1>
+                <p className="text-typography-sm mt-1">
+                  細かな仕様や使いかたをまとめた
+                  <br />
+                  <span className="text-textColor-link">ヘルプページ</span>
+                  をご用意しています
+                </p>
+              </div>
+              <Image
+                src={`${process.env.NEXT_PUBLIC_ASSET_BASE_URL}/image/about/help-medechan.svg`}
+                alt=""
+                width={156}
+                height={166}
+              />
+            </a>
+          </div>
         </Section>
       </article>
     </>
@@ -209,7 +252,7 @@ const Section = ({
   gap,
 }: {
   children: React.ReactNode;
-  title: React.ReactNode | string;
+  title?: React.ReactNode | string;
   subTitle?: string;
   description?: React.ReactNode;
   className?: string;
@@ -230,9 +273,11 @@ const Section = ({
             {subTitle}
           </span>
         )}
-        <h1 className="font-zenMaruGothic text-primary-700 text-center text-typography-xxl max-sm:text-typography-xxl font-bold max-sm:font-bold max-sm:leading-[1.6]">
-          {title}
-        </h1>
+        {title && (
+          <h1 className="font-zenMaruGothic text-primary-700 text-center text-typography-xxl max-sm:text-typography-xxl font-bold max-sm:font-bold max-sm:leading-[1.6]">
+            {title}
+          </h1>
+        )}
         {description && (
           <p className="text-typography-sm mt-1 text-center">{description}</p>
         )}
