@@ -21,7 +21,7 @@ export const METADATA_TITLE = {
 
 export const DESCRIPTION = {
   common:
-    "トリメデは鳥さんにくわしい人から普段なんとなく鳥さんが気になっている人まですべての鳥好きが楽しめる場所です",
+    "トリメデは普段なんとなく鳥さんが気になる人から鳥さんにくわしい人まで、すべての鳥好きが楽しめる場所です。",
 };
 
 export const FAVICON = {

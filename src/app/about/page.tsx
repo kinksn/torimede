@@ -34,12 +34,12 @@ export default function About() {
                   鳥さんを
                   <span className={medeTextGradientStyle}>愛でて</span>
                 </p>
-                <p>いやしの輪をひろげる</p>
+                <p>いやしの輪がひろがる</p>
               </h1>
               <p>
-                くわしい人から普段なんとなく鳥さんが気になっている人まで、
+                普段なんとなく鳥さんが気になる人から鳥さんにくわしい人まで、
                 <br className="max-sm:hidden" />
-                すべての鳥好きが楽しめる場所です。
+                すべての鳥好きが楽しめる場所がトリメデです。
               </p>
             </div>
             <Image
@@ -82,8 +82,8 @@ export default function About() {
                   <h2 className="font-zenMaruGothic text-typography-lg font-bold leading-none">
                     投稿する
                   </h2>
-                  <p className="font-medium">
-                    街中の野鳥さん、ペットの鳥さんなど、日常で出会う鳥さんを投稿しましょう。イラストやグッズの鳥さんでもOKです。
+                  <p>
+                    町中の野鳥さん、ペットの鳥さんなど、日常で出会う鳥さんを投稿しましょう。イラストやグッズの鳥さんでもOKです。
                   </p>
                 </div>
               </li>
@@ -113,7 +113,7 @@ export default function About() {
                   <h2 className="font-zenMaruGothic text-typography-lg font-bold leading-none">
                     愛でる
                   </h2>
-                  <p className="font-medium">
+                  <p>
                     好きな鳥さんを選んで「メデボタン」を押すと愛でることができます。SNSの「いいね」とはちがい数値は表示されません。
                   </p>
                 </div>
@@ -144,8 +144,8 @@ export default function About() {
                   <h2 className="font-zenMaruGothic text-typography-lg font-bold leading-none">
                     集める
                   </h2>
-                  <p className="font-medium">
-                    自分が投稿した鳥さんがたくさん愛でられるとキラキラ輝く特別なカードになります。カードはマイページで見ることができます。
+                  <p>
+                    投稿した鳥さんがたくさん愛でられるとキラキラ輝く特別なカードになります。カードはマイページで見ることができます。
                   </p>
                 </div>
               </li>
@@ -157,7 +157,7 @@ export default function About() {
           subTitle="promise"
           description={
             <>
-              気を使うことなく楽しめるように、
+              気を使うことなく楽しめるように
               <br />
               以下の約束を守ります
             </>
@@ -180,7 +180,7 @@ export default function About() {
                 </div>
                 数値化しない
               </h2>
-              <p>愛でた回数やあなたの行動を数値化して他の人に見せません。</p>
+              <p>あなたの行動を数値化して他のユーザーに見せません。</p>
             </li>
             <li className="flex flex-col gap-1 max-w-[380px] p-10 rounded-20 bg-secondary-50 border-4 border-secondary-100">
               <h2 className="flex items-center gap-2 text-tertialy-oceanblue-400 font-bold text-typography-lg font-zenMaruGothic">
@@ -189,9 +189,7 @@ export default function About() {
                 </div>
                 勝手に公開しない
               </h2>
-              <p>
-                育った鳥さんなどあなたが手に入れたものを他の人に見せません。
-              </p>
+              <p>あなたが手に入れたものを勝手に他のユーザーに見せません。</p>
             </li>
           </ul>
         </Section>
@@ -211,7 +209,7 @@ export default function About() {
                 alt=""
                 width={20}
                 height={20}
-                className="absolute top-5 right-5"
+                className="absolute top-4 right-4"
               />
               <div className="flex flex-col gap-2">
                 <span className="font-comfortaa text-secondary-400 leading-none">
@@ -222,7 +220,7 @@ export default function About() {
                   <br />
                   もっと詳しく知る
                 </h1>
-                <p className="text-typography-sm mt-1">
+                <p className="text-typography-sm font-medium mt-1">
                   細かな仕様や使いかたをまとめた
                   <br />
                   <span className="text-textColor-link">ヘルプページ</span>
